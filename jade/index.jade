@@ -1,5 +1,5 @@
 doctype html
-html(lang="en", data-ng-app="angle")
+html(lang="en", data-ng-app="kiraso")
 
   head
     meta(charset='utf-8')
@@ -8,17 +8,17 @@ html(lang="en", data-ng-app="angle")
     meta(name='description', content='{{app.description}}')
     meta(name='keywords', content='app, responsive, angular, bootstrap, dashboard, admin')
 
-    title(data-ng-bind="::pageTitle()") Angle - Angular Bootstrap Admin Template
+    title(data-ng-bind="::pageTitle()") Kiraso - Angular Bootstrap Admin Template
     // Bootstrap styles
     link(rel='stylesheet', href='app/css/bootstrap.css', data-ng-if="!app.layout.isRTL")
-    link(rel='stylesheet', href='app/css/bootstrap-rtl.css', data-ng-if="app.layout.isRTL")
+    link(rel='stylesheet', href='app/css/Bootstraptstrap-rtl.css', data-ng-if="app.layout.isRTL")
     // Application styles
     link(rel='stylesheet', href='app/css/app.css', data-ng-if="!app.layout.isRTL")
     link(rel='stylesheet', href='app/css/app-rtl.css', data-ng-if="app.layout.isRTL")
     // Themes
     link(rel='stylesheet', ng-href='{{app.layout.theme}}', data-ng-if="app.layout.theme")
 
-  body(data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat, 'offsidebar-open': app.offsidebarOpen, 'aside-toggled': app.asideToggled}")
+  body(data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat, 'offsidebar-open': app.offsidebarOpen, 'aside-toggled': app.asideToggled}" )
 
     div(data-preloader)
 
@@ -26,5 +26,8 @@ html(lang="en", data-ng-app="angle")
 
     script(src='app/js/base.js')
     script(src='app/js/app.js')
+    script(type="text/javascript", src="bower_components/ace-builds/src-min-noconflict/ace.js")
+    script(type="text/javascript", src="bower_components/angular/angular.js")
+    script(type="text/javascript", src="bower_components/angular-ui-ace/ui-ace.js")
     //- templates:js
     //- endinject

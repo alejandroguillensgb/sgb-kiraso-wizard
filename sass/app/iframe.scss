@@ -1,0 +1,50 @@
+
+.top {
+  width: 100%;
+}
+
+.sourceEditor { 
+  width: 60%;
+  float: left;
+} 
+
+.sourceCode {
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: -1px;
+}
+
+
+#result {
+  float: left;
+  width: 40%;
+  margin-top: -1px;
+}
+
+.device {
+  background: url("/server/img/phone.png") no-repeat right top;
+  margin: auto;
+  margin-top: 5px;
+  width: 245px;
+  height: 600px;
+  background-size: 245px 600px;
+}
+
+.device .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.device .screen iframe {
+    position: absolute;
+    top: 104px;
+    left: 29px;
+    z-index: 0;
+    width: 195px;
+    height: 410px;
+    top: 89px;
+    left: 25px;
+    border: 0;
+    background-color: #efefef;
+}

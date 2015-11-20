@@ -12,8 +12,8 @@
       // Global Settings
       // ----------------------------------- 
       $rootScope.app = {
-        name: 'Angle',
-        description: 'Angular Bootstrap Admin Template',
+        name: 'Kiraso.io',
+        description: 'Kiraso',
         year: ((new Date()).getFullYear()),
         layout: {
           isFixed: true,
@@ -27,7 +27,7 @@
         },
         useFullLayout: false,
         hiddenFooter: false,
-        offsidebarOpen: false,
+        offsidebarOpen: true,
         asideToggled: false,
         viewAnimation: 'ng-fadeInUp'
       };

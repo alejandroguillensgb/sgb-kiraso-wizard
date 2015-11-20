@@ -1,10 +1,10 @@
 {
-  "name": "Angle",
+  "name": "Kiraso",
   "version": "0.0.0",
   "authors": [
     "@themicon_co"
   ],
-  "description": "Angle - Bootstrap Admin App + AngularJS",
+  "description": "Kiraso",
   "main": "index.html",
   "keywords": [
     "bootstrap",
@@ -43,12 +43,25 @@
     "angular-resource": "1.4.2",
     "simple-line-icons": "0.1.1",
     "angular-touch": "1.4.2",
-    "jquery.browser": "master"
+    "jquery.browser": "master",
+    "ace": "~1.2.2",
+    "angular-ui-ace": "bower"
   },
   "resolutions": {
     "angular": "1.4.2",
     "angular-translate": "2.6.0",
     "angular-translate-storage-cookie": "2.6.0",
     "angular-cookies": "1.4.2"
+  },
+  "overrides": {
+    "ace-builds": {
+      "main": [
+        "src-min-noconflict/ace.js",
+        "src-min-noconflict/mode-json.js",
+        "src-min-noconflict/mode-yaml.js",
+        "src-min-noconflict/theme-idle_fingers.js",
+        "src-min-noconflict/worker-json.js"
+      ]
+    }
   }
 }

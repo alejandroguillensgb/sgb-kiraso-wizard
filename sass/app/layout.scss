@@ -133,7 +133,7 @@ html, body {
   > .unwrap {
     margin: -15px; // expand over wrapper padding
     @media only screen and (min-width: $mq-tablet) {
-      margin: -20px; // expand over wrapper padding
+      margin: -25px; // expand over wrapper padding
     }    
   }
 
@@ -170,6 +170,7 @@ html, body {
     > h3,
     > .content-heading {
       margin: -$content-padding;
+      margin-right:-25px; 
       margin-bottom: $content-padding;
       padding: $content-padding;
     }

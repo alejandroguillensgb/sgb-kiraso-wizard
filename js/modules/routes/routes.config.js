@@ -34,13 +34,20 @@
           .state('app.singleview', {
               url: '/singleview',
               title: 'Single View',
-              templateUrl: helper.basepath('singleview.html')
+              views:{
+                  "singleView":{templateUrl: helper.basepath('singleview.html'),
+                      controller:"Controller"},
+                  "offsidebar":{templateUrl: helper.basepath('partials/offsidebar.html'),
+                                controller: "Controller"}
+              }
           })
           .state('app.submenu', {
               url: '/submenu',
               title: 'Submenu',
               templateUrl: helper.basepath('submenu.html')
           })
+          
+          
           // 
           // CUSTOM RESOLVES
           //   Add your own resolves properties
