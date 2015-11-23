@@ -1,17 +1,9 @@
-h3 
-  // START Language list
-  .pull-right
-    .btn-group(dropdown='', is-open='language.listIsOpen')
-      button.btn.btn-default(type='button', dropdown-toggle="")
-        | {{language.selected}}
-        span.caret
-      ul.dropdown-menu.dropdown-menu-right.animated.fadeInUpShort(role='menu')
-        li(ng-repeat='(localeId, langName) in language.available')
-          a(ng-click='language.set(localeId, $event)') {{langName}}
-  // END Language list    
 
-  | Single View
-  small {{ 'dashboard.WELCOME' | translate:{ appName: app.name } }}  !
+div
+    div.btn-group.btn-group-justified
+        label.btn.btn-primary.active(ng-model="radioModel", uib-btn-radio="'Left'", checked="") Left
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'") Middle
+
 
 //- .row
 //-   .col-xs-12.text-center
@@ -20,26 +12,9 @@ h3
 //-       br 
 //-       | The seed app doesn't do much and has most of the feature removed so you can add theme as per your needs just following the demo app examples.
 
-//- div#aceEditor.ace_editor(ng-model="code" ui-ace="{useWrapMode : true, showGutter: true, mode: 'html', theme: 'monokai', onLoad: aceLoaded, onChange: aceChanged}")
-
-//- div#result(style="height: 800px;")
-//-  div.device
-//-   div.screen
-//-    iframe#frame(src="")
-
 
 div( ng-controller="Controller")
   div
     div
       div#aceEditor.ace_editor(ui-ace="{useWrapMode : true,showGutter: true,mode: 'html',theme: 'monokai',onLoad: aceLoaded,onChange: aceChanged}" ng-model="code")
-        
-  //- div#result
-  //-  div.device
-  //-   div.screen
-  //-    iframe#frame(src="/server/code.html")
-         
-  //- div#result(style="height: 312px;")
-  //-   div.device
-  //-     div.screen
-  //-       iframe#frame(src="/server/code.html")
         

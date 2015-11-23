@@ -36,9 +36,9 @@
               title: 'Single View',
               views:{
                   "singleView":{templateUrl: helper.basepath('singleview.html'),
-                      controller:"Controller"},
+                      controller:"aceController"},
                   "offsidebar":{templateUrl: helper.basepath('partials/offsidebar.html'),
-                                controller: "Controller"}
+                                controller: "aceController"}
               }
           })
           .state('app.submenu', {

@@ -9,7 +9,8 @@
             'app.core',
             'app.routes',
             'app.sidebar',
-            'ui.ace'
+            'custom.ace',
+            'custom.sideb'
             /*...*/
         ]);
 })();

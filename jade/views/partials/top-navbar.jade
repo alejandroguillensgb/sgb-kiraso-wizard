@@ -12,14 +12,14 @@ nav.navbar.topnavbar(role='navigation')
     // START Nav wrapper
     .nav-wrapper
       // START Left navbar
-      ul.nav.navbar-nav
-        li
-          // Button used to collapse the left sidebar. Only visible on tablet and desktops
-          a(href='', trigger-resize="", ng-click="app.layout.isCollapsed = !app.layout.isCollapsed").hidden-xs
-            em.fa.fa-navicon
-          // Button to show/hide the sidebar on mobile. Visible on mobile only.
-          a(href='', ng-click="app.asideToggled = !app.asideToggled").visible-xs.sidebar-toggle
-            em.fa.fa-navicon
+      //- ul.nav.navbar-nav
+      //-   li
+      //-     // Button used to collapse the left sidebar. Only visible on tablet and desktops
+      //-     a(href='', trigger-resize="", ng-click="app.layout.isCollapsed = !app.layout.isCollapsed").hidden-xs
+      //-       em.fa.fa-navicon
+      //-     // Button to show/hide the sidebar on mobile. Visible on mobile only.
+      //-     a(href='', ng-click="app.asideToggled = !app.asideToggled").visible-xs.sidebar-toggle
+      //-       em.fa.fa-navicon
       // END Left navbar
 
       // START Right Navbar
@@ -39,5 +39,7 @@ nav.navbar.topnavbar(role='navigation')
         .fa.fa-times.form-control-feedback(search-dismiss)
       button.hidden.btn.btn-default(type='submit') Submit
     // END Search form
+
+    
 
 // END Top Navbar
