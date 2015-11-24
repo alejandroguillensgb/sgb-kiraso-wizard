@@ -10,7 +10,8 @@
             'app.routes',
             'app.sidebar',
             'custom.ace',
-            'custom.sideb'
+            'custom.sideb',
+            'custom.forms'
             /*...*/
         ]);
 })();

@@ -45,7 +45,10 @@
     "angular-touch": "1.4.2",
     "jquery.browser": "master",
     "ace": "~1.2.2",
-    "angular-ui-ace": "bower"
+    "angular-ui-ace": "bower",
+    "angular-ui-sortable": "0.13.4",
+    "angular-schema-form": "0.8.12"
+
   },
   "resolutions": {
     "angular": "1.4.2",

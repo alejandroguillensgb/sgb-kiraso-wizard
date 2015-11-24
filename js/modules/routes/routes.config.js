@@ -19,33 +19,58 @@
         $locationProvider.html5Mode(false);
 
         // defaults to dashboard
-        $urlRouterProvider.otherwise('/app/singleview');
+        $urlRouterProvider.otherwise('/app/wizard');
 
         // 
         // Application Routes
         // -----------------------------------   
         $stateProvider
-          .state('app', {
-              url: '/app',
-              abstract: true,
-              templateUrl: helper.basepath('app.html'),
-              resolve: helper.resolveFor('modernizr', 'icons')
-          })
-          .state('app.singleview', {
-              url: '/singleview',
-              title: 'Single View',
-              views:{
-                  "singleView":{templateUrl: helper.basepath('singleview.html'),
-                      controller:"aceController"},
-                  "offsidebar":{templateUrl: helper.basepath('partials/offsidebar.html'),
-                                controller: "aceController"}
-              }
-          })
-          .state('app.submenu', {
-              url: '/submenu',
-              title: 'Submenu',
-              templateUrl: helper.basepath('submenu.html')
-          })
+        .state('app', {
+            url: '/app',
+            abstract: true,
+            templateUrl: helper.basepath('app.html'),
+            resolve: helper.resolveFor('modernizr', 'icons')
+        })
+        .state('app.preview', {
+            url: '/preview',
+            title: 'Preview & Source',
+            views:{
+                "singleview":{
+                    templateUrl: helper.basepath('singleview.html'),
+                    controller:"aceController"
+                },
+                "offsidebar":{
+                    templateUrl: helper.basepath('partials/offsidebar.html'),
+                    controller: "aceController"
+                },
+                "sidebar":{
+                    templateUrl: helper.basepath('partials/menubar.html'),
+                    controller: "SidebarController"
+                }
+            }
+        })
+        .state('app.wizard', {
+            url: '/wizard',
+            title: 'Wizard',
+            views:{
+                "singleview":{
+                    templateUrl: helper.basepath('graphicview.html')
+                },
+                "offsidebar":{
+                    templateUrl: helper.basepath('partials/offsidetabs.html'),
+                    controller: "formsController"
+                },
+                "sidebar":{
+                    templateUrl: helper.basepath('partials/sidebar.html'),
+                    controller: "sidebController"
+                }
+            }
+        })
+        .state('app.submenu', {
+            url: '/submenu',
+            title: 'Submenu',
+            templateUrl: helper.basepath('submenu.html')
+        })
           
           
           // 

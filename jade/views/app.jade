@@ -2,17 +2,37 @@
 header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'")
 
 // sidebar
-aside.aside(ng-include="'app/views/partials/sidebar.html'", ng-controller="sidebController")
+//aside.aside(ng-include="'app/views/partials/menubar.html'", ng-controller="SidebarController")
+
+//aside.aside(ng-include="'app/views/partials/sidebar.html'", ng-controller="sidebController")
+//aside.aside(ui-view="files",autoscroll="false")
+aside.aside(ui-view="sidebar",autoscroll="true")
 
 // offsidebar
 aside.offsidebar(ui-view="offsidebar", autoscroll="false")
-
+//aside.offsidebar(ng-include="'app/views/partials/sideform.html'", ng-controller="formsController")
+//aside.offsidebar(ui-view="wizard-offsidebar", autoscroll="false")
 // Main section
 section.has-sidebar-right
 
+  div
+    div.btn-group.btn-group-justified(style="padding:5px;")
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="''", ui-sref="app.wizard") Wizard
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'", ui-sref="app.preview") Preview&Source
+
+  div(style="text-align:center;")
+    div.btn-toolbar(style="display: inline-block; padding:5px;")      
+      label.btn.btn-primary New   
+      label.btn.btn-primary Load      
+      label.btn.btn-primary Save
+      label.btn.btn-primary Team
+      label.btn.btn-primary Download
+      label.btn.btn-primary Finish
+
   // Page content
-  .content-wrapper(ui-view="singleView", autoscroll="false", ng-class="app.viewAnimation")
-  
+  .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")
+
+
 // Page footer
 footer(ng-include="'app/views/partials/footer.html'")
 
