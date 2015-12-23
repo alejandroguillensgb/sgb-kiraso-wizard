@@ -27,7 +27,6 @@
         function getContent(path, onReady, onError) {
           
           onError = onError || function() { alert('Failure getting content'); };
-
           
           $http
             .get('http://localhost:8000/getContent?path=' + path)
