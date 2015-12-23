@@ -120,6 +120,7 @@
             .removeClass('open')
             .end()
             .toggleClass('open');
+          
         }
 
         // Handles hover to open items under collapsed menu

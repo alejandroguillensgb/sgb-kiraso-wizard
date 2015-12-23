@@ -37,6 +37,18 @@
             $scope.menuItems = items;
           }
 
+          function contentReady(data,path){
+              $scope.data = data;              
+              $rootScope.$broadcast('aceChange', data, path);
+            }
+
+          $scope.aceChange = aceChange;
+          function aceChange(item){
+            if (item.type === 'folder') return
+            SidebarLoader.getContent(item.path,contentReady);
+            
+          }
+
           // Handle sidebar and collapse items
           // ----------------------------------
           
@@ -80,18 +92,21 @@
 
             // Check item and children active state
             function isActive(item) {
-
               if(!item) return;
 
-              if( !item.sref || item.sref === '#') {
+              if( !item.path || item.path === '#') {
                 var foundActive = false;
                 angular.forEach(item.submenu, function(value) {
                   if(isActive(value)) foundActive = true;
                 });
                 return foundActive;
               }
-              else
-                return $state.is(item.sref) || $state.includes(item.sref);
+              else{
+                
+                return $state.is("app.submenu") || $state.includes("app.submenu");    
+                
+              }
+                
             }
 
             function closeAllBut(index) {

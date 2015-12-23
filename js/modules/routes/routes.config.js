@@ -29,6 +29,7 @@
             url: '/app',
             abstract: true,
             templateUrl: helper.basepath('app.html'),
+            controller: "Controller",
             resolve: helper.resolveFor('modernizr', 'icons')
         })
         .state('app.preview', {

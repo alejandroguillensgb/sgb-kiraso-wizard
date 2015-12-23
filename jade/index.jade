@@ -17,6 +17,7 @@ html(lang="en", data-ng-app="kiraso")
     link(rel='stylesheet', href='app/css/app-rtl.css', data-ng-if="app.layout.isRTL")
     // Themes
     link(rel='stylesheet', ng-href='{{app.layout.theme}}', data-ng-if="app.layout.theme")
+    
 
   body(data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed, 'layout-boxed' : app.layout.isBoxed, 'layout-fs': app.useFullLayout, 'hidden-footer': app.hiddenFooter, 'layout-h': app.layout.horizontal, 'aside-float': app.layout.isFloat, 'offsidebar-open': app.offsidebarOpen, 'aside-toggled': app.asideToggled}" )
 
@@ -41,5 +42,10 @@ html(lang="en", data-ng-app="kiraso")
     script(type="text/javascript", src="bower_components/angular-schema-form/dist/bootstrap-decorator.js")
     script(type="text/javascript", src="bower_components/angular-spectrum-colorpicker/dist/angular-spectrum-colorpicker.min.js")
     
+    //graph
+    script(src="//d3js.org/d3.v3.js", charset="utf-8")
+    script(src="//cdn.jsdelivr.net/filesaver.js/0.1/FileSaver.min.js")
+    script(src="js/graph-creator.js")
+
     //- templates:js
     //- endinject

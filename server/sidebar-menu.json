@@ -16,7 +16,7 @@
     "icon": "icon-folder",
     "submenu": [
       { "text": "Sub Menu", 
-        "sref": "app.submenu", 
+        "sref": "app.graphicview", 
         "translate": "sidebar.nav.menu.SUBMENU" 
       }    
     ],

@@ -4,13 +4,15 @@ div.aside-inner
     uib-tab(heading="Apps&Comp")
         uib-accordion(close-others="oneAtATime")
           uib-accordion-group(heading="Prebuilt Apps")
-            p The body of the uib-accordion group grows to fit the contents
-            button.btn.btn-default.btn-sm(type="button", ng-click="addItem()") Add Item
-            div(ng-repeat="item in items") {{item}}
-          
+            nav.sidebar(sidebar="")
+              ul.nav
+                li(ng-repeat='item in appItems')
+                  {{item.name}}
+        
           uib-accordion-group(heading="Components")
-            p The body of the uib-accordion group grows to fit the contents
-            button.btn.btn-default.btn-sm(type="button", ng-click="addItem()") Add Item
-            div(ng-repeat='item in items') {{item}}
+            nav.sidebar(sidebar="")
+              ul.nav
+                li(ng-repeat='item in compItems')
+                  {{item.name}}
     uib-tab(heading="Hierarchy")
       div(ng-include="'app/views/partials/menubar.html'", ng-controller="SidebarController")

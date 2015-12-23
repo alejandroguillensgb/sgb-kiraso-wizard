@@ -1,0 +1,8 @@
+{
+	"name":"sgb-screen-list", 
+	"type":"screen",
+	"params": [
+		"param1": "type",
+		"param2": "type"
+	]
+}
