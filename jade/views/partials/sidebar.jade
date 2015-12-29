@@ -8,11 +8,25 @@ div.aside-inner
               ul.nav
                 li(ng-repeat='item in appItems')
                   {{item.name}}
+                  span(style="float: right;") 
+                    em.icon-magnifier
+                    em.icon-magnifier
+                    em.icon-magnifier
+
+
         
           uib-accordion-group(heading="Components")
             nav.sidebar(sidebar="")
               ul.nav
                 li(ng-repeat='item in compItems')
                   {{item.name}}
+                li
+                  div Create a component
+                    span(style="float: right;") 
+                      em.icon-magnifier
+                li
+                  div Add your component
+                    span(style="float: right;") 
+                      em.icon-magnifier
     uib-tab(heading="Hierarchy")
-      div(ng-include="'app/views/partials/menubar.html'", ng-controller="SidebarController")
+      

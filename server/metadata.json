@@ -1,0 +1,27 @@
+{
+    "name": "sgb-screen-list",
+    "type": "screen",
+    "version": "1.0",
+    "params": {
+        "param1": {
+            "name":"showSearch",
+            "type":"string",
+            "options": ["true", "false"],
+            "description": "", 
+            "title": "Show search" 
+        },
+        "param2": {
+            "name":"templateType",
+            "type": "string",
+            "options": ["compact-left", "compact-right", "large"],
+            "description": "",
+            "title": "Template type"
+        },        
+        "param3": {
+            "name": "showIcon",
+            "type": "string",
+            "description": "Use the name of a valid icon",
+            "title": "Icon"
+        }
+    }
+}

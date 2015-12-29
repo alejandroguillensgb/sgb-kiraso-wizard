@@ -38,15 +38,14 @@
           }
 
           function contentReady(data,path){
-              $scope.data = data;              
-              $rootScope.$broadcast('aceChange', data, path);
-            }
+            $scope.data = data;              
+            $rootScope.$broadcast('aceChange', data, path);
+          }
 
           $scope.aceChange = aceChange;
           function aceChange(item){
             if (item.type === 'folder') return
             SidebarLoader.getContent(item.path,contentReady);
-            
           }
 
           // Handle sidebar and collapse items

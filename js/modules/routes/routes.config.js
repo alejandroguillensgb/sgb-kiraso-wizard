@@ -19,12 +19,13 @@
         $locationProvider.html5Mode(false);
 
         // defaults to dashboard
-        $urlRouterProvider.otherwise('/app/wizard');
+        $urlRouterProvider.otherwise('/base/login');
 
         // 
         // Application Routes
         // -----------------------------------   
         $stateProvider
+        
         .state('app', {
             url: '/app',
             abstract: true,
@@ -32,6 +33,26 @@
             controller: "Controller",
             resolve: helper.resolveFor('modernizr', 'icons')
         })
+
+        .state('base', {
+            url: '/base',
+            abstract: true,
+            templateUrl: helper.basepath('base.html'),
+            controller: "Controller",
+            resolve: helper.resolveFor('modernizr', 'icons')
+        })
+
+        .state('base.login', {
+            url: '/login',
+            title: 'Login',
+            views:{
+                "loginview":{
+                    templateUrl: helper.basepath('login.html')
+                }
+            }
+            
+        })
+
         .state('app.preview', {
             url: '/preview',
             title: 'Preview & Source',
