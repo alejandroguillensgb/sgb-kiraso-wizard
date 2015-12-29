@@ -8,25 +8,24 @@ div.aside-inner
               ul.nav
                 li(ng-repeat='item in appItems')
                   {{item.name}}
-                  span(style="float: right;") 
-                    em.icon-magnifier
-                    em.icon-magnifier
-                    em.icon-magnifier
-
-
         
           uib-accordion-group(heading="Components")
             nav.sidebar(sidebar="")
               ul.nav
                 li(ng-repeat='item in compItems')
                   {{item.name}}
+                  span(style="float: right;") 
+                    em.icon-eye
+                    em.icon-doc
+                    em.icon-settings
+
                 li
                   div Create a component
                     span(style="float: right;") 
-                      em.icon-magnifier
+                      em.icon-note
                 li
                   div Add your component
                     span(style="float: right;") 
-                      em.icon-magnifier
+                      em.icon-plus
     uib-tab(heading="Hierarchy")
       

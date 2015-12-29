@@ -19,7 +19,9 @@
           'gray-dark':              '#3a3f51',
           'gray':                   '#dde6e9',
           'gray-light':             '#e4eaec',
-          'gray-lighter':           '#edf1f2'
+          'gray-lighter':           '#edf1f2',
+          'kiraso-green':           '#2ab24b',
+          'kiraso-blue':            '#182f58'
         })
         ;
 })();

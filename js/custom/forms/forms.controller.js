@@ -50,20 +50,54 @@
                     {
                       type: "button",
                       "htmlClass": "col-md-4",
-                      style: "btn-info",
+                      style: "kiraso-green",
                       title: "Sing Up",
-                      onClick: ""
+                      onClick: "goToSignup()"
                     }
               ]}];
 
               $scope.loginModel = {};
 
+              $scope.goToSignup = function(){
+                $state.go('base.signup')
+              }
 
+              $scope.onSubmitSignup = function(form){
+                $scope.$broadcast('schemaFormValidate');
+                if (form.$valid){
+                  $state.go('base.login')
+                }                
+              }
 
+              $scope.signupSchema = {
+                type: "object",
+                properties: {
+                  username: { type: "string", minLength: 4, title: "Username", description: "Username or alias" },
+                  password: { type: "string", minLength:6, title: "Password"},
+                  confirmPassword: { type: "string", minLength:6, title: "Confirm password"}
+                },
+                required: ["username", "password", "confirmPassword"]
+              };
+              
+              $scope.signupForm = [
+                "*",
+                {
+                      type: "submit",
+                      title: "Sign Up"
+                },
+                {
+                  "type": "section",
+                  "htmlClass": "row",
+                  "items": [
+                    {
+                      type: "button",
+                      "htmlClass": "col-md-6",
+                      style: "btn-info",
+                      title: "Already have an account?"
+                    }
+              ]}];
 
-
-
-
+              $scope.signupModel = {};
 
             $scope.appSchema = {
                 type: "object",

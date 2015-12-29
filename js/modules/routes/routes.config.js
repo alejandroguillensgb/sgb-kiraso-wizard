@@ -53,6 +53,17 @@
             
         })
 
+        .state('base.signup', {
+            url: '/signup',
+            title: 'Sign Up',
+            views:{
+                "signupview":{
+                    templateUrl: helper.basepath('signup.html')
+                }
+            }
+            
+        })
+
         .state('app.preview', {
             url: '/preview',
             title: 'Preview & Source',
