@@ -52,14 +52,14 @@
                       "htmlClass": "col-md-4",
                       style: "kiraso-green",
                       title: "Sing Up",
-                      onClick: "goToSignup()"
+                      onClick: "goTo('base.signup')"
                     }
               ]}];
 
               $scope.loginModel = {};
 
-              $scope.goToSignup = function(){
-                $state.go('base.signup')
+              $scope.goTo = function(path){
+                $state.go(path)
               }
 
               $scope.onSubmitSignup = function(form){
@@ -93,7 +93,8 @@
                       type: "button",
                       "htmlClass": "col-md-6",
                       style: "btn-info",
-                      title: "Already have an account?"
+                      title: "Already have an account?",
+                      onClick: "goTo('base.login')"
                     }
               ]}];
 

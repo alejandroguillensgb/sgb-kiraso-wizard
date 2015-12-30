@@ -25,7 +25,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       justScaleTransGraph: false,
       lastKeyDown: -1,
       shiftNodeDrag: false,
-      selectedText: null
+      selectedText: null,
+      doubleClick: false
     };
 
     // define arrow markers for graph links
@@ -87,11 +88,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
     svg.on("mousedown", function(d){thisGraph.svgMouseDown.call(thisGraph, d);});
     svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
+    svg.on("dblclick", function(d){thisGraph.svgMouseD.call(thisGraph, d);});
 
     // listen for dragging
     var dragSvg = d3.behavior.zoom()
           .on("zoom", function(){
-            if (d3.event.sourceEvent.shiftKey){
+            if (d3.event.sourceEvent.ctrlKey){
               // TODO  the internal d3 state is still changing
               return false;
             } else{
@@ -104,7 +106,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             if (ael){
               ael.blur();
             }
-            if (!d3.event.sourceEvent.shiftKey) d3.select('body').style("cursor", "move");
+            if (!d3.event.sourceEvent.ctrlKey) d3.select('body').style("cursor", "move");
           })
           .on("zoomend", function(){
             d3.select('body').style("cursor", "auto");
@@ -162,7 +164,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }
 
     });
-
+    
     // handle delete graph
     d3.select("#delete-graph").on("click", function(){
       thisGraph.deleteGraph(false);
@@ -306,8 +308,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         state = thisGraph.state;
     d3.event.stopPropagation();
     state.mouseDownNode = d;
-    if (d3.event.shiftKey){
-      state.shiftNodeDrag = d3.event.shiftKey;
+    if (d3.event.ctrlKey){
+      state.shiftNodeDrag = d3.event.ctrlKey;
       // reposition dragged directed edge
       thisGraph.dragLine.classed('hidden', false)
         .attr('d', 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + d.y);
@@ -343,7 +345,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           })
           .on("keydown", function(d){
             d3.event.stopPropagation();
-            if (d3.event.keyCode == consts.ENTER_KEY && !d3.event.shiftKey){
+            if (d3.event.keyCode == consts.ENTER_KEY && !d3.event.ctrlKey){
               this.blur();
             }
           })
@@ -390,7 +392,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         state.justDragged = false;
       } else{
         // clicked, not dragged
-        if (d3.event.shiftKey){
+        if (d3.event.ctrlKey){
           // shift-clicked node: edit text content
           var d3txt = thisGraph.changeTextOfNode(d3node, d);
           var txtNode = d3txt.node();
@@ -415,6 +417,23 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   }; // end of circles mouseup
 
+  GraphCreator.prototype.svgMouseD = function(){
+    var thisGraph = this,
+        state = thisGraph.state;
+    this.state.doubleClick = true;
+    var xycoords = d3.mouse(thisGraph.svgG.node()),
+          d = {id: thisGraph.idct++, title: consts.defaultTitle, x: xycoords[0], y: xycoords[1]};
+      thisGraph.nodes.push(d);
+      thisGraph.updateGraph();
+      // make title of text immediently editable
+      var d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function(dval){
+        return dval.id === d.id;
+      }), d),
+          txtNode = d3txt.node();
+      thisGraph.selectElementContents(txtNode);
+      txtNode.focus();
+  };
+
   // mousedown on main svg
   GraphCreator.prototype.svgMouseDown = function(){
     this.state.graphMouseDown = true;
@@ -427,7 +446,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     if (state.justScaleTransGraph) {
       // dragged not clicked
       state.justScaleTransGraph = false;
-    } else if (state.graphMouseDown && d3.event.shiftKey){
+    } else if (state.graphMouseDown && d3.event.ctrlKey){
       // clicked not dragged from svg
       var xycoords = d3.mouse(thisGraph.svgG.node()),
           d = {id: thisGraph.idct++, title: consts.defaultTitle, x: xycoords[0], y: xycoords[1]};
