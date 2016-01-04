@@ -5,8 +5,8 @@
         .module('custom.sideb')
         .controller('sidebController', sidebController);
 
-    sidebController.$inject = ['$log','$scope', 'PrebuiltLoader'];
-    function sidebController($log,$scope, PrebuiltLoader) {
+    sidebController.$inject = ['$log','$scope', '$rootScope','PrebuiltLoader'];
+    function sidebController($log,$scope,$rootScope,PrebuiltLoader) {
 
         activate();
         
@@ -26,6 +26,13 @@
               
             function compReady(items) {
                 $scope.compItems = items;
+            }
+
+
+            $scope.prueba = function(item){
+                var event = document.createEvent('CustomEvent');
+                event.initCustomEvent("create-node", true, true, item);
+                document.documentElement.dispatchEvent(event);
             }
             
         }

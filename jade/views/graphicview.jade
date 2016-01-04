@@ -87,6 +87,13 @@ script.
   svg.on("mousedown", function(d){thisGraph.svgMouseDown.call(thisGraph, d);});
   svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
   svg.on("dblclick", function(d){thisGraph.svgMouseD.call(thisGraph, d);});
+  
+  window.addEventListener("create-node", function(event) {
+    thisGraph.svgMouseDD.call(thisGraph, event.detail)
+  }, false);
+
+
+
   // listen for dragging
   var dragSvg = d3.behavior.zoom()
   .on("zoom", function(){
@@ -377,6 +384,19 @@ script.
   state.mouseDownNode = null;
   return;
   }; // end of circles mouseup
+
+
+  GraphCreator.prototype.svgMouseDD = function(item){
+  var thisGraph = this,
+  state = thisGraph.state;
+  this.state.doubleClick = true;
+  var d = {id: thisGraph.idct++, title: item.name, x: 150, y: 150};
+  thisGraph.nodes.push(d);
+  thisGraph.updateGraph();
+  };
+
+
+
   GraphCreator.prototype.svgMouseD = function(){
   var thisGraph = this,
   state = thisGraph.state;
