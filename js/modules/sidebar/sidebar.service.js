@@ -19,7 +19,7 @@
           onError = onError || function() { alert('Failure loading menu'); };
 
           $http
-            .get('http://localhost:8000/testTree')
+            .get('http://localhost:8000/dirTree')
             .success(onReady)
             .error(onError);
         };
