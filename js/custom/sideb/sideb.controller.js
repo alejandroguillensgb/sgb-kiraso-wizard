@@ -28,7 +28,6 @@
                 $scope.compItems = items;
             }
 
-
             $scope.createNode = function(item){
                 var event = document.createEvent('CustomEvent');
                 event.initCustomEvent("create-node", true, true, item);
