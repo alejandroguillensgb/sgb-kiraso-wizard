@@ -12,10 +12,10 @@ div.aside-inner
           uib-accordion-group(heading="Components")
             nav.sidebar(sidebar="")
               ul.nav
-                li
-                  a(ng-repeat='item in compItems', ng-click="prueba(item)"){{item.name}}
+                li(ng-repeat='item in compItems', ng-click="prueba(item)"){{item.name}}
                   span(style="float: right;") 
-                    em.icon-eye
+                    a
+                      em.icon-eye
                     em.icon-doc
                     em.icon-settings
 

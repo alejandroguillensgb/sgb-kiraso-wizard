@@ -1,14 +1,14 @@
 [
   {
     "name": "Lista",
-    "url": ""
+    "path": "/home/alejandro/kiraso-wizard/list"
   },
   {
     "name": "Menu",
-    "url": ""
+    "path": "/home/alejandro/kiraso-wizard/"
   },
   {
     "name": "Dashboard",
-    "url": ""
+    "path": "/home/alejandro/kiraso-wizard/dashboard"
   }
 ]

@@ -48,7 +48,8 @@
     "angular-ui-ace": "bower",
     "angular-ui-sortable": "0.13.4",
     "angular-schema-form": "0.8.12",
-    "lodash": "~3.10.1"
+    "lodash": "~3.10.1",
+    "angular-tree-control": "~0.2.23"
   },
   "resolutions": {
     "angular": "1.4.2",

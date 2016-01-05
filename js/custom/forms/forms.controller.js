@@ -118,9 +118,10 @@
 
               $scope.appModel = {};
 
-              FormsLoader.getFormParams(paramsReady)
+              window.addEventListener("select-node", function(event) {
+                FormsLoader.getFormParams(event.detail.path, paramsReady)
 
-              function paramsReady(data){
+                function paramsReady(data){
                 $scope.params = data;
                 
                 $scope.properties = {}
@@ -159,6 +160,10 @@
               ];
 
               $scope.paramsModel = {};
+              }, false);
+              
+
+              
 
 
 

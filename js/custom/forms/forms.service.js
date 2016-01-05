@@ -11,12 +11,12 @@
 
         ////////////////
 
-        function getFormParams(onReady, onError) {
+        function getFormParams(path, onReady, onError) {
             
           onError = onError || function() { alert('Failure loading metadata'); };
 
           $http
-            .get('http://localhost:8000/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/server/metadata.json&type=json')
+            .get('http://localhost:8000/getContent?path='+ path +'/metadata.json&type=json')
             .success(onReady)
             .error(onError);
         };

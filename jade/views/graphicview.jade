@@ -84,9 +84,9 @@ script.
   .on("keyup", function(){
   thisGraph.svgKeyUp.call(thisGraph);
   });
-  svg.on("mousedown", function(d){thisGraph.svgMouseDown.call(thisGraph, d);});
-  svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
-  svg.on("dblclick", function(d){thisGraph.svgMouseD.call(thisGraph, d);});
+  //svg.on("mousedown", function(d){thisGraph.svgMouseDown.call(thisGraph, d);});
+  //svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
+  //svg.on("dblclick", function(d){thisGraph.svgMouseD.call(thisGraph, d);});
   
   window.addEventListener("create-node", function(event) {
     thisGraph.svgMouseDD.call(thisGraph, event.detail)
@@ -284,6 +284,9 @@ script.
   state = thisGraph.state;
   d3.event.stopPropagation();
   state.mouseDownNode = d;
+  var event = document.createEvent('CustomEvent');
+  event.initCustomEvent("select-node", true, true, d3node[0][0].__data__);
+  document.documentElement.dispatchEvent(event);
   if (d3.event.ctrlKey){
   state.shiftNodeDrag = d3.event.ctrlKey;
   // reposition dragged directed edge
@@ -390,7 +393,7 @@ script.
   var thisGraph = this,
   state = thisGraph.state;
   this.state.doubleClick = true;
-  var d = {id: thisGraph.idct++, title: item.name, x: 150, y: 150};
+  var d = {id: thisGraph.idct++, title: item.name, x: 150, y: 150, path: item.path};
   thisGraph.nodes.push(d);
   thisGraph.updateGraph();
   };
