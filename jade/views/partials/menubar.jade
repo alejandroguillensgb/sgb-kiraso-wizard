@@ -1,12 +1,12 @@
-script(type='text/ng-template', id="sidebar-renderer.html")
-  span(ng-if="item.heading") {{(item.translate | translate) || item.text}}
-  a(ng-if="!item.heading", ng-click="aceChange(item)", title="{{item.text}}")
-    .pull-right(ng-if="item.alert", ng-class="item.label || 'label label-success'") {{item.alert}}
-    em(class="{{item.icon}}", ng-if="item.icon")
-    span {{(item.translate | translate) || item.text}}
-  ul(class="nav sidebar-subnav", ng-if="item.submenu", collapse="isCollapse(pIndex)",  ng-init="addCollapse(pIndex, item)")
-    li.sidebar-subnav-header {{(item.translate | translate) || item.text}}
-    li(ng-repeat='item in item.submenu', ng-include="'sidebar-renderer.html'", ng-class="getMenuItemPropClasses(item)", ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true", ng-click="toggleCollapse(pIndex)")
+//script(type='text/ng-template', id="sidebar-renderer.html")
+//  span(ng-if="item.heading") {{(item.translate | translate) || item.text}}
+//  a(ng-if="!item.heading", ng-click="aceChange(item)", title="{{item.text}}")
+//    .pull-right(ng-if="item.alert", ng-class="item.label || 'label label-success'") {{item.alert}}
+//    em(class="{{item.icon}}", ng-if="item.icon")
+//    span {{(item.translate | translate) || item.text}}
+//  ul(class="nav sidebar-subnav", ng-if="item.submenu", collapse="isCollapse(pIndex)",  ng-init="addCollapse(pIndex, item)")
+//    li.sidebar-subnav-header {{(item.translate | translate) || item.text}}
+//    li(ng-repeat='item in item.submenu', ng-include="'sidebar-renderer.html'", ng-class="getMenuItemPropClasses(item)", ng-init="pIndex=(pIndex+'-'+$index); inSubmenu = true", ng-click="toggleCollapse(pIndex)")
 
 // START Sidebar (left)
 .aside-inner
@@ -29,7 +29,13 @@ script(type='text/ng-template', id="sidebar-renderer.html")
       //- // END user info
 
       // Iterates over all sidebar items
-      li(ng-class="getMenuItemPropClasses(item)", ng-repeat='item in menuItems', ng-init="pIndex = $index", ng-include="'sidebar-renderer.html'", ng-click="toggleCollapse(pIndex, true)")
+
+      treecontrol.tree-light(tree-model='menuItems', options='treeOptions', on-selection='aceChange(node)', selected-node='node1')
+        {{node.text}}
+
+
+
+      //li(ng-class="getMenuItemPropClasses(item)", ng-repeat='item in menuItems', ng-init="pIndex = $index", ng-include="'sidebar-renderer.html'", ng-click="toggleCollapse(pIndex, true)")
     // END sidebar nav
 
 // END Sidebar (left)

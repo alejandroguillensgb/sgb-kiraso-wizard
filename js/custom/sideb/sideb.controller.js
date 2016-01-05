@@ -29,10 +29,18 @@
             }
 
 
-            $scope.prueba = function(item){
+            $scope.createNode = function(item){
                 var event = document.createEvent('CustomEvent');
                 event.initCustomEvent("create-node", true, true, item);
                 document.documentElement.dispatchEvent(event);
+            }
+
+            $scope.copyContent = function(item){
+                PrebuiltLoader.copyContent(item, reloadController);
+            }
+
+            function reloadController(name, path){
+                $scope.compItems.push({name: name, path: path})
             }
             
         }

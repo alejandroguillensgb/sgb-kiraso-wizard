@@ -27,6 +27,11 @@
             }
           });
 
+          $scope.treeOptions = {
+            nodeChildren: "submenu",
+            dirSelectable: false
+          }
+
 
           // Load menu from json file
           // ----------------------------------- 
