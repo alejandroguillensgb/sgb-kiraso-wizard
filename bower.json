@@ -49,7 +49,12 @@
     "angular-ui-sortable": "0.13.4",
     "angular-schema-form": "0.8.12",
     "lodash": "~3.10.1",
-    "angular-tree-control": "~0.2.23"
+    "angular-tree-control": "~0.2.23",
+    "angular-schema-form-nwp-file-upload": "*",
+    "angular-messages": "~1.4.8",
+    "angular-schema-form-file-reader": "~0.1.1",
+    "schema-form-file-upload": "chengz/schema-form-file-upload",
+    "angular-schema-form-file-upload": "~0.0.3"
   },
   "resolutions": {
     "angular": "1.4.2",
