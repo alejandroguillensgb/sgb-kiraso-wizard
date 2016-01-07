@@ -2,5 +2,5 @@
     'use strict';
 
     angular
-        .module('custom.forms', ['schemaForm', 'schemaForm-file-upload']);
+        .module('custom.forms', ['schemaForm']);
 })();

@@ -17,13 +17,13 @@
 $nav-header-wd:                 $aside-wd;
 $nav-header-wd-toggled:         $aside-wd-collapsed;
 
-$nav-top-bg:                    $brand-info;
-$nav-top-bg-start:              $nav-top-bg;
-$nav-top-bg-end:                $brand-info-light;
+$nav-top-bg:                    $kiraso-blue;
+$nav-top-bg-start:              $kiraso-green;
+$nav-top-bg-end:                $kiraso-green;
 $nav-header-bg:                 transparent;
 
-$nav-top-item-mobile:           $nav-top-bg;
-$nav-top-item-mobile-active:    darken($nav-top-item-mobile, 20%);
+$nav-top-item-mobile:           #fff;
+$nav-top-item-mobile-active:    darken($nav-top-bg, 20%);
 
 $nav-top-item-desktop:          #fff;
 $nav-top-item-desktop-active:   $nav-top-item-mobile-active;

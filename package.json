@@ -16,7 +16,7 @@
     "gulp-angular-templatecache": "^1.7.0",
     "gulp-awspublish": "^2.0.2",
     "gulp-changed": "^1.1.0",
-    "gulp-compass": "^2.0.4",
+    "gulp-compass": "^2.1.0",
     "gulp-concat": "^2.4.1",
     "gulp-copy": "0.0.2",
     "gulp-css-flip": "^0.4.0",
