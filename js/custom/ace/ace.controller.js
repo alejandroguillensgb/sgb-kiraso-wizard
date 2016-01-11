@@ -34,13 +34,14 @@
             };
 
             $scope.$on('aceChange', function(event, content, path){
+                console.log('CONTENT:'+ content)
                 $scope.aceSession.setValue(content);
                 $scope.path = path;
             });
 
             $scope.$on('save', function(event){
                 $http
-                    .get('http://localhost:8000/setContent?path=' + $scope.path + '&cont=' + $scope.aceSession.getValue())
+                    .get('http://localhost:8000/setContent?path=' + $scope.path + '&cont=' + JSON.stringify($scope.aceSession.getValue().split('\n')))
                     .success(function(data){
                         console.log('Save: ' + data)
                     })

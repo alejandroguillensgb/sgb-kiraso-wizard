@@ -43,7 +43,7 @@
           }
 
           function contentReady(data,path){
-            $scope.data = data;              
+            $scope.data = data;           
             $rootScope.$broadcast('aceChange', data, path);
           }
 
