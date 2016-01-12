@@ -6,8 +6,8 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader'];
-    function formsController($log,$scope,$state,FormsLoader) {
+    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader', 'localStorageService'];
+    function formsController($log,$scope,$state,FormsLoader, localStorageService) {
 
         activate();
         
@@ -169,57 +169,80 @@
               $scope.appModel = {};
 
               window.addEventListener("select-node", function(event) {
+ 
+                //localStorageService.clearAll()
+
+                if(localStorageService.keys().indexOf(event.detail.id.toString()) != -1){
+                  console.log('ENTRE A: '+ localStorageService.get(event.detail.id.toString()))
+                  $scope.paramsModel = localStorageService.get(event.detail.id.toString());
+                }else{
+                  $scope.paramsModel = {}
+                }
+
                 FormsLoader.getFormParams(event.detail.path, paramsReady)
+                
 
                 function paramsReady(data){
-                $scope.params = data;
-                
-                $scope.properties = {};
+                  
+                  $scope.params = data;
+                  
+                  
+                  $scope.properties = {};
 
-                _.forEach($scope.params.params, function(value,key){
-                  if ('options' in value){
-                    $scope.properties[value.name] = {
-                      "title": value.title,
-                      "type": value.type,
-                      "description": value.description,
-                      "enum": value.options
-                    }
-                  }
-                  else if('elements' in value){
-                    $scope.properties = {
-                      "Menu": {
+                  
+
+                  //$scope.paramsModel = {}
+
+                  console.log('LOCALSTORAGE')
+                  console.log(event.detail.id)
+                  console.log(localStorageService.keys())
+                  console.log(localStorageService.keys().indexOf(event.detail.id.toString()))
+                  
+
+                  _.forEach($scope.params.params, function(value,key){
+                    if ('options' in value){
+                      $scope.properties[value.name] = {
                         "title": value.title,
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "title": {
-                              "title": value.elements[0],
-                              "type": "string"
-                            },
-                            "screen": {
-                              "title": value.elements[1],
-                              "type": "string"
+                        "type": value.type,
+                        "description": value.description,
+                        "enum": value.options
+                      }
+                    }
+                    else if('elements' in value){
+                      $scope.properties = {
+                        "Menu": {
+                          "title": value.title,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "title": {
+                                "title": value.elements[0],
+                                "type": "string"
+                              },
+                              "screen": {
+                                "title": value.elements[1],
+                                "type": "string"
+                              }
                             }
                           }
                         }
                       }
                     }
-                  }
-                  else{
-                    $scope.properties[value.name] = {
-                      "title": value.title,
-                      "type": value.type,
-                      "description": value.description
+                    else{
+                      $scope.properties[value.name] = {
+                        "title": value.title,
+                        "type": value.type,
+                        "description": value.description
+                      }
                     }
-                  }
-                })
+                  })
 
-                $scope.paramsSchema ={
-                  "type": "object",
-                  "properties": $scope.properties  
+                  $scope.paramsSchema ={
+                    "type": "object",
+                    "properties": $scope.properties  
+                  }
                 }
-              }
 
               
                 $scope.paramsForm = [
@@ -231,14 +254,20 @@
                     "title": "OK"
                   }
                 ]
-              
 
-              $scope.paramsModel = {};
+                $scope.submitParams = function(){
+                  console.log('ENTRE')
+                  localStorageService.set(event.detail.id, $scope.paramsModel)
+                  console.log(localStorageService.get(event.detail.id))
+                  console.log(localStorageService.keys())
+                }     
+
+              
               }, false);
               
 
               
-
+                
 
 
 
