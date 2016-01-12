@@ -282,6 +282,7 @@ script.
   var thisGraph = this,
   state = thisGraph.state;
   d3.event.stopPropagation();
+  console.log(d3node[0][0].__data__)
   state.mouseDownNode = d;
   var event = document.createEvent('CustomEvent');
   event.initCustomEvent("select-node", true, true, d3node[0][0].__data__);
@@ -560,8 +561,8 @@ script.
   };
   var docEl = document.documentElement,
   bodyEl = document.getElementsByTagName('body')[0];
-  var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth,
-  height =  window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
+  var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth;
+  var height = 400; // window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
   var xLoc = width/2 - 25,
   yLoc = 100;
   // initial node data

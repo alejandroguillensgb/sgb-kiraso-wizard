@@ -6,8 +6,8 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader'];
-    function formsController($log,$scope,$state,FormsLoader) {
+    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader', 'localStorageService'];
+    function formsController($log,$scope,$state,FormsLoader,localStorageService) {
 
         activate();
         
@@ -50,7 +50,6 @@
                     {
                       type: "button",
                       "htmlClass": "col-md-4",
-                      style: "kiraso-green",
                       title: "Sing Up",
                       onClick: "goTo('base.signup')"
                     }
@@ -59,6 +58,11 @@
               $scope.loginModel = {};
 
               $scope.goTo = function(path){
+                localStorageService.set("hola", {name: "test"})
+                console.log(localStorageService.get("hola"))
+                console.log(localStorageService.keys())
+                localStorageService.remove("hola")
+                localStorageService.clearAll()
                 $state.go(path)
               }
 
@@ -144,11 +148,24 @@
 
 
               $scope.appForm = [
-                "*",
+                "name",
+                "backgroundImage",
                 {
-                  type: "submit",
-                  title: "Submit"
-                }
+                  type: "button",
+                  title: "add"
+                }, 
+                "appLogo", 
+                "defaultScreen"
+                //"*",
+                // {
+                //   key: "backgroundImage",
+                //   type: "button",
+                //   onClick: ""
+                //  }//,
+                // {
+                //   type: "submit",
+                //   title: "Submit"
+                // }
 
      //            {
      //   key: 'backgroundImage',

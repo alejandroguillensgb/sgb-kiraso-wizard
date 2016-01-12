@@ -54,7 +54,8 @@
     "angular-messages": "~1.4.8",
     "angular-schema-form-file-reader": "~0.1.1",
     "schema-form-file-upload": "chengz/schema-form-file-upload",
-    "angular-schema-form-file-upload": "~0.0.3"
+    "angular-schema-form-file-upload": "~0.0.3",
+    "angular-local-storage": "~0.2.3"
   },
   "resolutions": {
     "angular": "1.4.2",

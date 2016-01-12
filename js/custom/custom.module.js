@@ -12,7 +12,8 @@
             'app.sidebar',
             'custom.ace',
             'custom.sideb',
-            'custom.forms'
+            'custom.forms',
+            'LocalStorageModule'
             /*...*/
         ]);
 })();
