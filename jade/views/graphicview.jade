@@ -282,7 +282,6 @@ script.
   var thisGraph = this,
   state = thisGraph.state;
   d3.event.stopPropagation();
-  console.log(d3node[0][0].__data__)
   state.mouseDownNode = d;
   var event = document.createEvent('CustomEvent');
   event.initCustomEvent("select-node", true, true, d3node[0][0].__data__);
@@ -458,10 +457,12 @@ script.
   var selectedNode = state.selectedNode,
   selectedEdge = state.selectedEdge;
   switch(d3.event.keyCode) {
-  case consts.BACKSPACE_KEY:
   case consts.DELETE_KEY:
   d3.event.preventDefault();
   if (selectedNode){
+  var event = document.createEvent('CustomEvent');
+  event.initCustomEvent("delete-node", true, true, 'delete');
+  document.documentElement.dispatchEvent(event);
   thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
   thisGraph.spliceLinksForNode(selectedNode);
   state.selectedNode = null;

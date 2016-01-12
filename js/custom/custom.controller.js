@@ -21,6 +21,10 @@
             $scope.save = function(){
                 $rootScope.$broadcast('save');
             };
+
+            $scope.code = function(){
+                $rootScope.$broadcast('code');
+            };
                         
         }
     }

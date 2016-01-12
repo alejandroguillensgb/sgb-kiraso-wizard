@@ -34,7 +34,6 @@
             };
 
             $scope.$on('aceChange', function(event, content, path){
-                console.log('CONTENT:'+ content)
                 $scope.aceSession.setValue(content);
                 $scope.path = path;
             });
