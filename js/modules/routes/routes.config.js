@@ -82,6 +82,7 @@
                 }
             }
         })
+        
         .state('app.wizard', {
             url: '/wizard',
             title: 'Wizard',

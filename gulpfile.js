@@ -276,7 +276,7 @@ gulp.task('templates:views', function() {
 //---------------
 
 // Rerun the task when a file changes
-/*
+
 gulp.task('watch', function() {
   log('Starting watch and LiveReload..');
 
@@ -307,7 +307,7 @@ gulp.task('watch', function() {
       }, livereloadDelay);
     });
 
-});*/
+});
 
 // lint javascript
 gulp.task('lint', function() {
@@ -430,3 +430,4 @@ function flipcss(opt) {
 function log(msg) {
   $.util.log( $.util.colors.blue( msg ) );
 }
+

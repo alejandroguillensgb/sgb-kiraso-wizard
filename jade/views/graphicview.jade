@@ -1,9 +1,11 @@
 #graph
-#toolbox
-  input#hidden-file-upload(type='file')
-  input#upload-input(type='image', title='upload graph', src='app/img/upload-icon.png', alt='upload graph')
-  input#download-input(type='image', title='download graph', src='app/img/download-icon.png', alt='download graph')
-  input#delete-graph(type='image', title='delete graph', src='app/img/trash-icon.png', alt='delete graph')
+//- #toolbox
+//-   input#hidden-file-upload(type='file')
+//-   input#upload-input(type='image', title='upload graph', src='app/img/upload-icon.png', alt='upload graph')
+//-   input#download-input(type='image', title='download graph', src='app/img/download-icon.png', alt='download graph')
+//-   input#delete-graph(type='image', title='delete graph', src='app/img/trash-icon.png', alt='delete graph')
+
+input#hidden-file-upload(type='file')
 
 script.
   document.onload = (function(d3, saveAs, Blob, undefined){
@@ -92,6 +94,17 @@ script.
     thisGraph.svgMouseDD.call(thisGraph, event.detail)
   }, false);
 
+  window.addEventListener("create-file", function(event) {
+    var saveEdges = [];
+    thisGraph.edges.forEach(function(val, i){
+    saveEdges.push({source: val.source.id, target: val.target.id});
+    });
+    var item = window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges});
+    var event = document.createEvent('CustomEvent');
+    event.initCustomEvent("send-info", true, true, item);
+    document.documentElement.dispatchEvent(event);
+  }, false);
+
 
 
   // listen for dragging
@@ -127,10 +140,24 @@ script.
   var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "mydag.json");
   });
-  // handle uploaded data
-  d3.select("#upload-input").on("click", function(){
-  document.getElementById("hidden-file-upload").click();
+
+  window.addEventListener("download-file", function(event) {
+  var saveEdges = [];
+  thisGraph.edges.forEach(function(val, i){
+  saveEdges.push({source: val.source.id, target: val.target.id});
   });
+  var blob = new Blob([window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})], {type: "text/plain;charset=utf-8"});
+  saveAs(blob, "mydag.json");
+  }, false);
+
+  // handle uploaded data
+  
+  //- d3.select("#upload-input").on("click", function(){
+  //- document.getElementById("hidden-file-upload").click();
+  //- });
+  window.addEventListener("load-file", function(event) {
+    document.getElementById("hidden-file-upload").click();
+  }, false);
   d3.select("#hidden-file-upload").on("change", function(){
   if (window.File && window.FileReader && window.FileList && window.Blob) {
   var uploadFile = this.files[0];
@@ -161,9 +188,12 @@ script.
   }
   });
   // handle delete graph
-  d3.select("#delete-graph").on("click", function(){
+  window.addEventListener("create-new", function(event) {
   thisGraph.deleteGraph(false);
-  });
+  }, false);
+  //- d3.select("#delete-graph").on("click", function(){
+  //- thisGraph.deleteGraph(false);
+  //- });
   };
   GraphCreator.prototype.setIdCt = function(idct){
   this.idct = idct;
@@ -392,9 +422,12 @@ script.
   var thisGraph = this,
   state = thisGraph.state;
   this.state.doubleClick = true;
-  var d = {id: thisGraph.idct++, title: item.name, x: 150, y: 150, path: item.path};
+  var d = {id: thisGraph.idct++, title: item.name, type: item.type, x: 150, y: 150, path: item.path};
   thisGraph.nodes.push(d);
   thisGraph.updateGraph();
+  var event = document.createEvent('CustomEvent');
+  event.initCustomEvent("node-added", true, true, d);
+  document.documentElement.dispatchEvent(event);
   };
 
 

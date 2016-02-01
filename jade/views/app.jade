@@ -22,12 +22,12 @@ section.has-sidebar-right
 
   div(style="text-align:center;")
     div.btn-toolbar(style="display: inline-block; padding:5px;")      
-      label.btn.btn-primary New   
-      label.btn.btn-primary Load      
+      label.btn.btn-primary(ng-click="new()") New
+      label.btn.btn-primary(ng-click="load()") Load
       label.btn.btn-primary(ng-click="save()") Save
       label.btn.btn-primary Team
-      label.btn.btn-primary(ng-click="code()") Download 
-      label.btn.btn-primary Finish
+      label.btn.btn-primary(ng-click="download()") Download
+      label.btn.btn-primary(ng-click="code()") Finish
 
   // Page content
   .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")

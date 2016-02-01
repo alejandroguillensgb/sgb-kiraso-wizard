@@ -1,14 +1,17 @@
 [
   {
     "name": "Lista",
+    "type": "sgb-screen-list",
     "path": "/home/alejandro/kiraso-wizard/list"
   },
   {
     "name": "Menu",
+    "type": "sgb-screen-menu",
     "path": "/home/alejandro/kiraso-wizard/menu"
   },
   {
     "name": "Dashboard",
+    "type": "sgb-screen-dashboard",
     "path": "/home/alejandro/kiraso-wizard/dashboard"
   }
 ]

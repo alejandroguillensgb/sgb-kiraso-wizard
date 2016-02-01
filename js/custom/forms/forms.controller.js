@@ -128,6 +128,7 @@
 
             // App options form
 
+            $scope.screens = [];
             $scope.appSchema = {
                 type: "object",
                 properties: {
@@ -147,11 +148,22 @@
                     defaultScreen: {
                         title: "Default screen",
                         type: "string",
-                        enum: ["screen1", "screen2"]
+                        enum: $scope.screens
+                    },
+                    directory: {
+                        title: "Directory Url",
+                        type: "string",
+                        description: "Workspace directory"
                     }
                 },
                 required: ["name"]
             };
+
+            window.addEventListener("node-added", function(event) {
+                var node = event.detail;
+                $scope.screens.push(node.title);
+                console.log($scope.screens);
+            }, false);
 
             $scope.appForm = [
                 "name",
@@ -159,21 +171,31 @@
                 {
                     type: "button",
                     title: "add"
-                }, 
-                "appLogo", 
-                "defaultScreen"    
+                },
+                "appLogo",
+                "directory",
+                "defaultScreen",
+                {
+                    type: "submit",
+                    title: "Save"
+                }
             ];
 
             $scope.appModel = {};
+
+            $scope.submitApp = function(){
+                console.log($scope.appModel);
+                localStorageService.set('app'+$scope.nodeId, $scope.paramsModel);
+            }
 
             // Params form
 
             window.addEventListener("select-node", function(event) {
                 $scope.nodeId = event.detail.id.toString();
-                //localStorageService.clearAll()
+                //localStorageService.clearAll();
 
-                if(localStorageService.keys().indexOf($scope.nodeId) != -1)
-                    $scope.paramsModel = localStorageService.get($scope.nodeId);
+                if(localStorageService.keys().indexOf('params'+$scope.nodeId) != -1)
+                    $scope.paramsModel = localStorageService.get('params'+$scope.nodeId);
                 else
                     $scope.paramsModel = {}
 
@@ -194,8 +216,8 @@
                         }
                         else if('elements' in value){
                             $scope.properties = {
-                                "Menu": {
-                                    title: value.title,
+                                array: {
+                                    title: "Menu",
                                     type: "array",
                                     items: {
                                         type: "object",
@@ -237,53 +259,79 @@
                 ];
 
                 $scope.submitParams = function(){
-                    localStorageService.set($scope.nodeId, $scope.paramsModel)
+                    console.log($scope.paramsModel);
+                    localStorageService.set('params'+$scope.nodeId, $scope.paramsModel);
                 }
+
+                //////////////////
+
+                $scope.dataSchema = {
+                    type: "object",
+                    properties: {
+                        type: {
+                            title: "Select type of data source",
+                            type: "string"
+                        },
+                        path: {
+                            title: "Path",
+                            type: 'string'
+                        }
+                    }
+                };
+
+                $scope.dataForm = [
+                    {
+                        key: "type",
+                        type: "select",
+                        titleMap: [
+                            {
+                                value: "sgb-datasource-json",
+                                name: "JSON"
+                            },
+                            {
+                                value: "sgb-datasource-param",
+                                name: "Param"
+                            }
+                        ]
+                    },
+                    {
+                        key: "path",
+                        type: "string"
+                    },
+                    {
+                        type: "submit",
+                        title: "Save"
+                    }
+                ];
+
+                if(localStorageService.keys().indexOf('data'+$scope.nodeId) != -1)
+                    $scope.dataModel = localStorageService.get('data'+$scope.nodeId);
+                else
+                    $scope.dataModel = {}
+
+                $scope.submitData = function(){
+                    console.log($scope.dataModel);
+                    localStorageService.set('data'+$scope.nodeId, $scope.dataModel);
+                };
+
+                ////////////////////
+
             }, false);
+            
+            // window.addEventListener("req-models", function(event){
+            //     var object = {
+            //         localStorageService.get('data'+)
+            //     }
+            // }, false);
 
             window.addEventListener("delete-node", function(event){
-                if(localStorageService.keys().indexOf($scope.nodeId) != -1)
-                    localStorageService.remove($scope.nodeId)
+                if(localStorageService.keys().indexOf('params'+$scope.nodeId) != -1)
+                    localStorageService.remove('params'+$scope.nodeId)
             }, false);
 
             // Data form
 
-            $scope.dataSchema = {
-                type: "object",
-                properties: {
-                    select: {
-                        title: "Select type of data source",
-                        type: "string",
-                        enum: [
-                            "JSON",
-                            "Params"
-                        ]   
-                    },
-                    archivo: {
-                        title: 'Archivo',
-                        type: 'string',
-                        format: 'file',
-                        description: 'This is a upload element'
-                    }
-                }
-            };
 
-            $scope.dataForm = [
-                "select",
-                {
-                    key: "archivo",
-                    type: "fileUpload",
-                    options: {
-                        onReadFn: "showContent"
-                    }
-                },
-                {
-                    type: "submit",
-                    title: "Save"
-                }
-            ];
-
-            $scope.dataModel = {};
         }
     }
 })();

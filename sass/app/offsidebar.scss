@@ -10,7 +10,7 @@
 $offsidebar-bg:           #fff;
 $offsidebar-border-color: grayscale(darken($offsidebar-bg, 20%));
 $offsidebar-color:        $text-color;
-$offsidebar-wd:           $aside-wd + 15px;      // match the width with the main aside component
+$offsidebar-wd:           $aside-wd + 130px;      // match the width with the main aside component
 
 .offsidebar {
   position: absolute;
@@ -22,8 +22,9 @@ $offsidebar-wd:           $aside-wd + 15px;      // match the width with the mai
   border-left: 1px solid $offsidebar-border-color;
   background-color: $offsidebar-bg;
   color: $offsidebar-color;
-  z-index: $z-index-main-section + 5;
   overflow: auto;
+  display: block;
+  z-index: 200;
   -webkit-overflow-scrolling: touch;
   @include transition(all .3s ease);
   

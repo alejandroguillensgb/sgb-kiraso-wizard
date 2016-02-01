@@ -17,6 +17,7 @@
 $aside-wd:                                220px;
 $aside-wd-collapsed:                      70px;
 $aside-bg:                                #fff;
+$offsidebar-wd:                           $aside-wd + 130px;
 
 $content-bg:                              $body-bg;
 $content-heading-bg:                      #fafbfc;
@@ -200,13 +201,14 @@ html, body {
     > section,
     > footer {
       margin-left: $aside-wd;
+      margin-right: $offsidebar-wd;
     }
 
     > section {
       // with just a margin we can make the 
       // right sidebar always visible
       &.has-sidebar-right {
-        margin-right: $aside-wd + 20;
+        margin-right: $offsidebar-wd;
         + .offsidebar {
           z-index: 1;
         }
@@ -232,10 +234,12 @@ html, body {
       > section,
       > footer {
         margin-left: $aside-wd;
+        margin-right: $offsidebar-wd;
       }
       
       > .aside {
-        margin-left: 0;
+        margin-left: $aside-wd;
+        margin-right: $offsidebar-wd;
       }
     }
   }
