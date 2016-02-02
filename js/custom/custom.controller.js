@@ -118,7 +118,7 @@
                     ];
 
                     exportfiles.push(file);
-                    
+                        
                     $http
                         .get('http://localhost:8000/setContent?path=/home/alejandro/kiraso-wizard/files/'+title+'.ts&cont=' + JSON.stringify(_.flattenDeep(file)))
                         .success(function(data){

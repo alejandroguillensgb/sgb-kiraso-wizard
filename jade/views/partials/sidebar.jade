@@ -15,7 +15,7 @@ div.aside-inner
                 li(ng-repeat='item in compItems') 
                   span(ng-click="createNode(item)") {{item.name}}
                   span(style="float: right;") 
-                    a.icon-eye
+                    a.icon-eye(ng-click="openModal(item)")
                     a.icon-doc(ng-click=('copyContent(item)'))
                     a.icon-settings
 
