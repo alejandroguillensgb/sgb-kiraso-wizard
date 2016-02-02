@@ -18,7 +18,7 @@ section.has-sidebar-right
   div
     div.btn-group.btn-group-justified(style="padding:5px;")
         label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="''", ui-sref="app.wizard") Wizard
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'", ui-sref="app.preview") Preview&Source
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'", ng-click="preview()", ui-sref="app.preview") Preview&Source
 
   div(style="text-align:center;")
     div.btn-toolbar(style="display: inline-block; padding:5px;")      

@@ -145,11 +145,6 @@
                         title: "App logo",
                         type: "string"
                     },
-                    defaultScreen: {
-                        title: "Default screen",
-                        type: "string",
-                        enum: $scope.screens
-                    },
                     directory: {
                         title: "Directory Url",
                         type: "string",
@@ -168,13 +163,8 @@
             $scope.appForm = [
                 "name",
                 "backgroundImage",
-                {
-                    type: "button",
-                    title: "add"
-                },
                 "appLogo",
                 "directory",
-                "defaultScreen",
                 {
                     type: "submit",
                     title: "Save"
@@ -211,7 +201,7 @@
                                 title: value.title,
                                 type: value.type,
                                 description: value.description,
-                                enum: value.options
+                                enum: value.options.concat("")
                             }
                         }
                         else if('elements' in value){
@@ -317,16 +307,15 @@
                 ////////////////////
 
             }, false);
-            
-            // window.addEventListener("req-models", function(event){
-            //     var object = {
-            //         localStorageService.get('data'+)
-            //     }
-            // }, false);
+       
 
             window.addEventListener("delete-node", function(event){
-                if(localStorageService.keys().indexOf('params'+$scope.nodeId) != -1)
-                    localStorageService.remove('params'+$scope.nodeId)
+                if(localStorageService.keys().indexOf('params'+$scope.nodeId) >= 0){
+                    localStorageService.remove('params'+$scope.nodeId);
+                };
+                if(localStorageService.keys().indexOf('data'+$scope.nodeId) >= 0){
+                    localStorageService.remove('data'+$scope.nodeId);
+                };
             }, false);
 
             // Data form

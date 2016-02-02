@@ -21,19 +21,10 @@
             
             $scope.code = "<h1>Kiraso.io</h1>";
             $scope.iframe = document.getElementById('frame');
-            $scope.terminalFrame = document.getElementById('terminalFrame');
-            $scope.terminalFrameWindow = $scope.terminalFrame.contentWindow;
-            console.log(document.domain);
-
+        
             $scope.aceLoaded = function(_editor) {
                 $scope.aceSession = _editor.getSession();
                 $scope.aceRenderer = _editor.renderer;
-            };
-
-            $scope.aceChanged = function(e) {
-                // $scope.iframe.contentWindow.document.open("text/html", "replace");
-                // $scope.iframe.contentWindow.document.write($scope.aceSession.getValue());
-                // $scope.iframe.contentWindow.document.close();
             };
 
             $scope.$on('aceChange', function(event, content, path){

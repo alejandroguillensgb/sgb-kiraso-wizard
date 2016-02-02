@@ -14,7 +14,7 @@
 
         function activate() {
             // Load menu from json file
-            // ----------------------------------- 
+            // -----------------------------------
 
             PrebuiltLoader.getApps(prebuiltReady);
               
