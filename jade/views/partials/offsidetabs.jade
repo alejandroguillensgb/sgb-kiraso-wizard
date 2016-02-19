@@ -1,12 +1,22 @@
 div.aside-inner
-  uib-accordion(close-others="oneAtATime")
-    uib-accordion-group(heading="App Settings")
-      div(ng-include="'app/views/partials/appForm.html'")
 
-    uib-accordion-group(heading="Params")
-      div(ng-include="'app/views/partials/paramsForm.html'")
+    div(ng-hide="show_event")
+        uib-accordion
+            uib-accordion-group(heading="App Settings")
+                div(ng-include="'app/views/partials/appForm.html'")
 
-    uib-accordion-group(heading="Data")
-      div(ng-include="'app/views/partials/dataForm.html'")
+            uib-accordion-group(heading="Screen")
+                div(ng-include="'app/views/partials/screenForm.html'")
+
+            uib-accordion-group(heading="Params")
+                div(ng-include="'app/views/partials/paramsForm.html'")
+
+            uib-accordion-group(heading="Data")
+                div(ng-include="'app/views/partials/dataForm.html'")
+
+    div(ng-show="show_event")
+        uib-accordion
+            uib-accordion-group(heading="Event")
+                div(ng-include="'app/views/partials/eventForm.html'")
       
  

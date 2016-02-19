@@ -33,8 +33,12 @@
             });
 
             $scope.$on('save', function(event){
+                var reqObj = {
+                    path: $scope.path,
+                    cont: JSON.stringify($scope.aceSession.getValue().split('\n'))
+                };
                 $http
-                    .get('http://localhost:8000/setContent?path=' + $scope.path + '&cont=' + JSON.stringify($scope.aceSession.getValue().split('\n')))
+                    .put('http://localhost:8000/setContent', reqObj)
                     .success(function(data){
                         console.log('Save: ' + data)
                     })

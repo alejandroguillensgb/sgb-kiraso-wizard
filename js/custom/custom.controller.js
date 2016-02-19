@@ -10,8 +10,8 @@
         .module('kiraso')
         .controller('Controller', Controller);
 
-    Controller.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService'];
-    function Controller($log, $scope, $rootScope, $http, localStorageService) {
+    Controller.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state'];
+    function Controller($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state) {
 
         activate();
         
@@ -19,8 +19,30 @@
 
         function activate() {
 
+            $scope.closeModal = function(){
+                $scope.modalInstance.close();
+            };
+
+            $scope.newProject = function() {
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/newAppModal.html',
+                    scope: $scope
+                });
+            };
+
+            $scope.loadProject = function(project){
+                console.log(project);
+            };
+
+            $scope.previewActive = false;
+
+            $scope.wizard = function(){
+                $scope.previewActive = false;
+            } 
+
             $scope.preview = function(){
-                console.log("Preview function");
+                $scope.previewActive = true;
             };
 
             $scope.new = function(){
@@ -32,6 +54,45 @@
 
             $scope.save = function(){
                 $rootScope.$broadcast('save');
+            };
+
+            $scope.saveWizard = function(){
+                var event = new CustomEvent("request-graph");
+                window.dispatchEvent(event);
+            };
+
+            window.addEventListener("response-graph", function(event){
+                var reqObj = {
+                    graph: event.detail
+                };
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                console.log("respuesta");
+                console.log(event.detail);
+
+                $http
+                    .post("http://localhost:8000/mongoose_setGraph?app=" + $rootScope.app_name, reqObj)
+                    .success(function(){
+                        console.log("graph app saved");
+                    })
+                    .error(function(){
+                        console.log("error saving graph app");
+                    });
+            }, false);
+
+            $scope.loadProject = function(project){
+                $rootScope.app_name = project;
+                $http
+                    .get("http://localhost:8000/mongoose_findGraph?app="+project)
+                    .success(function(graph){
+                        var event = new CustomEvent("load-graph", { detail: graph});
+                        window.dispatchEvent(event);
+                        console.log("event send");
+                        $state.go("app.wizard");
+                    })
+                    .error(function(){
+                        console.log("error loading graph");
+                    });
             };
 
             $scope.code = function(){
@@ -50,37 +111,51 @@
                 var event = document.createEvent('CustomEvent');
                 event.initCustomEvent("download-file", true, true, '');
                 document.documentElement.dispatchEvent(event);
-            };            
+            };
+
+            //testing
+            $scope.team = function(){
+                $http
+                    .get("http://localhost:8000/dropDb")
+                    .success(function(data){
+                        console.log(data)
+                    })
+                    .error(function(){
+                        console.log('DROP error')
+                    })
+            };
 
             $scope.nodes = [];
             $scope.edges = [];
             $scope.roots = [];
+            $scope.src = [];
+            $scope.tgt = [];
 
             window.addEventListener("send-info", function(event) {
                 var data = JSON.parse(event.detail);
                 $scope.nodes = data.nodes;
                 $scope.edges = data.edges;
-                
-                var src = [];
-                var tgt = [];
 
                 _.forEach($scope.edges, function(elem){
-                    src.push(elem.source);
-                    tgt.push(elem.target);
+                    $scope.src.push(elem.source);
+                    $scope.tgt.push(elem.target);
                 });
                 
-                _.forEach(_.uniq(src), function(elem){
-                    if(_.uniq(tgt).indexOf(elem) == -1)
+                _.forEach(_.uniq($scope.src), function(elem){
+                    if(_.uniq($scope.tgt).indexOf(elem) == -1)
                         $scope.roots.push(elem);
                 });
                 
+                //Config files
+
                 var exportfiles = [];
 
                 _.forEach($scope.nodes, function(item){
                     var nodeId = item.id.toString();
-                    var title = item.title.toLowerCase();
-
+                    var screen_obj = localStorageService.get('screen'+nodeId);
+                    var title = screen_obj.name.toLowerCase();
                     var dataSource = [];
+
                     if(localStorageService.get('data'+nodeId)){
                         var nodeData = localStorageService.get('data'+nodeId);
                         var nodeDataType = nodeData.type;
@@ -118,40 +193,109 @@
                     ];
 
                     exportfiles.push(file);
-                        
+                    
+                    var reqObj = {
+                        path: "/home/alejandro/kiraso-wizard/files/"+title+".ts",
+                        cont: JSON.stringify(_.flattenDeep(file))
+                    };
                     $http
-                        .get('http://localhost:8000/setContent?path=/home/alejandro/kiraso-wizard/files/'+title+'.ts&cont=' + JSON.stringify(_.flattenDeep(file)))
+                        .put("http://localhost:8000/setContent", reqObj)
                         .success(function(data){
-                            console.log('Save: ' + data)
+                            console.log('Save: ' + data);
                         })
                         .error(function(){
-                            console.error('Failed on save')
+                            console.error('Failed on save');
                         });
                 });
 
+                //////////////////////////////////////////////////////////////////////////////
+
+                //Screen.ts
+
                 var imports = [];
                 var screens = [];
+                var nodeObj = [];
+
                 _.forEach($scope.nodes, function(item){
-                    var name = item.title.toLowerCase();
+                    var screenObj = localStorageService.get('screen'+item.id.toString());
+                    var name = screenObj.name.toLowerCase();
                     imports.push("import " + name + " = require('./"+ name +"')");
-                    if($scope.roots.indexOf(item.id) >= 0){
-                        screens.push("\t"+"'root': " + name + "." + name + "Screen,");    
+                    if($scope.roots.indexOf(item.id) >= 0 || 
+                        ($scope.src.indexOf(item.id) < 0 && $scope.tgt.indexOf(item.id) < 0)){
+                        screens.push("\t'" + name +"': " + name + "." + name + "Screen,");    
                     }else{
-                        screens.push("\t"+"'root." + name + "': " + name + "." + name + "Screen,");
+                        screens.push("\t'root." + name + "': " + name + "." + name + "Screen,");
+                        nodeObj.push({screenName: name, id: item.id});                               
                     }    
                 });
 
                 var line = ['','export var screens : Megazord.ContainerScreenList = {'];
                 var end = ["}"];
                 var result = _.flattenDeep([imports,line,screens,end]);
+
+                var reqObj = {
+                    path: "/home/alejandro/kiraso-wizard/files/screens.ts",
+                    cont: JSON.stringify(result)
+                };             
                 $http
-                    .get('http://localhost:8000/setContent?path=/home/alejandro/kiraso-wizard/files/screens.ts&cont='+JSON.stringify(result))
+                    .put("http://localhost:8000/setContent", reqObj)
                     .success(function(data){
                         console.log('success');
                     })
                     .error(function(err){
                         console.error(err);
                     });
+
+                ///////////////////////////////////////////////////////////////////////////
+
+                // Routes.ts
+
+                /*
+                    example
+                    export var routes : Megazord.RouterConfig = {
+                        "root.companies" : {
+                            itemClick: 'root.detail'
+                        },
+                        "root.dashboard" : {
+                            news: 'root.news',
+                            events: 'root.sessions',
+                            companies: 'root.companies',
+                            form: 'root.form'
+                        },
+                        "root.login" : {
+                            doLogin: 'root.companies'
+                        }
+                    };
+                */
+
+                var routes_line = ["export var routes : Megazord.RouterConfig = {"]; 
+                var routes_end = ["};"];
+                var routes = [];
+
+                _.forEach(localStorageService.keys(), function(elem){
+                    if(elem.indexOf("edge") >= 0){
+                        var src_tgt = elem.split("edge")[1].split("-");
+                        var src = src_tgt[0];
+                        var tgt = src_tgt[1];
+                        _.forEach(nodeObj, function(obj){
+                            if(src == obj.id.toString()){
+                                var index = _.findIndex(nodeObj, function(obj){
+                                    return obj.id.toString() == tgt
+                                });
+                                var event_name = localStorageService.get(elem).event;
+                                var routes_init = ["\t'" + obj.screenName + "': {", 
+                                                    "\t\t" + event_name + ": '" +
+                                                    nodeObj[index].screenName + "',",
+                                                    "\t},"]
+                                routes.push(routes_init);
+                            };
+                        });
+                    };
+                });
+                console.log(routes)
+
+                ///////////////////////////////////////////////////////////////////////////
+
             }, false);
 
         }

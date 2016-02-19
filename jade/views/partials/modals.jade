@@ -1,8 +1,9 @@
 div.modal-header
   h3.modal-title {{type}}
 div.modal-body
-  div(ng-repeat="url in images_url")
-    img(src="{{url}}")
+  div(ng-repeat="image in description_images")
+    h4 {{image.desc}}
+    img(src="{{image.url}}")
 div.modal-footer
   button.btn.btn-primary(type="button", ng-click="closeModal()") OK
  

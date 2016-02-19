@@ -19,7 +19,7 @@
         $locationProvider.html5Mode(false);
 
         // defaults to dashboard
-        $urlRouterProvider.otherwise('/app/wizard');
+        $urlRouterProvider.otherwise('/base/login');
 
         // 
         // Application Routes
@@ -28,7 +28,6 @@
         
         .state('app', {
             url: '/app',
-            abstract: true,
             templateUrl: helper.basepath('app.html'),
             controller: "Controller",
             resolve: helper.resolveFor('modernizr', 'icons')
@@ -50,7 +49,6 @@
                     templateUrl: helper.basepath('login.html')
                 }
             }
-            
         })
 
         .state('base.signup', {
@@ -60,8 +58,14 @@
                 "signupview":{
                     templateUrl: helper.basepath('signup.html')
                 }
-            }
-            
+            } 
+        })
+
+        .state('projects', {
+            url: '/projects',
+            title: 'My projects',
+            templateUrl: helper.basepath('projectsview.html'),
+            controller: "Controller"
         })
 
         .state('app.preview', {

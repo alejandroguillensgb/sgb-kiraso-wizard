@@ -39,9 +39,8 @@
             };
 
             $scope.openModal = function (item) {
-                console.log(item);
                 $scope.type = item.type;
-                $scope.images_url = item.images_url;
+                $scope.description_images = item.description_images;
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: '/app/views/partials/modals.html',

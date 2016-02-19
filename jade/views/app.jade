@@ -17,15 +17,26 @@ section.has-sidebar-right
 
   div
     div.btn-group.btn-group-justified(style="padding:5px;")
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="''", ui-sref="app.wizard") Wizard
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="''", ng-click="wizard()",ui-sref="app.wizard") Wizard
         label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'", ng-click="preview()", ui-sref="app.preview") Preview&Source
 
-  div(style="text-align:center;")
+
+  // Wizard buttons
+  div(style="text-align:center;", ng-if="!previewActive")
     div.btn-toolbar(style="display: inline-block; padding:5px;")      
       label.btn.btn-primary(ng-click="new()") New
       label.btn.btn-primary(ng-click="load()") Load
+      label.btn.btn-primary(ng-click="saveWizard()") Save
+      label.btn.btn-primary(ng-click="download()") Download
+      label.btn.btn-primary(ng-click="code()") Finish
+
+  // Preview and source buttons
+  div(style="text-align:center;", ng-if="previewActive")
+    div.btn-toolbar(style="display: inline-block; padding:5px;")      
+      //label.btn.btn-primary(ng-click="new()") New
+      //label.btn.btn-primary(ng-click="load()") Load
       label.btn.btn-primary(ng-click="save()") Save
-      label.btn.btn-primary Team
+      label.btn.btn-primary(ng-click="team()") Team
       label.btn.btn-primary(ng-click="download()") Download
       label.btn.btn-primary(ng-click="code()") Finish
 
