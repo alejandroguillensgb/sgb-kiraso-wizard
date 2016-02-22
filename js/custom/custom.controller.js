@@ -57,7 +57,7 @@
             };
 
             $scope.saveWizard = function(){
-                var event = new CustomEvent("request-graph");
+                var event = new CustomEvent("request-graph", {cancelable: true});
                 window.dispatchEvent(event);
             };
 
@@ -65,7 +65,6 @@
                 var reqObj = {
                     graph: event.detail
                 };
-                event.stopPropagation();
                 event.stopImmediatePropagation();
                 console.log("respuesta");
                 console.log(event.detail);
@@ -82,17 +81,7 @@
 
             $scope.loadProject = function(project){
                 $rootScope.app_name = project;
-                $http
-                    .get("http://localhost:8000/mongoose_findGraph?app="+project)
-                    .success(function(graph){
-                        var event = new CustomEvent("load-graph", { detail: graph});
-                        window.dispatchEvent(event);
-                        console.log("event send");
-                        $state.go("app.wizard");
-                    })
-                    .error(function(){
-                        console.log("error loading graph");
-                    });
+                $state.go("app.wizard", false);
             };
 
             $scope.code = function(){

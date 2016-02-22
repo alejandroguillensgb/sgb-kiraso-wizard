@@ -218,7 +218,7 @@
                             $rootScope.app_name = $scope.app;
                             console.log($scope.app);
                             console.log('app_mongoose_success');
-                            if(flag_new == true){
+                            if(flag_new){
                                 var reqObj = {
                                     username: $rootScope.username,
                                     project: $scope.app
@@ -227,9 +227,7 @@
                                     .post("http://localhost:8000/mongoose_setProjects", reqObj)
                                     .success(function(){
                                         console.log("success setting projects");
-                                        var event = new CustomEvent("create-new");
-                                        window.dispatchEvent(event);
-                                        $state.go("app.wizard");
+                                        $state.go("app.wizard", {new: flag_new});
                                     })
                                     .error(function(err){
                                         alert(err);

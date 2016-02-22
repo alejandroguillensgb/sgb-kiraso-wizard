@@ -88,11 +88,12 @@
         })
         
         .state('app.wizard', {
-            url: '/wizard',
+            url: '/wizard?new',
             title: 'Wizard',
             views:{
                 "singleview":{
-                    templateUrl: helper.basepath('graphicview.html')
+                    templateUrl: helper.basepath('graphicview.html'),
+                    controller: "graphController"
                 },
                 "offsidebar":{
                     templateUrl: helper.basepath('partials/offsidetabs.html'),

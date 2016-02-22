@@ -29,9 +29,8 @@
             }
 
             $scope.createNode = function(item){
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent("create-node", true, true, item);
-                document.documentElement.dispatchEvent(event);
+                var event = new CustomEvent("create-node", {detail: item});
+                window.dispatchEvent(event);
             }
 
             $scope.closeModal = function(){

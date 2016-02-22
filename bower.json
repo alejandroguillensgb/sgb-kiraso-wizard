@@ -56,7 +56,8 @@
     "schema-form-file-upload": "chengz/schema-form-file-upload",
     "angular-schema-form-file-upload": "~0.0.3",
     "angular-local-storage": "~0.2.3",
-    "ng-lodash": "~0.3.0"
+    "ng-lodash": "~0.3.0",
+    "eventEmitter": "~4.3.0"
   },
   "resolutions": {
     "angular": "1.4.2",

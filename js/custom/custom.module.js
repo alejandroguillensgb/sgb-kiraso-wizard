@@ -13,7 +13,8 @@
             'custom.ace',
             'custom.sideb',
             'custom.forms',
-            'LocalStorageModule'
+            'LocalStorageModule',
+            'custom.graph'
             /*...*/
         ]);
 })();
