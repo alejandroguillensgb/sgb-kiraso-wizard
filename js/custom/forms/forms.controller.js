@@ -209,39 +209,58 @@
                 }
             ];
 
+            $scope.appModelNew = {};
+
             if(kirasoFactory.getAppModel().appModel.name)
                 $scope.appModel = kirasoFactory.getAppModel().appModel;
             else
                 $scope.appModel = {};
 
             $scope.submitApp = function(form, flag_new){
-                console.log(flag_new)
+                console.log("submit app")
                 if(form.name.$viewValue != ""){
-                    $http
-                        .post("http://localhost:8000/mongoose_test", $scope.appModel)
-                        .success(function(){
-                            kirasoFactory.setAppModel($scope.appModel);
-                            console.log('app_mongoose_success');
-                            if(flag_new){
-                                var reqObj = {
-                                    username: kirasoFactory.getUsername().username,
-                                    project: kirasoFactory.getAppModel().appModel.name
+                    if(!flag_new && kirasoFactory.getAppName() != $scope.appModel.name){
+                        var reqObj = {
+                            username: kirasoFactory.getUsername().username,
+                            old_name: kirasoFactory.getAppName(),
+                            model: $scope.appModel
+                        };
+                        $http
+                            .put("http://localhost:8000/mongoose_updateProject", reqObj)
+                            .success(function(){
+                                console.log("successful operation");
+                            })
+                            .error(function(){
+                                console.log("operation failed");
+                            })
+                    }else{
+                        $http
+                            .post("http://localhost:8000/mongoose_test", $scope.appModelNew)
+                            .success(function(){
+                                kirasoFactory.setAppModel($scope.appModelNew);
+                                kirasoFactory.setAppName($scope.appModelNew.name);
+                                console.log('app_mongoose_success');
+                                if(flag_new){
+                                    var reqObj = {
+                                        username: kirasoFactory.getUsername().username,
+                                        project: kirasoFactory.getAppModel().appModel.name
+                                    };
+                                    $http
+                                        .post("http://localhost:8000/mongoose_setProjects", reqObj)
+                                        .success(function(){
+                                            console.log("success setting projects");
+                                            $state.go("app.wizard", {new: flag_new});
+                                        })
+                                        .error(function(err){
+                                            alert(err);
+                                            console.log("error setting projects");
+                                        });
                                 };
-                                $http
-                                    .post("http://localhost:8000/mongoose_setProjects", reqObj)
-                                    .success(function(){
-                                        console.log("success setting projects");
-                                        $state.go("app.wizard", {new: flag_new});
-                                    })
-                                    .error(function(err){
-                                        alert(err);
-                                        console.log("error setting projects");
-                                    });
-                            };
-                        })
-                        .error(function(){
-                            console.log('app_mongoose_error');
-                        });
+                            })
+                            .error(function(){
+                                console.log('app_mongoose_error');
+                            });
+                        }
                 } else {
                     alert("App name is required");
                 };                

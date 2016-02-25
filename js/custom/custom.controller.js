@@ -69,6 +69,9 @@
                     .get("http://localhost:8000/mongoose_findApp?app=" + project)
                     .success(function(data){
                         kirasoFactory.setAppModel(data);
+                        kirasoFactory.setAppName(data.name);
+                        console.log("loadproject<")
+                        console.log(data)
                         $state.go("app.wizard", { new: false });
                     })
                     .error(function(){
