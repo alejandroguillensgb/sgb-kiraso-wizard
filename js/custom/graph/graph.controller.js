@@ -20,7 +20,7 @@
         function activate() {
 
             console.log("graphController");
-            $scope.app_name = kirasoFactory.getAppName().app_name;
+            $scope.app_name = kirasoFactory.getAppModel().appModel.name;
              
             var stateChangeSuccessListener = $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, options){ 
                 if(toState.name == "app.wizard" && toParams.new=="false"){

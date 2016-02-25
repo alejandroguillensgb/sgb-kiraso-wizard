@@ -7,11 +7,11 @@
 
     kirasoFactory.$inject = [];
     function kirasoFactory() {
-        var app_name = "";
+        var appModel = {};
         var username = "";
         var projects = [];
-        function setAppName(name){
-            app_name = name;
+        function setAppModel(model){
+            appModel = model;
         };
         function setUsername(name){
             username = name;
@@ -21,9 +21,9 @@
         };
 
         return {
-            getAppName: function(){
+            getAppModel: function(){
                 return {
-                    app_name: app_name
+                    appModel: appModel
                 }
             },
             getUsername: function(){
@@ -36,7 +36,7 @@
                     projects: projects
                 }
             },
-            setAppName: setAppName,
+            setAppModel: setAppModel,
             setUsername: setUsername,
             setProjects: setProjects
         };          

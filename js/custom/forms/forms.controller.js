@@ -51,6 +51,7 @@
                             $rootScope.$broadcast('login', resObj);
                             kirasoFactory.setUsername(resObj.username);
                             kirasoFactory.setProjects(resObj.projects);
+                            console.log(resObj.projects)
                             $state.go('projects');
                         })
                         .error(function(err){
@@ -208,39 +209,23 @@
                 }
             ];
 
-            // $scope.$on("load-project", function(event, app_name){
-            //     console.log("entre load project")
-            //     $rootScope.app_name = app_name;
-            //     console.log(app_name);
-            //     $http
-            //         .get("http://localhost:8000/mongoose_findApp?app="+ $scope.app_name)
-            //         .success(function(data){
-            //             console.log('success finding app');
-            //             if(data == ""){
-            //                 $scope.appModel = {};
-            //             } else {
-            //                 $scope.appModel = data;    
-            //             };
-            //             console.log($scope.appModel);
-            //         })
-            //         .error(function(){
-            //             $scope.appModel = {};
-            //             console.log("error");
-            //         });
-            // });
-            $scope.appModel = {};
+            if(kirasoFactory.getAppModel().appModel.name)
+                $scope.appModel = kirasoFactory.getAppModel().appModel;
+            else
+                $scope.appModel = {};
 
             $scope.submitApp = function(form, flag_new){
+                console.log(flag_new)
                 if(form.name.$viewValue != ""){
                     $http
                         .post("http://localhost:8000/mongoose_test", $scope.appModel)
                         .success(function(){
-                            kirasoFactory.setAppName($scope.appModel.name);
+                            kirasoFactory.setAppModel($scope.appModel);
                             console.log('app_mongoose_success');
                             if(flag_new){
                                 var reqObj = {
                                     username: kirasoFactory.getUsername().username,
-                                    project: kirasoFactory.getAppName().app_name
+                                    project: kirasoFactory.getAppModel().appModel.name
                                 };
                                 $http
                                     .post("http://localhost:8000/mongoose_setProjects", reqObj)
@@ -268,7 +253,7 @@
             function selectNodeFunction(event, node_data){
                 $scope.show_event = false;
                 $scope.nodeId = node_data.id;
-                $scope.app_name = kirasoFactory.getAppName().app_name;
+                $scope.app_name = kirasoFactory.getAppModel().name;
 
                 if(node_data.paramsModel)
                     $scope.paramsModel = node_data.paramsModel;

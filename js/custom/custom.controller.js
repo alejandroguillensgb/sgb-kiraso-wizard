@@ -65,8 +65,15 @@
             };
             
             $scope.loadProject = function(project){
-                kirasoFactory.setAppName(project);
-                $state.go("app.wizard", { new: false });
+                $http
+                    .get("http://localhost:8000/mongoose_findApp?app=" + project)
+                    .success(function(data){
+                        kirasoFactory.setAppModel(data);
+                        $state.go("app.wizard", { new: false });
+                    })
+                    .error(function(){
+                        console.log("erro loading project");
+                    });
             };
 
             $scope.code = function(){

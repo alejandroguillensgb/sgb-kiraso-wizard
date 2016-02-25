@@ -12,8 +12,7 @@
             restrict: 'EA',
             link: function(scope, element, attrs) {
               d3Factory.d3().then(function(d3) {
-                console.log("directive")
-                console.log(scope.test)
+                console.log("directive");
                 // TODO add user settings
                 var consts = {
                   defaultTitle: "random variable"
@@ -171,7 +170,7 @@
                     console.log("request listener");
                     var saveEdges = [];                    
                     thisGraph.edges.forEach(function(val, i){
-                      saveEdges.push({source: val.source.id, target: val.target.id});
+                      saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
                     });
                     var reqObj = {
                       graph: JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})
@@ -751,7 +750,8 @@
                   var transformEdges = graph.edges;
                   transformEdges.forEach(function(e, i){
                     transformEdges[i] = {source: nodes.filter(function(n){return n.id == e.source;})[0],
-                    target: nodes.filter(function(n){return n.id == e.target;})[0]};
+                    target: nodes.filter(function(n){return n.id == e.target;})[0],
+                    eventModel: e.eventModel};
                   });
                   var edges = transformEdges;
                   var svg = d3.select(settings.appendElSpec).append("svg")
