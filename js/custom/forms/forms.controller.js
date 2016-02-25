@@ -6,9 +6,9 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader', 'localStorageService', '$http', '$rootScope'];
+    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader', 'localStorageService', '$http', '$rootScope', 'kirasoFactory'];
 
-    function formsController($log,$scope,$state,FormsLoader,localStorageService, $http, $rootScope) {
+    function formsController($log,$scope,$state,FormsLoader,localStorageService, $http, $rootScope, kirasoFactory) {
         
         activate();
         
@@ -16,6 +16,7 @@
 
         function activate() {
             
+
             // Log In
 
             $scope.loginSchema = {
@@ -48,8 +49,8 @@
                         .success(function(resObj){
                             console.log('logged in');
                             $rootScope.$broadcast('login', resObj);
-                            $rootScope.username = resObj.username;
-                            $rootScope.projects = resObj.projects;
+                            kirasoFactory.setUsername(resObj.username);
+                            kirasoFactory.setProjects(resObj.projects);
                             $state.go('projects');
                         })
                         .error(function(err){
@@ -207,6 +208,26 @@
                 }
             ];
 
+            // $scope.$on("load-project", function(event, app_name){
+            //     console.log("entre load project")
+            //     $rootScope.app_name = app_name;
+            //     console.log(app_name);
+            //     $http
+            //         .get("http://localhost:8000/mongoose_findApp?app="+ $scope.app_name)
+            //         .success(function(data){
+            //             console.log('success finding app');
+            //             if(data == ""){
+            //                 $scope.appModel = {};
+            //             } else {
+            //                 $scope.appModel = data;    
+            //             };
+            //             console.log($scope.appModel);
+            //         })
+            //         .error(function(){
+            //             $scope.appModel = {};
+            //             console.log("error");
+            //         });
+            // });
             $scope.appModel = {};
 
             $scope.submitApp = function(form, flag_new){
@@ -214,14 +235,12 @@
                     $http
                         .post("http://localhost:8000/mongoose_test", $scope.appModel)
                         .success(function(){
-                            $scope.app = $scope.appModel.name;
-                            $rootScope.app_name = $scope.app;
-                            console.log($scope.app);
+                            kirasoFactory.setAppName($scope.appModel.name);
                             console.log('app_mongoose_success');
                             if(flag_new){
                                 var reqObj = {
-                                    username: $rootScope.username,
-                                    project: $scope.app
+                                    username: kirasoFactory.getUsername(),
+                                    project: kirasoFactory.getAppName()
                                 };
                                 $http
                                     .post("http://localhost:8000/mongoose_setProjects", reqObj)
@@ -263,15 +282,15 @@
 
 
             // Params form
+            $scope.$on("select-node", selectNodeFunction);
 
-            window.addEventListener("select-node", function(event) {
+            function selectNodeFunction(event, node_data){
                 $scope.show_event = false;
-                $scope.nodeId = event.detail.id.toString();
-                event.stopPropagation();
-                event.stopImmediatePropagation();
+                $scope.nodeId = node_data.id.toString();
+                $scope.app_name = kirasoFactory.getAppName().app_name;
 
                 $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app + "&id=" + $scope.nodeId + "&type=params")
+                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=params")
                     .success(function(data){
                         console.log('success params find');
                         if(data == ""){
@@ -279,13 +298,15 @@
                         } else {
                             $scope.paramsModel = data;    
                         };
+                        console.log($scope.paramsModel)
+                        FormsLoader.getFormParams(node_data.path, paramsReady);
                     })
                     .error(function(){
                         $scope.paramsModel = {};
                         console.log("error");
                     });
 
-                FormsLoader.getFormParams(event.detail.path, paramsReady)
+                
       
                 function paramsReady(data){
                     $scope.params = data;
@@ -298,9 +319,8 @@
                                 type: value.type,
                                 description: value.description,
                                 enum: value.options.concat("")
-                            }
-                        }
-                        else if('elements' in value){
+                            };
+                        } else if('elements' in value){
                             $scope.properties = {
                                 menu: {
                                     title: "Menu",
@@ -344,26 +364,28 @@
                         },
                         required: ["name"]
                     };
+
+                    $scope.paramsForm = [                  
+                        "*",
+                        {
+                            type: "submit",
+                            style: "btn-info",
+                            title: "OK"
+                        }
+                    ];
                 };
               
-                $scope.paramsForm = [                  
-                    "*",
-                    {
-                        type: "submit",
-                        style: "btn-info",
-                        title: "OK"
-                    }
-                ];
+                
 
                 $scope.submitParams = function(){
                     console.log($scope.nodeId);
-                    $scope.paramsModel.nodeId = $scope.nodeId;
+                    $scope.paramsModel.elementId = $scope.nodeId;
                     var reqObj = {
                         model_type: "params",
                         model: $scope.paramsModel
                     };
                     $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app, reqObj)
+                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
                         .success(function(){
                             console.log('params_mongoose_success')
                         })
@@ -414,7 +436,7 @@
                 ];
 
                 $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app + "&id=" + $scope.nodeId + "&type=data")
+                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=data")
                     .success(function(data){
                         console.log('success data find');
                         if(data == ""){
@@ -430,21 +452,20 @@
 
                 $scope.submitData = function(){
                     console.log($scope.nodeId);
-                    $scope.dataModel.nodeId = $scope.nodeId;
+                    $scope.dataModel.elementId = $scope.nodeId;
                     var reqObj = {
                         model_type: "data",
                         model: $scope.dataModel
                     };
                     console.log($scope.dataModel);
                     $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app, reqObj)
+                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
                         .success(function(){
                             console.log('data_mongoose_success')
                         })
                         .error(function(){
                             console.log('data_mongoose_error');
                         });
-                    //localStorageService.set('data'+$scope.nodeId, $scope.dataModel);
                 };
 
                 ////////////////////////////////////////////////////
@@ -459,7 +480,7 @@
                 ];
 
                 $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app + "&id=" + $scope.nodeId + "&type=screen")
+                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=screen")
                     .success(function(data){
                         console.log('success screen find');
                         if(data == ""){
@@ -476,43 +497,52 @@
                 $scope.submitScreen = function(){
                     console.log($scope.nodeId);
                     console.log($scope.screenModel);
-                    $scope.screenModel.nodeId = $scope.nodeId;
+                    $scope.screenModel.elementId = $scope.nodeId;
                     console.log($scope.screenModel);
                     var reqObj = {
                         model_type: "screen",
                         model: $scope.screenModel
                     };
                     $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app, reqObj)
+                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
                         .success(function(){
                             console.log('screen_mongoose_success')
                         })
                         .error(function(){
                             console.log('screen_mongoose_error');
                         });
-                    // localStorageService.set('screen'+$scope.nodeId, $scope.screenModel);
                 };
 
                 ///////////////////////////////////////////////////////
+            };
 
-
-            }, false);
 
             $scope.show_event = false;
-            window.addEventListener("select-edge", function(event){
+            
+            $scope.$on("select-edge", selectEdgeFunction);
+            // window.addEventListener("select-edge", function(event){
+            function selectEdgeFunction(event, edge_data){
                 $scope.show_event = true;
                 $scope.$apply();
-                $scope.edge = event.detail;
+                $scope.edge = edge_data;
                 $scope.edgeSrcId = $scope.edge.source.id.toString();
                 $scope.edgeTgtId = $scope.edge.target.id.toString();
 
-                if(localStorageService.keys().indexOf('edge'+$scope.edgeSrcId + "-" + $scope.edgeTgtId) != -1){
-                    $scope.eventModel = localStorageService.get('edge'+$scope.edgeSrcId + "-" + $scope.edgeTgtId);
-                    $scope.$apply();
-                } else {
-                    $scope.eventModel = {};
-                    $scope.$apply();
-                };
+                $http
+                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.edgeSrcId + "-" + $scope.edgeTgtId + "&type=event")
+                    .success(function(data){
+                        console.log('success event find');
+                        if(data == ""){
+                            $scope.eventModel = {};
+                        } else {
+                            $scope.eventModel = data;
+                        };
+                    })
+                    .error(function(){
+                        $scope.eventModel = {};
+                       // $scope.$apply();
+                        console.log("error");
+                    });
 
                 $scope.eventSchema = {
                     type: "object",
@@ -534,31 +564,45 @@
                 
                 $scope.submitEvent = function(){
                     console.log('event submmited');
-                    $scope.eventModel.edge = $scope.edge;
+                    $scope.eventModel.elementId = $scope.edgeSrcId + "-" +$scope.edgeTgtId;
                     var reqObj = {
                         model_type: "event",
                         model: $scope.eventModel
                     };
                     $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app, reqObj)
+                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
                         .success(function(){
                             console.log('screen_mongoose_success')
                         })
                         .error(function(){
                             console.log('screen_mongoose_error');
                         });
-                    localStorageService.set('edge'+$scope.edgeSrcId + "-" + $scope.edgeTgtId, $scope.eventModel);
                 };
-            }, false);
+            };
 
-            window.addEventListener("delete-node", function(event){
-                if(localStorageService.keys().indexOf('params'+$scope.nodeId) >= 0){
-                    localStorageService.remove('params'+$scope.nodeId);
-                };
-                if(localStorageService.keys().indexOf('data'+$scope.nodeId) >= 0){
-                    localStorageService.remove('data'+$scope.nodeId);
-                };
-            }, false);
-        }
-    }
+            // $scope.$on("delete-node", deleteNodeFunction);
+            // $scope.$on("delete-edge", deleteEdgeFunction);
+
+            function deleteNodeFunction(){
+                $http
+                    .delete("http://localhost:8000/mongoose_removeNode?app=" + $scope.app_name + "&id=" + $scope.nodeId)
+                    .success(function(){
+                        console.log("delete success")
+                    })
+                    .error(function(){
+                        console.log("delete error")
+                    });
+            };
+            function deleteEdgeFunction(){
+                $http
+                    .delete("http://localhost:8000/mongoose_removeEdge?app=" + $scope.app_name + "&id=" + $scope.edgeSrcId + edgeTgtId)
+                    .success(function(){
+                        console.log("delete success")
+                    })
+                    .error(function(){
+                        console.log("delete error")
+                    });
+            };
+        };
+    };
 })();

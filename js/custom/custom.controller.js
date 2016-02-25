@@ -10,14 +10,21 @@
         .module('kiraso')
         .controller('Controller', Controller);
 
-    Controller.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state'];
-    function Controller($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state) {
+    Controller.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state', 'kirasoFactory'];
+    function Controller($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state, kirasoFactory) {
 
         activate();
         
         ////////////////
 
         function activate() {
+
+            $scope.username = kirasoFactory.getUsername().username;
+            $scope.projects = kirasoFactory.getProjects().projects;
+
+            $scope.goLogin = function(){
+                $state.go("base.login");
+            };
 
             $scope.closeModal = function(){
                 $scope.modalInstance.close();
@@ -29,10 +36,6 @@
                     templateUrl: '/app/views/partials/newAppModal.html',
                     scope: $scope
                 });
-            };
-
-            $scope.loadProject = function(project){
-                console.log(project);
             };
 
             $scope.previewActive = false;
@@ -57,49 +60,31 @@
             };
 
             $scope.saveWizard = function(){
-                var event = new CustomEvent("request-graph", {cancelable: true});
-                window.dispatchEvent(event);
+                console.log("save")
+                $scope.$broadcast("request-graph");
             };
-
-            window.addEventListener("response-graph", function(event){
-                var reqObj = {
-                    graph: event.detail
-                };
-                event.stopImmediatePropagation();
-                console.log("respuesta");
-                console.log(event.detail);
-
-                $http
-                    .post("http://localhost:8000/mongoose_setGraph?app=" + $rootScope.app_name, reqObj)
-                    .success(function(){
-                        console.log("graph app saved");
-                    })
-                    .error(function(){
-                        console.log("error saving graph app");
-                    });
-            }, false);
-
+            
             $scope.loadProject = function(project){
-                $rootScope.app_name = project;
-                $state.go("app.wizard", false);
+                kirasoFactory.setAppName(project);
+                $state.go("app.wizard", { new: false });
             };
 
             $scope.code = function(){
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent("create-file", true, true, '');
-                document.documentElement.dispatchEvent(event);
+                // var event = document.createEvent('CustomEvent');
+                // event.initCustomEvent("create-file", true, true, '');
+                // document.documentElement.dispatchEvent(event);
             };
 
             $scope.load = function(){
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent("load-file", true, true, '');
-                document.documentElement.dispatchEvent(event);
+                // var event = document.createEvent('CustomEvent');
+                // event.initCustomEvent("load-file", true, true, '');
+                // document.documentElement.dispatchEvent(event);
             };            
 
             $scope.download = function(){
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent("download-file", true, true, '');
-                document.documentElement.dispatchEvent(event);
+                // var event = document.createEvent('CustomEvent');
+                // event.initCustomEvent("download-file", true, true, '');
+                // document.documentElement.dispatchEvent(event);
             };
 
             //testing

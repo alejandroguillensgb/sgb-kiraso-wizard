@@ -10,8 +10,8 @@
         .module('custom.graph')
         .controller('graphController', graphController);
 
-    graphController.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state'];
-    function graphController($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state) {
+    graphController.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state', 'd3Factory', '$stateParams', 'kirasoFactory'];
+    function graphController($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state, d3Factory, $stateParams, kirasoFactory) {
 
         activate();
         
@@ -19,37 +19,28 @@
 
         function activate() {
 
-            console.log("controller")
-            var e = new EventEmitter();
-            // e.addListener("event", function(){
-            //     console.log("EventEmitter")
-            // })
-    
-
-            
-            $scope.$on('$viewContentLoaded', function(){
-                e.emitEvent("event");
-                console.log("$viewContentLoaded")
-            });
-            
-            $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, options){ 
-                console.log(toState.name == "app.wizard");
-                if(toState.name == "app.wizard" && toParams.new){
-                    console.log("nuevo");
-                    // $scope.$on('$viewContentLoaded', function(){
-                    // });                    
-                } else if(toState.name == "app.wizard" && !toParams.new){
-                    
-                    $http
-                        .get("http://localhost:8000/mongoose_findGraph?app="+$rootScope.app_name)
-                            .success(function(graph){
-                                console.log("event send");
-                                var event = new CustomEvent("load-graph", { detail: graph, cancelable: true});
-                                window.dispatchEvent(event);
-                            })
-                            .error(function(){
-                                console.log("error loading graph");
-                            });
+            console.log("graphController");
+            $scope.app_name = kirasoFactory.getAppName().app_name;
+             
+            var stateChangeSuccessListener = $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, options){ 
+                if(toState.name == "app.wizard" && toParams.new=="false"){
+                    console.log("antes del servicio")
+                    $scope.$on("directiveReady", function(){
+                        $http
+                            .get("http://localhost:8000/mongoose_findGraph?app="+$scope.app_name)
+                                .success(function(graph){
+                                    console.log("event send");
+                                    $scope.$emit("load-graph", graph);
+                                })
+                                .error(function(){
+                                    console.log("error loading graph");
+                                });    
+                    });                    
+                } else{
+                    $scope.$on("directiveReady", function(){
+                        console.log("nuevo");
+                        $scope.$emit("new-graph");    
+                    });
                 };
             });
         }

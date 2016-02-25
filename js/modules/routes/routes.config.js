@@ -88,7 +88,7 @@
         })
         
         .state('app.wizard', {
-            url: '/wizard?new',
+            url: '/wizard/:new',
             title: 'Wizard',
             views:{
                 "singleview":{
