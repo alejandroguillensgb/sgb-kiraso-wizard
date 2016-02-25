@@ -239,8 +239,8 @@
                             console.log('app_mongoose_success');
                             if(flag_new){
                                 var reqObj = {
-                                    username: kirasoFactory.getUsername(),
-                                    project: kirasoFactory.getAppName()
+                                    username: kirasoFactory.getUsername().username,
+                                    project: kirasoFactory.getAppName().app_name
                                 };
                                 $http
                                     .post("http://localhost:8000/mongoose_setProjects", reqObj)
@@ -262,51 +262,20 @@
                 };                
             };
 
-            //// Prepare wizard
-
-            function prepareWizard(app_name){
-                $state.go("app.wizard");
-                // load models
-                // load graph
-                $http
-                    .get("http://localhost:8000/mongoose_findGraph?app="+app_name)
-                    .success(function(graph){
-                        console.log(graph);
-                    })
-                    .error(function(){
-                        console.log("error retrieving graph");
-                    });
-            };
-
-            //////////////////
-
-
             // Params form
             $scope.$on("select-node", selectNodeFunction);
 
             function selectNodeFunction(event, node_data){
                 $scope.show_event = false;
-                $scope.nodeId = node_data.id.toString();
+                $scope.nodeId = node_data.id;
                 $scope.app_name = kirasoFactory.getAppName().app_name;
 
-                $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=params")
-                    .success(function(data){
-                        console.log('success params find');
-                        if(data == ""){
-                            $scope.paramsModel = {};
-                        } else {
-                            $scope.paramsModel = data;    
-                        };
-                        console.log($scope.paramsModel)
-                        FormsLoader.getFormParams(node_data.path, paramsReady);
-                    })
-                    .error(function(){
-                        $scope.paramsModel = {};
-                        console.log("error");
-                    });
+                if(node_data.paramsModel)
+                    $scope.paramsModel = node_data.paramsModel;
+                else
+                    $scope.paramsModel = {};
 
-                
+                FormsLoader.getFormParams(node_data.path, paramsReady);
       
                 function paramsReady(data){
                     $scope.params = data;
@@ -374,25 +343,10 @@
                         }
                     ];
                 };
-              
-                
 
                 $scope.submitParams = function(){
-                    console.log($scope.nodeId);
-                    $scope.paramsModel.elementId = $scope.nodeId;
-                    var reqObj = {
-                        model_type: "params",
-                        model: $scope.paramsModel
-                    };
-                    $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
-                        .success(function(){
-                            console.log('params_mongoose_success')
-                        })
-                        .error(function(){
-                            console.log('params_mongoose_error');
-                        });
-                }
+                    $rootScope.$broadcast("push-paramsModel", $scope.nodeId, $scope.paramsModel);
+                };
 
                 //////////////////
 
@@ -435,42 +389,16 @@
                     }
                 ];
 
-                $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=data")
-                    .success(function(data){
-                        console.log('success data find');
-                        if(data == ""){
-                            $scope.dataModel = {};
-                        } else {
-                            $scope.dataModel = data;    
-                        };
-                    })
-                    .error(function(){
-                        $scope.dataModel = {};
-                        console.log("error");
-                    });
-
+                if(node_data.dataModel)
+                    $scope.dataModel = node_data.dataModel;
+                else
+                    $scope.dataModel = {};
                 $scope.submitData = function(){
-                    console.log($scope.nodeId);
-                    $scope.dataModel.elementId = $scope.nodeId;
-                    var reqObj = {
-                        model_type: "data",
-                        model: $scope.dataModel
-                    };
-                    console.log($scope.dataModel);
-                    $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
-                        .success(function(){
-                            console.log('data_mongoose_success')
-                        })
-                        .error(function(){
-                            console.log('data_mongoose_error');
-                        });
+                    $rootScope.$broadcast("push-dataModel", $scope.nodeId, $scope.dataModel);
                 };
 
                 ////////////////////////////////////////////////////
-                
-                
+
                 $scope.screenForm =  [
                     "*",
                     {
@@ -479,38 +407,13 @@
                     }
                 ];
 
-                $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.nodeId + "&type=screen")
-                    .success(function(data){
-                        console.log('success screen find');
-                        if(data == ""){
-                            $scope.screenModel = {};
-                        } else {
-                            $scope.screenModel = data;    
-                        };
-                    })
-                    .error(function(){
-                        $scope.screenModel = {};
-                        console.log("error");
-                    });
+                if(node_data.screenModel)
+                    $scope.screenModel = node_data.screenModel;
+                else
+                    $scope.screenModel = {};
                 
                 $scope.submitScreen = function(){
-                    console.log($scope.nodeId);
-                    console.log($scope.screenModel);
-                    $scope.screenModel.elementId = $scope.nodeId;
-                    console.log($scope.screenModel);
-                    var reqObj = {
-                        model_type: "screen",
-                        model: $scope.screenModel
-                    };
-                    $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
-                        .success(function(){
-                            console.log('screen_mongoose_success')
-                        })
-                        .error(function(){
-                            console.log('screen_mongoose_error');
-                        });
+                    $rootScope.$broadcast("push-screenModel", $scope.nodeId, $scope.screenModel);
                 };
 
                 ///////////////////////////////////////////////////////
@@ -520,29 +423,20 @@
             $scope.show_event = false;
             
             $scope.$on("select-edge", selectEdgeFunction);
-            // window.addEventListener("select-edge", function(event){
             function selectEdgeFunction(event, edge_data){
                 $scope.show_event = true;
                 $scope.$apply();
                 $scope.edge = edge_data;
-                $scope.edgeSrcId = $scope.edge.source.id.toString();
-                $scope.edgeTgtId = $scope.edge.target.id.toString();
+                $scope.edgeSrcId = $scope.edge.source.id;
+                $scope.edgeTgtId = $scope.edge.target.id;
 
-                $http
-                    .get("http://localhost:8000/mongooseFind?app="+ $scope.app_name + "&id=" + $scope.edgeSrcId + "-" + $scope.edgeTgtId + "&type=event")
-                    .success(function(data){
-                        console.log('success event find');
-                        if(data == ""){
-                            $scope.eventModel = {};
-                        } else {
-                            $scope.eventModel = data;
-                        };
-                    })
-                    .error(function(){
-                        $scope.eventModel = {};
-                       // $scope.$apply();
-                        console.log("error");
-                    });
+                if(edge_data.eventModel){
+                    $scope.eventModel = edge_data.eventModel;
+                    $scope.$apply();
+                } else {
+                    $scope.eventModel = {};
+                    $scope.$apply();
+                };
 
                 $scope.eventSchema = {
                     type: "object",
@@ -563,45 +457,8 @@
                 ];
                 
                 $scope.submitEvent = function(){
-                    console.log('event submmited');
-                    $scope.eventModel.elementId = $scope.edgeSrcId + "-" +$scope.edgeTgtId;
-                    var reqObj = {
-                        model_type: "event",
-                        model: $scope.eventModel
-                    };
-                    $http
-                        .post("http://localhost:8000/mongoose_setModels?app="+$scope.app_name, reqObj)
-                        .success(function(){
-                            console.log('screen_mongoose_success')
-                        })
-                        .error(function(){
-                            console.log('screen_mongoose_error');
-                        });
+                    $rootScope.$broadcast("push-eventModel", $scope.edgeSrcId, $scope.edgeTgtId, $scope.eventModel);
                 };
-            };
-
-            // $scope.$on("delete-node", deleteNodeFunction);
-            // $scope.$on("delete-edge", deleteEdgeFunction);
-
-            function deleteNodeFunction(){
-                $http
-                    .delete("http://localhost:8000/mongoose_removeNode?app=" + $scope.app_name + "&id=" + $scope.nodeId)
-                    .success(function(){
-                        console.log("delete success")
-                    })
-                    .error(function(){
-                        console.log("delete error")
-                    });
-            };
-            function deleteEdgeFunction(){
-                $http
-                    .delete("http://localhost:8000/mongoose_removeEdge?app=" + $scope.app_name + "&id=" + $scope.edgeSrcId + edgeTgtId)
-                    .success(function(){
-                        console.log("delete success")
-                    })
-                    .error(function(){
-                        console.log("delete error")
-                    });
             };
         };
     };

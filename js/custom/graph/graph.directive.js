@@ -186,6 +186,60 @@
                       });
                   });
 
+                  scope.$on("push-paramsModel", function(event, nodeId, model){
+                    var node = _.find(thisGraph.nodes, {id: nodeId});
+                    var index = _.indexOf(thisGraph.nodes, node);
+                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
+                                                        title: node.title,
+                                                        type: node.type,
+                                                        x: node.x, y: node.y,
+                                                        path: node.path,
+                                                        screenModel: node.screenModel,
+                                                        paramsModel: model,
+                                                        dataModel: node.dataModel
+                                                      });
+                  });
+
+                  scope.$on("push-screenModel", function(event, nodeId, model){
+                    var node = _.find(thisGraph.nodes, {id: nodeId});
+                    var index = _.indexOf(thisGraph.nodes, node);
+                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
+                                                        title: node.title,
+                                                        type: node.type,
+                                                        x: node.x, y: node.y,
+                                                        path: node.path,
+                                                        screenModel: model,
+                                                        paramsModel: node.paramsModel,
+                                                        dataModel: node.dataModel
+                                                      });
+                  });
+
+                  scope.$on("push-dataModel", function(event, nodeId, model){
+                    var node = _.find(thisGraph.nodes, {id: nodeId});
+                    var index = _.indexOf(thisGraph.nodes, node);
+                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
+                                                        title: node.title,
+                                                        type: node.type,
+                                                        x: node.x, y: node.y,
+                                                        path: node.path,
+                                                        screenModel: node.screenModel,
+                                                        paramsModel: node.paramsModel,
+                                                        dataModel: model
+                                                      });
+                  });
+
+                  scope.$on("push-eventModel", function(event, srcId, tgtId, model){
+                    var edge = _.find(thisGraph.edges, function(elem){
+                      return elem.source.id == srcId && elem.target.id == tgtId; 
+                    });
+                    var index = _.indexOf(thisGraph.edges, edge);
+                    thisGraph.edges.splice(index, 1, {  source: edge.source,
+                                                        target: edge.target,
+                                                        eventModel: model
+                                                      });
+                    thisGraph.updateGraph();
+                  });
+
                   d3.select("#hidden-file-upload").on("change", function(){
                     if (window.File && window.FileReader && window.FileList && window.Blob) {
                       var uploadFile = this.files[0];
@@ -331,9 +385,6 @@
                 };
 
                 GraphCreator.prototype.pathMouseDown = function(d3path, d){
-                  // var event = document.createEvent('CustomEvent');
-                  // event.initCustomEvent("select-edge", true, true, d3path[0][0].__data__);
-                  // document.documentElement.dispatchEvent(event);
                   $rootScope.$broadcast("select-edge", d3path[0][0].__data__);
                   var thisGraph = this,
                   state = thisGraph.state;
@@ -471,7 +522,10 @@
                             title: item.name, 
                             type: item.type, 
                             x: 150, y: 150, 
-                            path: item.path};
+                            path: item.path,
+                            screenModel: {},
+                            paramsModel: {},
+                            dataModel: {}};
                   thisGraph.nodes.push(d);
                   thisGraph.updateGraph();
                 };
