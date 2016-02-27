@@ -82,9 +82,6 @@
             $scope.code = function(){
                 console.log("request code");
                 $scope.$broadcast("create-file");
-                // var event = document.createEvent('CustomEvent');
-                // event.initCustomEvent("create-file", true, true, '');
-                // document.documentElement.dispatchEvent(event);
             };
 
             $scope.load = function(){
@@ -117,8 +114,6 @@
             $scope.src = [];
             $scope.tgt = [];
 
-
-            
             $scope.sendInfoFunction = function(event, graph){
                 console.log("listen send info")
                 var data = JSON.parse(graph);
@@ -167,13 +162,6 @@
                     return mark;
                 };
 
-                var reach = bfs(adjMatrix, 3);
-
-                for(var i = 1; i<reach.length+1; i++){
-                    if(reach[i])
-                        console.log(i)
-                }
-
                 //Config files
 
                 var exportfiles = [];
@@ -190,9 +178,9 @@
                         var nodeDataPath = nodeData.path;
                         dataSource = [
                             "\tdataSource: {",
-                            "\t\ttype: " + nodeDataType + ",",
+                            "\t\ttype: '" + nodeDataType + "',",
                             "\t\tparams: {",
-                            "\t\t\tpath: " + nodeDataPath,
+                            "\t\t\tpath: '" + nodeDataPath + "'",
                             "\t\t}",
                             "\t},"
                         ];
@@ -216,9 +204,14 @@
                         "export var " + title + "Screen = {",
                         "\ttype: '" + item.type + "',",
                         params,    
-                        dataSource,
-                        "}"
+                        dataSource
                     ];
+
+                    if(screen_obj.default){
+                        file.push(["\tdefault: true"]);
+                    };
+
+                    file.push("}");
 
                     exportfiles.push(file);
                     
@@ -230,7 +223,7 @@
                     $http
                         .put("http://localhost:8000/setContent", reqObj)
                         .success(function(data){
-                            console.log('Save: ' + data);
+                            console.log('Save: ');
                         })
                         .error(function(){
                             console.error('Failed on save');
@@ -256,6 +249,7 @@
                 _.forEach($scope.roots, function(root){
                     var root_name = _.find($scope.nodes, function(node){return node.id == root}).screenModel.name.toLowerCase();
                     screens.push("\t'" + root_name +"': " + root_name + "." + root_name + "Screen,"); 
+                    nodeObj.push({screenName: root_name, id: root});
 
                     var reacheability = bfs(adjMatrix, root);
 
@@ -265,7 +259,7 @@
                             var name = screenObj.name.toLowerCase();
                             imports.push("import " + name + " = require('./"+ name +"')");
                             screens.push("\t'" + root_name + "." + name + "': " + name + "." + name + "Screen,");
-                            nodeObj.push({screenName: name, id: item.id});    
+                            nodeObj.push({screenName: root_name + "." + name, id: item.id});    
                         };
                         
                     });    
@@ -292,50 +286,49 @@
                 ///////////////////////////////////////////////////////////////////////////
 
                 // Routes.ts
+                var routes_line = ["export var routes : Megazord.RouterConfig = {"]; 
+                var routes_end = ["};"];
+                var routes = [];
 
-                /*
-                    example
-                    export var routes : Megazord.RouterConfig = {
-                        "root.companies" : {
-                            itemClick: 'root.detail'
-                        },
-                        "root.dashboard" : {
-                            news: 'root.news',
-                            events: 'root.sessions',
-                            companies: 'root.companies',
-                            form: 'root.form'
-                        },
-                        "root.login" : {
-                            doLogin: 'root.companies'
-                        }
+                _.forEach(nodeObj, function(node){
+                    var edges_same_src = _.filter($scope.edges, function(edge){
+                        return edge.source == node.id 
+                    });
+
+                    if(edges_same_src.length != 0){
+                        var node_routes = [];
+                        _.forEach(edges_same_src, function(edge){
+                            if(edge.eventModel){
+                                var target_name = _.find(nodeObj, {id: edge.target}).screenName;
+                                var routes_intern = [
+                                                    "\t\t" + edge.eventModel.event + ": '" +
+                                                    target_name + "',"
+                                                ];
+                                node_routes.push(routes_intern);
+                            };
+                        });
+                        if(node_routes.length != 0){
+                            var routes_init = ["\t'" + node.screenName + "': {"]
+                            var routes_end = ["\t},"]
+                            routes.push(routes_init.concat(node_routes).concat(routes_end));
+                        };
                     };
-                */
-
-                // var routes_line = ["export var routes : Megazord.RouterConfig = {"]; 
-                // var routes_end = ["};"];
-                // var routes = [];
-
-                // _.forEach(localStorageService.keys(), function(elem){
-                //     if(elem.indexOf("edge") >= 0){
-                //         var src_tgt = elem.split("edge")[1].split("-");
-                //         var src = src_tgt[0];
-                //         var tgt = src_tgt[1];
-                //         _.forEach(nodeObj, function(obj){
-                //             if(src == obj.id.toString()){
-                //                 var index = _.findIndex(nodeObj, function(obj){
-                //                     return obj.id.toString() == tgt
-                //                 });
-                //                 var event_name = localStorageService.get(elem).event;
-                //                 var routes_init = ["\t'" + obj.screenName + "': {", 
-                //                                     "\t\t" + event_name + ": '" +
-                //                                     nodeObj[index].screenName + "',",
-                //                                     "\t},"]
-                //                 routes.push(routes_init);
-                //             };
-                //         });
-                //     };
-                // });
-                // console.log(routes)
+                });
+                console.log("RUTAS")
+                
+                var reqObj = {
+                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName(),
+                    filename: "routes.ts",
+                    cont: JSON.stringify(_.flattenDeep(routes))
+                };             
+                $http
+                    .put("http://localhost:8000/setContent", reqObj)
+                    .success(function(data){
+                        console.log('success');
+                    })
+                    .error(function(err){
+                        console.error(err);
+                    });
 
                 ///////////////////////////////////////////////////////////////////////////
 

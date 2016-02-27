@@ -333,6 +333,10 @@
                             name: {
                                 title: "Screen name",
                                 type: "string"
+                            },
+                            default: {
+                                title: "Default screen",
+                                type: "boolean"
                             }
                         },
                         required: ["name"]
