@@ -80,6 +80,8 @@
             };
 
             $scope.code = function(){
+                console.log("request code");
+                $scope.$broadcast("create-file");
                 // var event = document.createEvent('CustomEvent');
                 // event.initCustomEvent("create-file", true, true, '');
                 // document.documentElement.dispatchEvent(event);
@@ -115,8 +117,11 @@
             $scope.src = [];
             $scope.tgt = [];
 
-            window.addEventListener("send-info", function(event) {
-                var data = JSON.parse(event.detail);
+
+            
+            $scope.sendInfoFunction = function(event, graph){
+                console.log("listen send info")
+                var data = JSON.parse(graph);
                 $scope.nodes = data.nodes;
                 $scope.edges = data.edges;
 
@@ -130,18 +135,57 @@
                         $scope.roots.push(elem);
                 });
                 
+                var adjMatrix = [];
+                console.log($scope.nodes.length);
+                for(var i = 1; i < $scope.nodes.length+1; ++i){
+                    adjMatrix[i] = []; 
+                    for(var j = 1; j < $scope.nodes.length+1; ++j){
+                        if(_.filter($scope.edges, function(edge){return edge.source == i && edge.target == j}).length==1)
+                            adjMatrix[i][j] = true;
+                        else
+                            adjMatrix[i][j] = false;
+                    };
+                };
+
+                function bfs(adjMatrix, node){
+                    var queue = [];
+                    var mark = [];
+
+                    queue.push(node);
+                    mark[node] = true;
+
+                    while(queue.length != 0){
+                        var item = queue.shift();
+                        for(var i = 1; i < $scope.nodes.length+1; ++i){
+                            if(adjMatrix[item][i] && !mark[i]){
+                                mark[i] = true;
+                                queue.push(i);
+                            };
+                        };
+                    };
+
+                    return mark;
+                };
+
+                var reach = bfs(adjMatrix, 3);
+
+                for(var i = 1; i<reach.length+1; i++){
+                    if(reach[i])
+                        console.log(i)
+                }
+
                 //Config files
 
                 var exportfiles = [];
 
                 _.forEach($scope.nodes, function(item){
-                    var nodeId = item.id.toString();
-                    var screen_obj = localStorageService.get('screen'+nodeId);
+                    var nodeId = item.id;
+                    var screen_obj = item.screenModel;
                     var title = screen_obj.name.toLowerCase();
                     var dataSource = [];
 
-                    if(localStorageService.get('data'+nodeId)){
-                        var nodeData = localStorageService.get('data'+nodeId);
+                    if(item.dataModel){
+                        var nodeData = item.dataModel;
                         var nodeDataType = nodeData.type;
                         var nodeDataPath = nodeData.path;
                         dataSource = [
@@ -155,8 +199,8 @@
                     };
 
                     var params = [];
-                    if(localStorageService.get('params'+nodeId)){
-                        var nodeParams = localStorageService.get('params'+nodeId);
+                    if(item.paramsModel){
+                        var nodeParams = item.paramsModel;
                         var eachParam = []; 
                         for (var key in nodeParams){
                             eachParam.push("\t\t" + key + ": " + JSON.stringify(nodeParams[key]) + ",");
@@ -179,7 +223,8 @@
                     exportfiles.push(file);
                     
                     var reqObj = {
-                        path: "/home/alejandro/kiraso-wizard/files/"+title+".ts",
+                        path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName(),
+                        filename: title + ".ts",
                         cont: JSON.stringify(_.flattenDeep(file))
                     };
                     $http
@@ -199,18 +244,31 @@
                 var imports = [];
                 var screens = [];
                 var nodeObj = [];
-
+                
+                // imports
                 _.forEach($scope.nodes, function(item){
-                    var screenObj = localStorageService.get('screen'+item.id.toString());
+                    var screenObj = item.screenModel;
                     var name = screenObj.name.toLowerCase();
-                    imports.push("import " + name + " = require('./"+ name +"')");
-                    if($scope.roots.indexOf(item.id) >= 0 || 
-                        ($scope.src.indexOf(item.id) < 0 && $scope.tgt.indexOf(item.id) < 0)){
-                        screens.push("\t'" + name +"': " + name + "." + name + "Screen,");    
-                    }else{
-                        screens.push("\t'root." + name + "': " + name + "." + name + "Screen,");
-                        nodeObj.push({screenName: name, id: item.id});                               
-                    }    
+                    imports.push("import " + name + " = require('./"+ name +"')");    
+                });
+
+                // screens
+                _.forEach($scope.roots, function(root){
+                    var root_name = _.find($scope.nodes, function(node){return node.id == root}).screenModel.name.toLowerCase();
+                    screens.push("\t'" + root_name +"': " + root_name + "." + root_name + "Screen,"); 
+
+                    var reacheability = bfs(adjMatrix, root);
+
+                    _.forEach($scope.nodes, function(item){
+                        if(reacheability[item.id] && item.id != root){
+                            var screenObj = item.screenModel;
+                            var name = screenObj.name.toLowerCase();
+                            imports.push("import " + name + " = require('./"+ name +"')");
+                            screens.push("\t'" + root_name + "." + name + "': " + name + "." + name + "Screen,");
+                            nodeObj.push({screenName: name, id: item.id});    
+                        };
+                        
+                    });    
                 });
 
                 var line = ['','export var screens : Megazord.ContainerScreenList = {'];
@@ -218,7 +276,8 @@
                 var result = _.flattenDeep([imports,line,screens,end]);
 
                 var reqObj = {
-                    path: "/home/alejandro/kiraso-wizard/files/screens.ts",
+                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName(),
+                    filename: "screens.ts",
                     cont: JSON.stringify(result)
                 };             
                 $http
@@ -252,35 +311,36 @@
                     };
                 */
 
-                var routes_line = ["export var routes : Megazord.RouterConfig = {"]; 
-                var routes_end = ["};"];
-                var routes = [];
+                // var routes_line = ["export var routes : Megazord.RouterConfig = {"]; 
+                // var routes_end = ["};"];
+                // var routes = [];
 
-                _.forEach(localStorageService.keys(), function(elem){
-                    if(elem.indexOf("edge") >= 0){
-                        var src_tgt = elem.split("edge")[1].split("-");
-                        var src = src_tgt[0];
-                        var tgt = src_tgt[1];
-                        _.forEach(nodeObj, function(obj){
-                            if(src == obj.id.toString()){
-                                var index = _.findIndex(nodeObj, function(obj){
-                                    return obj.id.toString() == tgt
-                                });
-                                var event_name = localStorageService.get(elem).event;
-                                var routes_init = ["\t'" + obj.screenName + "': {", 
-                                                    "\t\t" + event_name + ": '" +
-                                                    nodeObj[index].screenName + "',",
-                                                    "\t},"]
-                                routes.push(routes_init);
-                            };
-                        });
-                    };
-                });
-                console.log(routes)
+                // _.forEach(localStorageService.keys(), function(elem){
+                //     if(elem.indexOf("edge") >= 0){
+                //         var src_tgt = elem.split("edge")[1].split("-");
+                //         var src = src_tgt[0];
+                //         var tgt = src_tgt[1];
+                //         _.forEach(nodeObj, function(obj){
+                //             if(src == obj.id.toString()){
+                //                 var index = _.findIndex(nodeObj, function(obj){
+                //                     return obj.id.toString() == tgt
+                //                 });
+                //                 var event_name = localStorageService.get(elem).event;
+                //                 var routes_init = ["\t'" + obj.screenName + "': {", 
+                //                                     "\t\t" + event_name + ": '" +
+                //                                     nodeObj[index].screenName + "',",
+                //                                     "\t},"]
+                //                 routes.push(routes_init);
+                //             };
+                //         });
+                //     };
+                // });
+                // console.log(routes)
 
                 ///////////////////////////////////////////////////////////////////////////
 
-            }, false);
+            };
+            $scope.$on("send-info", $scope.sendInfoFunction);
 
         }
     }

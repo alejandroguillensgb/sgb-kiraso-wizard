@@ -107,17 +107,20 @@
                   };
 
                   scope.$on("create-node", scope.createNodeFunction);
-   
-                  window.addEventListener("create-file", function(event) {
+                  
+                  scope.createFileFunction = function(){
+                    console.log("listen create-file");
                     var saveEdges = [];
                     thisGraph.edges.forEach(function(val, i){
-                    saveEdges.push({source: val.source.id, target: val.target.id});
+                    saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
                     });
                     var item = window.JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges});
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent("send-info", true, true, item);
-                    document.documentElement.dispatchEvent(event);
-                  }, false);
+                    scope.$emit("send-info", item);
+                  };
+
+                  scope.$on("create-file", scope.createFileFunction);
+
+                  
 
                   // listen for dragging
                   var dragSvg = d3.behavior.zoom()
