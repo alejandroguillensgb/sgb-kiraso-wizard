@@ -42,10 +42,11 @@
 
             $scope.wizard = function(){
                 $scope.previewActive = false;
-            } 
+            };
 
             $scope.preview = function(){
                 $scope.previewActive = true;
+                $scope.$broadcast("set-graph");
             };
 
             $scope.new = function(){
@@ -61,7 +62,7 @@
 
             $scope.saveWizard = function(){
                 console.log("save")
-                $scope.$broadcast("request-graph");
+                $scope.$broadcast("save-graph");
             };
             
             $scope.loadProject = function(project){

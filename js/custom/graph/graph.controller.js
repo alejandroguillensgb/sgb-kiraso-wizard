@@ -38,8 +38,13 @@
                     });                    
                 } else{
                     $scope.$on("directiveReady", function(){
-                        console.log("nuevo");
-                        $scope.$emit("new-graph");    
+                        if(fromState.name == "app.preview"){
+                            console.log("reload");
+                            $scope.$emit("reload-graph", kirasoFactory.getGraph());
+                        } else {
+                            console.log("nuevo");
+                            $scope.$emit("new-graph");
+                        }; 
                     });
                 };
             });

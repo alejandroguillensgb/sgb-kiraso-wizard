@@ -5,8 +5,8 @@
         .module('custom.graph')
         .directive('graph', graph);
 
-    graph.$inject = ['d3Factory', '$rootScope', '$http'];
-    function graph (d3Factory, $rootScope, $http) {
+    graph.$inject = ['d3Factory', '$rootScope', '$http', 'kirasoFactory'];
+    function graph (d3Factory, $rootScope, $http, kirasoFactory) {
 
         var directive = {
             restrict: 'EA',
@@ -169,8 +169,8 @@
                     saveAs(blob, "mydag.json");
                   }, false);
 
-                  scope.$on('request-graph', function(event){
-                    console.log("request listener");
+                  scope.$on('save-graph', function(){
+                    console.log("save listener");
                     var saveEdges = [];                    
                     thisGraph.edges.forEach(function(val, i){
                       saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
@@ -186,6 +186,15 @@
                       .error(function(){
                         console.log("error saving graph app");
                       });
+                  });
+
+                  scope.$on("set-graph", function(){
+                    console.log("setting graph");
+                    var saveEdges = [];                    
+                    thisGraph.edges.forEach(function(val, i){
+                      saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
+                    });
+                    kirasoFactory.setGraph(JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges}));
                   });
 
                   scope.$on("push-paramsModel", function(event, nodeId, model){
@@ -733,7 +742,6 @@
                   graph.updateGraph();  
                 };
                 
-
                 scope.loadGraphFunction = function(event, graph){
                   console.log("listen load-graph");
                   event.stopPropagation();
@@ -748,7 +756,9 @@
                   height =  400;//window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
                   var xLoc = width/2 - 25,
                   yLoc = 100;
-                  //var graph = event.detail;
+                  if(typeof(graph)=="string"){
+                    graph = JSON.parse(graph);
+                  };
                   var nodes = graph.nodes;
                   var transformEdges = graph.edges;
                   transformEdges.forEach(function(e, i){
@@ -765,7 +775,8 @@
                   graph.updateGraph();
                 };
 
-                // window.addEventListener("load-graph", scope.loadGraphFunction, false);
+                scope.$on("reload-graph", scope.loadGraphFunction);
+
                 scope.$on("load-graph", scope.loadGraphFunction);
 
                 scope.$on("new-graph", scope.newGraphFunction);

@@ -11,6 +11,7 @@
         var app_name = "";
         var username = "";
         var projects = [];
+        var graph = "";
         function setAppModel(model){
             console.log("got called")
             console.log(model)
@@ -24,6 +25,9 @@
         };
         function setAppName(name){
             app_name = name;
+        };
+        function setGraph(g){
+            graph = g;
         };
 
         return {
@@ -47,10 +51,14 @@
             getAppName: function(){
                 return app_name
             },
+            getGraph: function(){
+                return graph
+            },
             setAppModel: setAppModel,
             setUsername: setUsername,
             setProjects: setProjects,
-            setAppName: setAppName
+            setAppName: setAppName,
+            setGraph: setGraph
         };          
     }
 })();
