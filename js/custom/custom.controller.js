@@ -87,7 +87,6 @@
             };
 
             $scope.saveWizard = function(){
-                console.log("save")
                 $scope.$broadcast("save-graph");
             };
             
@@ -211,18 +210,26 @@
                             var title = screen_obj.name.toLowerCase();
                             var dataSource = [];
 
-                            if(item.dataModel){
+                            if(item.dataModel && item.dataModel.type != ""){
                                 var nodeData = item.dataModel;
                                 var nodeDataType = nodeData.type;
                                 var nodeDataPath = nodeData.path;
-                                dataSource = [
-                                    "\tdataSource: {",
-                                    "\t\ttype: '" + nodeDataType + "',",
-                                    "\t\tparams: {",
-                                    "\t\t\tpath: '" + nodeDataPath + "'",
-                                    "\t\t}",
-                                    "\t},"
-                                ];
+                                if(nodeDataType == "sgb-datasource-json"){
+                                    dataSource = [
+                                        "\tdataSource: {",
+                                        "\t\ttype: '" + nodeDataType + "',",
+                                        "\t\tparams: {",
+                                        "\t\t\tpath: '" + nodeDataPath + "'",
+                                        "\t\t}",
+                                        "\t},"
+                                    ];
+                                } else {
+                                    dataSource = [
+                                        "\tdataSource: {",
+                                        "\t\ttype: '" + nodeDataType + "'",
+                                        "\t},"
+                                    ];
+                                };
                             };
 
                             var params = [];
@@ -259,6 +266,8 @@
                                 filename: title + ".ts",
                                 cont: JSON.stringify(_.flattenDeep(file))
                             };
+                            console.log("archivo")
+                            console.log(file)
                             $http
                                 .put("http://localhost:8000/setContent", reqObj)
                                 .success(function(data){

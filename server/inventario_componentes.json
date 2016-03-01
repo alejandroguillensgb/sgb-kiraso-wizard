@@ -27,5 +27,46 @@
         "url": "https://camo.githubusercontent.com/bd351f6043a87ad136a8977664a4ab9efb0a8735/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d64617368626f6172642d6c6973742e706e67"},
       { "desc": "Opcion @category",
         "url": "https://camo.githubusercontent.com/eabe3e4c9a27fcf792b907bbaa5fe1e52b7274f2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d64617368626f6172642d63617465676f72792e706e67"}]
+  },
+  {
+    "name": "Collapse detail",
+    "type": "sgb-screen-collapse-detail",
+    "path": "/home/alejandro/kiraso-wizard/collapse-detail",
+    "description_images": [
+      { "desc": "Template",
+        "url": "https://camo.githubusercontent.com/24246b24484c32b21bc5f8e8be128a22aa6e3069/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d636f6c6c6173652d64657461696c2e706e67"
+      }
+    ]
+  },
+  {
+    "name": "Contact",
+    "type": "sgb-screen-contact",
+    "path": "/home/alejandro/kiraso-wizard/contact"
+  },
+  {
+    "name": "Short form",
+    "type": "sgb-screen-short-form",
+    "path": "/home/alejandro/kiraso-wizard/short-form",
+    "description_images": [
+      { "desc": "Template",
+        "url": "https://camo.githubusercontent.com/2ba47b73517865a4df104b0c51ec57391988cb13/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d73686f72742d666f726d2e706e67"
+      }
+    ]
+  },
+  {
+    "name": "Group list",
+    "type": "sgb-screen-group-list",
+    "path": "/home/alejandro/kiraso-wizard/group-list",
+    "description_images": [
+      { "desc": "@news",
+        "url": "https://camo.githubusercontent.com/800fea9e60f10d99a7a9282e2e9b8e0b265d8c03/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d67726f75702d6c6973742d6e6577732e706e67"
+      },
+      { "desc": "@compact-left",
+        "url": "https://camo.githubusercontent.com/ad8e2475a6ee1357b36842d88f8ede750e6ffd01/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d67726f75702d6c6973742d636f6d706163742d6c6566742e706e67"
+      },
+      { "desc": "@compact-right",
+        "url": "https://camo.githubusercontent.com/42ac8ab46c052b42650f92fa14397840e72660c7/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6d6567617a6f72642d6672616d65776f726b2f62616c73616d69712b6d6f636b7570732f7367622d73637265656e2d67726f75702d6c6973742d636f6d706163742d72696768742e706e67"
+      }
+    ]
   }
 ]

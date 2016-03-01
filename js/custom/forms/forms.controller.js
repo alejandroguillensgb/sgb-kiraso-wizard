@@ -217,6 +217,7 @@
                 $scope.appModel = {};
 
             $scope.submitApp = function(form, flag_new){
+                $scope.$broadcast('schemaFormValidate');
                 console.log("submit app")
                 if(form.name.$viewValue != ""){
                     if(!flag_new && kirasoFactory.getAppName() != $scope.appModel.name){
@@ -274,57 +275,71 @@
                 $scope.nodeId = node_data.id;
                 $scope.app_name = kirasoFactory.getAppModel().name;
 
-                if(node_data.paramsModel)
+                if(!_.isEmpty(node_data.paramsModel)){
                     $scope.paramsModel = node_data.paramsModel;
-                else
+                }else{
                     $scope.paramsModel = {};
+                }
 
                 FormsLoader.getFormParams(node_data.path, paramsReady);
       
                 function paramsReady(data){
+                    $scope.show = true;
                     $scope.params = data;
-                    $scope.versions = $scope.params.versions;
                     $scope.properties = {};
-                    _.forEach($scope.params.params, function(value,key){
-                        if ('options' in value){
-                            $scope.properties[value.name] = {
-                                title: value.title,
-                                type: value.type,
-                                description: value.description,
-                                enum: value.options.concat("")
-                            };
-                        } else if('elements' in value){
-                            $scope.properties = {
-                                menu: {
-                                    title: "Menu",
-                                    type: "array",
-                                    items: {
-                                        type: "object",
-                                        properties: {
-                                            "title": {
-                                                title: value.elements[0],
-                                                type: "string"
-                                            },
-                                            "screen": {
-                                                title: value.elements[1],
-                                                type: "string"
+                    if($scope.params.params){
+                        $scope.show = true
+                        console.log("params")
+                        _.forEach($scope.params.params, function(value,key){
+                            if ('options' in value){
+                                $scope.properties[value.name] = {
+                                    title: value.title,
+                                    type: value.type,
+                                    description: value.description,
+                                    enum: value.options.concat("")
+                                };
+                            } else if('elements' in value){
+                                $scope.properties = {
+                                    menu: {
+                                        title: "Menu",
+                                        type: "array",
+                                        items: {
+                                            type: "object",
+                                            properties: {
+                                                "title": {
+                                                    title: value.elements[0],
+                                                    type: "string"
+                                                },
+                                                "screen": {
+                                                    title: value.elements[1],
+                                                    type: "string"
+                                                }
                                             }
                                         }
                                     }
                                 }
+                            }else{
+                                $scope.properties[value.name] = {
+                                    title: value.title,
+                                    type: value.type,
+                                    description: value.description
+                                }
                             }
-                        }else{
-                            $scope.properties[value.name] = {
-                                title: value.title,
-                                type: value.type,
-                                description: value.description
+                        });
+                        $scope.paramsSchema ={
+                            type: "object",
+                            properties: $scope.properties  
+                        };
+                        $scope.paramsForm = [                  
+                            "*",
+                            {
+                                type: "submit",
+                                style: "btn-info",
+                                title: "OK"
                             }
-                        }
-                    });
-
-                    $scope.paramsSchema ={
-                        type: "object",
-                        properties: $scope.properties  
+                        ];
+                    } else {
+                        $scope.show = false;
                     };
 
                     $scope.screenSchema = {
@@ -342,18 +357,12 @@
                         required: ["name"]
                     };
 
-                    $scope.paramsForm = [                  
-                        "*",
-                        {
-                            type: "submit",
-                            style: "btn-info",
-                            title: "OK"
-                        }
-                    ];
+                    
                 };
 
                 $scope.submitParams = function(){
                     $rootScope.$broadcast("push-paramsModel", $scope.nodeId, $scope.paramsModel);
+                    alert("Params added");
                 };
 
                 //////////////////
@@ -384,12 +393,22 @@
                             {
                                 value: "sgb-datasource-param",
                                 name: "Param"
+                            },
+                            {
+                                value: "",
+                                name: "None"
                             }
                         ]
                     },
                     {
-                        key: "path",
-                        type: "string"
+                        type: "conditional",
+                        condition: "dataModel.type == 'sgb-datasource-json'",
+                        items: [
+                            {
+                                key: "path",
+                                type: "string"
+                            }
+                        ]
                     },
                     {
                         type: "submit",
@@ -401,8 +420,10 @@
                     $scope.dataModel = node_data.dataModel;
                 else
                     $scope.dataModel = {};
+
                 $scope.submitData = function(){
                     $rootScope.$broadcast("push-dataModel", $scope.nodeId, $scope.dataModel);
+                    alert("Data added");
                 };
 
                 ////////////////////////////////////////////////////
@@ -422,6 +443,7 @@
                 
                 $scope.submitScreen = function(){
                     $rootScope.$broadcast("push-screenModel", $scope.nodeId, $scope.screenModel);
+                    alert("Screen added");
                 };
 
                 ///////////////////////////////////////////////////////
@@ -466,6 +488,7 @@
                 
                 $scope.submitEvent = function(){
                     $rootScope.$broadcast("push-eventModel", $scope.edgeSrcId, $scope.edgeTgtId, $scope.eventModel);
+                    alert("Event added");
                 };
             };
         };

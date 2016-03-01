@@ -182,9 +182,11 @@
                       .post("http://localhost:8000/mongoose_setGraph?app=" + scope.app_name, reqObj)
                       .success(function(){
                         console.log("graph app saved");
+                        alert("Your app was saved");
                       })
                       .error(function(){
                         console.log("error saving graph app");
+                        alert("Error saving your app")
                       });
                   });
 
