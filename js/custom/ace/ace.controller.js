@@ -18,9 +18,13 @@
         ////////////////
 
         function activate() {
+            console.log("ace controller")
+
+            $scope.$on("$viewContentLoaded", function(){
+                $scope.$emit("ace-loaded");
+            });
             
             $scope.code = "<h1>Kiraso.io</h1>";
-            $scope.iframe = document.getElementById('frame');
         
             $scope.aceLoaded = function(_editor) {
                 $scope.aceSession = _editor.getSession();
@@ -33,8 +37,12 @@
             });
 
             $scope.$on('save', function(event){
+                var split_path = $scope.path.split("/");
+                var filename = split_path[split_path.length -1];
+                split_path.splice(split_path.length -1, 1); 
                 var reqObj = {
-                    path: $scope.path,
+                    path: split_path.join("/"),
+                    filename: filename,
                     cont: JSON.stringify($scope.aceSession.getValue().split('\n'))
                 };
                 $http

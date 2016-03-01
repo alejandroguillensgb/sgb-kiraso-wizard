@@ -32,8 +32,6 @@
 
         return {
             getAppModel: function(){
-                console.log("get model")
-                console.log(appModel)
                 return {
                     appModel: appModel
                 }

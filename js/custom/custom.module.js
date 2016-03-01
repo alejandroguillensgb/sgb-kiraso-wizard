@@ -14,7 +14,8 @@
             'custom.sideb',
             'custom.forms',
             'LocalStorageModule',
-            'custom.graph'
+            'custom.graph',
+            'custom.preview'
             /*...*/
         ]);
 })();

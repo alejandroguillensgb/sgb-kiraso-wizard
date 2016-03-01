@@ -26,24 +26,13 @@ nav.navbar.topnavbar(role='navigation', style="background:#2ab24b;")
       ul.nav.navbar-nav.navbar-right
         // Search icon
         li
-          //- a(search-open="")
-          //-   em.icon-magnifier
-          a Welcome {{ username }}
+          a Welcome {{ username }}!
         li
-          a Help
-        li
-          a Settings
+          a(ng-click="goToProjects()") My projects
         // END Offsidebar menu
       // END Right Navbar
     // END Nav wrapper
     
-    // START Search form
-    form.navbar-form(role='search', action="search.html")
-      .form-group.has-feedback
-        input.form-control(type='text', placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}")
-        .fa.fa-times.form-control-feedback(search-dismiss)
-      button.hidden.btn.btn-default(type='submit') Submit
-    // END Search form
 
     
 

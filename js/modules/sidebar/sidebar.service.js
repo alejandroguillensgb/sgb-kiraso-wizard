@@ -12,14 +12,14 @@
 
         ////////////////
 
-        function getMenu(onReady, onError) {
+        function getMenu(path, onReady, onError) {
           var menuJson = 'server/sidebar-menu.json',
               menuURL  = menuJson + '?v=' + (new Date().getTime()); // jumps cache
             
           onError = onError || function() { alert('Failure loading menu'); };
 
           $http
-            .get('http://localhost:8000/dirTree')
+            .get('http://localhost:8000/dirTree?path=' + path)
             .success(onReady)
             .error(onError);
         };

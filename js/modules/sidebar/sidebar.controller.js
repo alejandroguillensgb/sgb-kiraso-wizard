@@ -35,15 +35,18 @@
 
           // Load menu from json file
           // ----------------------------------- 
-
-          SidebarLoader.getMenu(sidebarReady);
           
           function sidebarReady(items) {
             $scope.menuItems = items;
           }
 
+          $scope.$on("gen-dir", function(event, path){
+            console.log("gen dir");
+            SidebarLoader.getMenu(path, sidebarReady);  
+          });
+
           function contentReady(data,path){
-            $scope.data = data;           
+            $scope.data = data; 
             $rootScope.$broadcast('aceChange', data, path);
           }
 

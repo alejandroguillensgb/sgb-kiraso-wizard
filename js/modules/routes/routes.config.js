@@ -78,7 +78,7 @@
                 },
                 "offsidebar":{
                     templateUrl: helper.basepath('partials/offsidebar.html'),
-                    controller: "aceController"
+                    controller: "previewController"
                 },
                 "sidebar":{
                     templateUrl: helper.basepath('partials/menubar.html'),
