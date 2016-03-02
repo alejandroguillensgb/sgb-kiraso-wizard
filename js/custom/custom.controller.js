@@ -42,6 +42,23 @@
                 });
             };
 
+            $scope.deleteProject = function(project){
+                console.log(project);
+                $http
+                    .delete("http://localhost:8000/mongoose_removeElement?app=" + project + "&username=" +$scope.username)
+                    .success(function(){
+                        console.log("delete successful")    
+                        var pro = _.filter($scope.projects, function(e){
+                            return e != project
+                        });
+                        kirasoFactory.setProjects(pro);
+                        $scope.projects = kirasoFactory.getProjects().projects;
+                    })
+                    .error(function(){
+                        console.log("delete error")
+                    })
+            }; 
+
             if($state.current.name == "app.preview")
                 $scope.previewActive = true;
             else 

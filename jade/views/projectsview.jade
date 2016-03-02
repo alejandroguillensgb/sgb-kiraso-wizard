@@ -4,11 +4,15 @@ header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'")
 section.content-wrapper(style="height: 500px; overflow-y: auto;")
     h2 Your projects
     button.btn.btn-primary(ng-click="newProject()") New project
-    div
-        ul
-            li(ng-repeat="project in projects")
-                a(ng-click="loadProject(project)")
-                    h4 {{ project }}
+    
+    table(ng-repeat="project in projects")
+        tr
+            td(style="width:90%;") 
+                a
+                    h4(ng-click="loadProject(project)") {{ project }}
+            td
+                button.btn.btn-danger.icon-trash(ng-click="deleteProject(project)")
+
 
 // Page footer
 footer(ng-include="'app/views/partials/footer.html'")

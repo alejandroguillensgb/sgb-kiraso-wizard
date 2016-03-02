@@ -249,6 +249,9 @@
                                     $http
                                         .post("http://localhost:8000/mongoose_setProjects", reqObj)
                                         .success(function(){
+                                            var projects = kirasoFactory.getProjects().projects;
+                                            projects.push($scope.appModelNew.name);
+                                            kirasoFactory.setProjects(projects);
                                             console.log("success setting projects");
                                             $state.go("app.wizard", {new: flag_new});
                                         })
