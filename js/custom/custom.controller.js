@@ -209,6 +209,7 @@
                             var screen_obj = item.screenModel;
                             var title = screen_obj.name.toLowerCase();
                             var dataSource = [];
+                            var dataConnector = [];
 
                             if(item.dataModel && item.dataModel.type != ""){
                                 var nodeData = item.dataModel;
@@ -223,6 +224,24 @@
                                         "\t\t}",
                                         "\t},"
                                     ];
+                                } else if(nodeDataType == "sgb-datasource-function"){
+                                    $http
+                                        .get("http://localhost:8000/getContent?path=" + nodeDataPath + "&type=json")
+                                        .success(function(data){
+                                            dataSource = [
+                                                "\tdataSource: {",
+                                                "\t\ttype: '" + nodeDataType + "',",
+                                                "\t\tparams: {",
+                                                "\t\t\tdata: function(){",
+                                                "\t\t\t\treturn " + JSON.stringify(data),
+                                                "\t\t\t}",
+                                                "\t\t}",
+                                                "\t},"
+                                            ];    
+                                        })
+                                        .error(function(){
+                                            console.log("error retreiving data");
+                                        });
                                 } else {
                                     dataSource = [
                                         "\tdataSource: {",
@@ -230,6 +249,23 @@
                                         "\t},"
                                     ];
                                 };
+                            };
+
+                            if(!_.isEmpty(item.dataconnectorModel)){
+                                console.log("DATACONNECTOR")
+                                console.log(item.dataconnectorModel)
+                                var nodeData = item.dataconnectorModel;
+                                dataConnector = [
+                                    "\tdataConnectors: {",
+                                    "\t\t" + nodeData.title + ": {",
+                                    "\t\t\ttype: '" + nodeData.type + "',",
+                                    "\t\t\tparams: {",
+                                    "\t\t\t\tmethod: '" + nodeData.method + "',",
+                                    "\t\t\t\turl: '" + nodeData.url + "'",
+                                    "\t\t\t},",
+                                    "\t\t}",
+                                    "\t}"
+                                ]
                             };
 
                             var params = [];
@@ -250,7 +286,8 @@
                                 "export var " + title + "Screen = {",
                                 "\ttype: '" + item.type + "',",
                                 params,    
-                                dataSource
+                                dataSource,
+                                dataConnector
                             ];
 
                             if(screen_obj.default){

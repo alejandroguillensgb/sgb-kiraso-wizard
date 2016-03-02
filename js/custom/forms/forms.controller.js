@@ -391,6 +391,10 @@
                                 name: "JSON"
                             },
                             {
+                                value: "sgb-datasource-function",
+                                name: "Function"
+                            },
+                            {
                                 value: "sgb-datasource-param",
                                 name: "Param"
                             },
@@ -402,7 +406,7 @@
                     },
                     {
                         type: "conditional",
-                        condition: "dataModel.type == 'sgb-datasource-json'",
+                        condition: "dataModel.type == 'sgb-datasource-json' || dataModel.type == 'sgb-datasource-function'",
                         items: [
                             {
                                 key: "path",
@@ -447,6 +451,84 @@
                 };
 
                 ///////////////////////////////////////////////////////
+
+                $scope.dataconnectorModel = node_data.dataconnectorModel;
+
+                $scope.dataconnectorSchema = {
+                    type: "object",
+                    properties: {
+                        title: {
+                            title: "Event name",
+                            type: "string"
+                        },
+                        type: {
+                            title: "Select type of data connector",
+                            type: "string"
+                        },
+                        url: {
+                            title: "Url",
+                            type: 'string'
+                        },
+                        method: {
+                            title: "Method http",
+                            type: "string"
+                        }
+                    }
+                };
+
+                $scope.dataconnectorForm = [
+                    "title",
+                    {
+                        key: "type",
+                        type: "select",
+                        titleMap: [
+                            {
+                                value: "sgb-dataconnector-http",
+                                name: "http"
+                            },
+                            {
+                                value: "",
+                                name: "None"
+                            }
+                        ]
+                    },
+                    "url",
+                    {
+                        key: "method",
+                        type: "select",
+                        titleMap: [
+                            {
+                                value: "GET",
+                                name: "get"
+                            },
+                            {
+                                value: "POST",
+                                name: "post"
+                            },
+                            {
+                                value: "PUT",
+                                name: "put"
+                            },
+                            {
+                                value: "DELETE",
+                                name: "delete"
+                            },
+                            {
+                                value: "",
+                                name: "None"
+                            }
+                        ]
+                    },
+                    {
+                        type: "submit",
+                        title: "Save"
+                    }
+                ];
+
+                $scope.submitDataconnector = function(){
+                    $rootScope.$broadcast("push-dataconnectorModel", $scope.nodeId, $scope.dataconnectorModel);
+                    alert("Dataconnector added");
+                };
             };
 
 

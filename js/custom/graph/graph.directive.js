@@ -209,7 +209,8 @@
                                                         path: node.path,
                                                         screenModel: node.screenModel,
                                                         paramsModel: model,
-                                                        dataModel: node.dataModel
+                                                        dataModel: node.dataModel,
+                                                        dataconnectorModel: node.dataconnectorModel
                                                       });
                   });
 
@@ -223,7 +224,8 @@
                                                         path: node.path,
                                                         screenModel: model,
                                                         paramsModel: node.paramsModel,
-                                                        dataModel: node.dataModel
+                                                        dataModel: node.dataModel,
+                                                        dataconnectorModel: node.dataconnectorModel
                                                       });
                   });
 
@@ -237,7 +239,23 @@
                                                         path: node.path,
                                                         screenModel: node.screenModel,
                                                         paramsModel: node.paramsModel,
-                                                        dataModel: model
+                                                        dataModel: model,
+                                                        dataconnectorModel: node.dataconnectorModel
+                                                      });
+                  });
+
+                  scope.$on("push-dataconnectorModel", function(event, nodeId, model){
+                    var node = _.find(thisGraph.nodes, {id: nodeId});
+                    var index = _.indexOf(thisGraph.nodes, node);
+                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
+                                                        title: node.title,
+                                                        type: node.type,
+                                                        x: node.x, y: node.y,
+                                                        path: node.path,
+                                                        screenModel: node.screenModel,
+                                                        paramsModel: node.paramsModel,
+                                                        dataModel: node.dataModel,
+                                                        dataconnectorModel: model
                                                       });
                   });
 
@@ -538,7 +556,8 @@
                             path: item.path,
                             screenModel: {},
                             paramsModel: {},
-                            dataModel: {}};
+                            dataModel: {},
+                            dataconnectorModel: {}};
                   thisGraph.nodes.push(d);
                   thisGraph.updateGraph();
                 };
