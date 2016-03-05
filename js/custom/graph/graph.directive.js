@@ -108,6 +108,52 @@
 
                   scope.$on("create-node", scope.createNodeFunction);
                   
+                 $rootScope.$on("update_node", function(event, data){
+                    console.log("update-node")
+                    console.log(data)
+                    for(var key in data)
+                      var data_key = key;
+                      var screenName = key.split("Screen")[0];
+                    
+                    var update_node = _.find(thisGraph.nodes, function(node){
+                      return node.screenModel.name.toLowerCase() == screenName;
+                    });
+
+                    var index = _.indexOf(thisGraph.nodes, update_node);
+
+                    for(var key in data[data_key]){
+                      console.log(key)
+                      if(key == "dataSource"){
+                        update_node.dataModel = data[data_key][key];
+                        console.log("data")
+                        console.log(update_node)
+                        console.log(data[data_key][key])
+                      } else if(key == "params") {
+                        update_node.paramsModel = data[data_key][key];
+                        console.log("params")
+                        console.log(update_node)
+                        console.log(data[data_key][key])
+                      } else if(key == "default") {
+                        update_node.screenModel = {name: screenName, default: data[data_key][key]};
+                        console.log("screen")
+                        console.log(update_node)
+                        console.log(data[data_key][key])
+                      } else if(key == "dataConnectors") {
+                        update_node.dataconnectorModel = data[data_key][key];
+                        console.log("dataC")
+                        console.log(update_node)
+                        console.log(data[data_key][key])
+                      }
+                    };
+                    console.log(thisGraph.nodes);
+                    var saveEdges = [];                    
+                    thisGraph.edges.forEach(function(val, i){
+                      saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
+                    });
+                    kirasoFactory.setGraph(JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges}));
+
+                  });
+
                   scope.createFileFunction = function(){
                     console.log("listen create-file");
                     var saveEdges = [];
@@ -179,7 +225,7 @@
                       graph: JSON.stringify({"nodes": thisGraph.nodes, "edges": saveEdges})
                     };
                     $http
-                      .post("http://localhost:8000/mongoose_setGraph?app=" + scope.app_name, reqObj)
+                      .post($rootScope.url + "/mongoose_setGraph?app=" + scope.app_name, reqObj)
                       .success(function(){
                         console.log("graph app saved");
                         alert("Your app was saved");
@@ -438,10 +484,9 @@
                   state = thisGraph.state;
                   d3.event.stopPropagation();
                   state.mouseDownNode = d;
+                  console.log("NODE")
+                  console.log(d3node[0][0].__data__)
                   $rootScope.$broadcast("select-node", d3node[0][0].__data__);
-                  // var event = document.createEvent('CustomEvent');
-                  // event.initCustomEvent("select-node", true, true, d3node[0][0].__data__);
-                  // document.documentElement.dispatchEvent(event);
                   if (d3.event.ctrlKey){
                     state.shiftNodeDrag = d3.event.ctrlKey;
                     // reposition dragged directed edge
@@ -735,10 +780,6 @@
                 };
 
                 /**** MAIN ****/
-                // warn the user when leaving
-                // window.onbeforeunload = function(){
-                // return "Make sure to save your graph locally before leaving :-)";
-                // };
                 scope.newGraphFunction = function(){
                   var docEl = document.documentElement,
                   bodyEl = document.getElementById('graph'),
@@ -805,6 +846,7 @@
                 scope.$broadcast("directiveReady");
               })
             }
+
         };
         return directive;
     }

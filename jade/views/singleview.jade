@@ -1,1 +1,23 @@
-div#aceEditor.ace_editor(ui-ace="{useWrapMode : true,showGutter: true,mode: 'html',theme: 'monokai',onLoad: aceLoaded,onChange: aceChanged}" ng-model="code")     
+script.
+    function init() {
+        websocket = new WebSocket("ws://echo.websocket.org/");
+        websocket.onopen = function() { document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"; };
+        websocket.onmessage = function(evt) { 
+            document.getElementById("output").innerHTML += "<p style='color: blue;'>> RESPONSE: " + evt.data + "</p>"; };
+        websocket.onerror = function(evt) { 
+            document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; 
+        };  
+    }
+    function sendMessage(message) {
+        document.getElementById("output").innerHTML += "<p>> SENT: " + message + "</p>";
+        websocket.send(message);
+    }
+    window.addEventListener("load", init, false);
+
+div#aceEditor.ace_editor(ui-ace="{useWrapMode : true,showGutter: true,mode: 'html',theme: 'monokai',onLoad: aceLoaded,onChange: aceChanged}" ng-model="code") 
+
+div(style="height: 500px; overflow-y: auto;")
+    #output
+  
+      
+

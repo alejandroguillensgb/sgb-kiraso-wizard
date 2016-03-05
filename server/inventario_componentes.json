@@ -15,7 +15,7 @@
   },          
   {
     "name": "Menu",
-    "type": "sgb-screen-menu",
+    "type": "sgb-parent-menu#1.0",
     "path": "/home/alejandro/kiraso-wizard/menu"          
   },
   {

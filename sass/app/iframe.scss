@@ -14,37 +14,17 @@
   margin-top: -1px;
 }
 
-
-#result {
-  float: left;
-  width: 40%;
-  margin-top: -1px;
-}
-
 .device {
-  background: url("/server/img/phone.png") no-repeat right top;
   margin: auto;
   margin-top: 5px;
-  width: 245px;
-  height: 600px;
-  background-size: 245px 600px;
+  height: 836px;
+  background: url("/server/img/phone.png") no-repeat top;
 }
 
-.device .screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.device .screen iframe {
-    position: absolute;
-    top: 104px;
-    left: 29px;
-    z-index: 0;
-    width: 195px;
-    height: 410px;
-    top: 89px;
-    left: 25px;
-    border: 0;
-    background-color: #efefef;
+#frame {
+  border: none;
+  height: 510px;
+  width: 285px;
+  margin-top: 108px;
+  margin-left: 25px;
 }

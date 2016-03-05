@@ -6,16 +6,15 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$log','$scope', '$state', 'FormsLoader', 'localStorageService', '$http', '$rootScope', 'kirasoFactory'];
+    formsController.$inject = ['$scope', '$state', 'FormsLoader', '$http', '$rootScope', 'kirasoFactory'];
 
-    function formsController($log,$scope,$state,FormsLoader,localStorageService, $http, $rootScope, kirasoFactory) {
+    function formsController($scope, $state, FormsLoader, $http, $rootScope, kirasoFactory) {
         
         activate();
         
         ////////////////
 
         function activate() {
-            
 
             // Log In
 
@@ -45,7 +44,7 @@
                         password: form.password.$viewValue
                     };
                     $http
-                        .post("http://localhost:8000/loginUser", reqObj)
+                        .post($rootScope.url + "/loginUser", reqObj)
                         .success(function(resObj){
                             console.log('logged in');
                             $rootScope.$broadcast('login', resObj);
@@ -108,7 +107,7 @@
                             password: form.password.$viewValue
                         };
                         $http
-                            .post("http://localhost:8000/createUser", reqObj)
+                            .post($rootScope.url + "/createUser", reqObj)
                             .success(function(data){
                                 console.log('success create user');
                                 $state.go('base.login');
@@ -227,7 +226,7 @@
                             model: $scope.appModel
                         };
                         $http
-                            .put("http://localhost:8000/mongoose_updateProject", reqObj)
+                            .put($rootScope.url + "/mongoose_updateProject", reqObj)
                             .success(function(){
                                 console.log("successful operation");
                             })
@@ -236,7 +235,7 @@
                             })
                     }else{
                         $http
-                            .post("http://localhost:8000/mongoose_test", $scope.appModelNew)
+                            .post($rootScope.url + "/mongoose_test", $scope.appModelNew)
                             .success(function(){
                                 kirasoFactory.setAppModel($scope.appModelNew);
                                 kirasoFactory.setAppName($scope.appModelNew.name);
@@ -247,7 +246,7 @@
                                         project: kirasoFactory.getAppModel().appModel.name
                                     };
                                     $http
-                                        .post("http://localhost:8000/mongoose_setProjects", reqObj)
+                                        .post($rootScope.url + "/mongoose_setProjects", reqObj)
                                         .success(function(){
                                             var projects = kirasoFactory.getProjects().projects;
                                             projects.push($scope.appModelNew.name);
@@ -274,6 +273,7 @@
             $scope.$on("select-node", selectNodeFunction);
 
             function selectNodeFunction(event, node_data){
+                console.log(node_data);
                 $scope.show_event = false;
                 $scope.nodeId = node_data.id;
                 $scope.app_name = kirasoFactory.getAppModel().name;
@@ -390,7 +390,7 @@
                         type: "select",
                         titleMap: [
                             {
-                                value: "sgb-datasource-json",
+                                value: "sgb-datasource-json#1.0",
                                 name: "JSON"
                             },
                             {
@@ -409,7 +409,7 @@
                     },
                     {
                         type: "conditional",
-                        condition: "dataModel.type == 'sgb-datasource-json' || dataModel.type == 'sgb-datasource-function'",
+                        condition: "dataModel.type == 'sgb-datasource-json#1.0' || dataModel.type == 'sgb-datasource-function'",
                         items: [
                             {
                                 key: "path",

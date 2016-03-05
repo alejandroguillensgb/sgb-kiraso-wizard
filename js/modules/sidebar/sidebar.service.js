@@ -5,8 +5,8 @@
         .module('app.sidebar')
         .service('SidebarLoader', SidebarLoader);
 
-    SidebarLoader.$inject = ['$http'];
-    function SidebarLoader($http) {
+    SidebarLoader.$inject = ['$http', '$rootScope'];
+    function SidebarLoader($http, $rootScope) {
         this.getMenu = getMenu;
         this.getContent = getContent;
 
@@ -19,7 +19,7 @@
           onError = onError || function() { alert('Failure loading menu'); };
 
           $http
-            .get('http://localhost:8000/dirTree?path=' + path)
+            .get($rootScope.url + '/dirTree?path=' + path)
             .success(onReady)
             .error(onError);
         };
@@ -29,16 +29,11 @@
           onError = onError || function() { alert('Failure getting content'); };
           
           $http
-            .get('http://localhost:8000/getContent?path=' + path)
+            .get($rootScope.url + '/getContent?path=' + path)
             .success(function(data){
               onReady(data,path)
             })
             .error(onError);
-
-          // $http
-          //   .get('http://localhost:8000/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/bower.json&type=json')
-          //   .success(onReady)
-          //   .error(onError);
         }
     }
 })();

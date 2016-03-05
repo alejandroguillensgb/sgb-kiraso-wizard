@@ -10,8 +10,8 @@
         .module('custom.preview')
         .controller('previewController', previewController);
 
-    previewController.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state', 'd3Factory', '$stateParams', 'kirasoFactory'];
-    function previewController($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state, d3Factory, $stateParams, kirasoFactory) {
+    previewController.$inject = ['$scope'];
+    function previewController($scope) {
 
         activate();
         

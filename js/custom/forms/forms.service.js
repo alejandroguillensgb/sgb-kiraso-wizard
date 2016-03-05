@@ -5,8 +5,8 @@
         .module('custom.forms')
         .service('FormsLoader', FormsLoader);
 
-    FormsLoader.$inject = ['$http'];
-    function FormsLoader($http) {
+    FormsLoader.$inject = ['$http', '$rootScope'];
+    function FormsLoader($http, $rootScope) {
         this.getFormParams = getFormParams;
 
         ////////////////
@@ -16,7 +16,7 @@
           onError = onError || function() { alert('Failure loading metadata'); };
 
           $http
-            .get('http://localhost:8000/getContent?path='+ path +'/metadata.json&type=json')
+            .get($rootScope.url + '/getContent?path='+ path +'/metadata.json&type=json')
             .success(onReady)
             .error(onError);
         };

@@ -10,8 +10,8 @@
         .module('kiraso')
         .controller('Controller', Controller);
 
-    Controller.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state', 'kirasoFactory'];
-    function Controller($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state, kirasoFactory) {
+    Controller.$inject = ['$scope', '$rootScope', '$http', '$uibModal', '$state', 'kirasoFactory', '$q'];
+    function Controller($scope, $rootScope, $http, $uibModal, $state, kirasoFactory, $q) {
 
         activate();
         
@@ -19,6 +19,7 @@
 
         function activate() {
 
+            $rootScope.url = "http://localhost:8000";
             $scope.username = kirasoFactory.getUsername().username;
             $scope.projects = kirasoFactory.getProjects().projects;
 
@@ -44,8 +45,9 @@
 
             $scope.deleteProject = function(project){
                 console.log(project);
+                //alerta 
                 $http
-                    .delete("http://localhost:8000/mongoose_removeElement?app=" + project + "&username=" +$scope.username)
+                    .delete($rootScope.url + "/mongoose_removeElement?app=" + project + "&username=" +$scope.username)
                     .success(function(){
                         console.log("delete successful")    
                         var pro = _.filter($scope.projects, function(e){
@@ -74,15 +76,16 @@
                 $scope.$broadcast("create-file");
             };
 
-            $scope.$on("ace-loaded", function(){
+            $scope.$on("files-ready", function(){
+                console.log("files ready")
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 $http
-                    .get("http://localhost:8000/exec?path=" + path)
+                    .get($rootScope.url + "/exec?path=" + path)
                     .success(function(data){
-                        console.log("ace loaded")
-                        console.log(data);
+                        console.log("finish")
+                        console.log(data)
                         $scope.$broadcast("gen-dir", path);
-                        $scope.$broadcast("reload-view");
+                        //$scope.$broadcast("reload-view");
                     })
                     .error(function(){
                         console.log("erro exec");
@@ -92,11 +95,37 @@
                 console.log("show frame");
             });
 
+            $scope.runApp = function(){
+                var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
+                $http
+                    .get($rootScope.url + "/runApp?path=" + path)
+                    .success(function(data){
+                        $scope.$broadcast("reload-view");
+                        $scope.pid = data;
+                    })
+                    .error(function(){
+                        console.log("erro exec");
+                    });
+            };
+
+            // $scope.$on("ace-loaded", function(){
+            //     var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
+            //     $http
+            //         .get($rootScope.url + "/exec?path=" + path)
+            //         .success(function(data){
+            //             console.log(data)
+            //             $scope.$broadcast("gen-dir", path);
+            //             //$scope.$broadcast("reload-view");
+            //         })
+            //         .error(function(){
+            //             console.log("erro exec");
+            //         });
+            //     console.log("gen app");
+            //     console.log("gen dir tree");
+            //     console.log("show frame");
+            // });
+
             $scope.new = function(){
-                var event = document.createEvent('CustomEvent');
-                event.initCustomEvent("create-new", true, true, 'new');
-                document.documentElement.dispatchEvent(event);
-                localStorageService.clearAll();
             };
 
             $scope.save = function(){
@@ -109,16 +138,15 @@
             
             $scope.loadProject = function(project){
                 $http
-                    .get("http://localhost:8000/mongoose_findApp?app=" + project)
+                    .get($rootScope.url + "/mongoose_findApp?app=" + project)
                     .success(function(data){
                         kirasoFactory.setAppModel(data);
                         kirasoFactory.setAppName(data.name);
-                        console.log("loadproject<")
                         console.log(data)
                         $state.go("app.wizard", { new: false });
                     })
                     .error(function(){
-                        console.log("erro loading project");
+                        console.log("error loading project");
                     });
             };
 
@@ -128,15 +156,12 @@
             };
 
             $scope.load = function(){
-                // var event = document.createEvent('CustomEvent');
-                // event.initCustomEvent("load-file", true, true, '');
-                // document.documentElement.dispatchEvent(event);
             };            
 
             $scope.download = function(){
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 $http
-                    .get("http://localhost:8000/generateFolder?path=" + path)
+                    .get($rootScope.url + "/generateFolder?path=" + path)
                     .success(function(data){
                         var blob = new Blob([data], {type: "application/x-tar"});
                         saveAs(blob, kirasoFactory.getAppName() + ".tar");
@@ -146,13 +171,32 @@
                     });
             };
 
+            // $scope.websocket = new WebSocket("ws://echo.websocket.org/");
+            // console.log($scope.websocket)
+            // $scope.websocket.onopen = function() { document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"; };
+            // $scope.websocket.onmessage = function(evt) { 
+            //     document.getElementById("output").innerHTML += "<p style='color: blue;'>> RESPONSE: " + evt.data + "</p>"; };
+            // $scope.websocket.onerror = function(evt) { 
+            //     document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; 
+            // };
+
+            var socket = io.connect($rootScope.url);
+            console.log(socket);
+            socket.on("news", function(data) {
+                console.log(data);
+            });
+
             //testing
             $scope.team = function(){
                 $http
-                    .get("http://localhost:8000/exec")
+                    //.get($rootScope.url + "/runServer")
+                    .get($rootScope.url + "/dropDb")
                     .success(function(data){
                         console.log(data)
-                        $scope.$broadcast("reload-view");
+                        
+
+                        
+                        //$scope.websocket.send(data)
                     })
                     .error(function(){
                         console.log('DROP error')
@@ -164,6 +208,7 @@
             $scope.roots = [];
             $scope.src = [];
             $scope.tgt = [];
+            $scope.request = [];
 
             $scope.sendInfoFunction = function(event, graph){
                 console.log("listen send info")
@@ -232,7 +277,7 @@
                                 var nodeData = item.dataModel;
                                 var nodeDataType = nodeData.type;
                                 var nodeDataPath = nodeData.path;
-                                if(nodeDataType == "sgb-datasource-json"){
+                                if(nodeDataType == "sgb-datasource-json#1.0"){
                                     dataSource = [
                                         "\tdataSource: {",
                                         "\t\ttype: '" + nodeDataType + "',",
@@ -243,7 +288,7 @@
                                     ];
                                 } else if(nodeDataType == "sgb-datasource-function"){
                                     $http
-                                        .get("http://localhost:8000/getContent?path=" + nodeDataPath + "&type=json")
+                                        .get($rootScope.url + "/getContent?path=" + nodeDataPath + "&type=json")
                                         .success(function(data){
                                             dataSource = [
                                                 "\tdataSource: {",
@@ -322,14 +367,14 @@
                             };
                             console.log("archivo")
                             console.log(file)
-                            $http
-                                .put("http://localhost:8000/setContent", reqObj)
-                                .success(function(data){
-                                    console.log('Save: ');
-                                })
-                                .error(function(){
-                                    console.error('Failed on save');
-                                });
+                            $scope.request.push($http
+                                .put($rootScope.url + "/setContent", reqObj))
+                                // .success(function(data){
+                                //     console.log('Save: ');
+                                // })
+                                // .error(function(){
+                                //     console.error('Failed on save');
+                                // });
                         });
 
                         //////////////////////////////////////////////////////////////////////////////
@@ -376,15 +421,15 @@
                             cont: JSON.stringify(result)
                         };
                         console.log(JSON.stringify(result));        
-                        $http
-                            .put("http://localhost:8000/setContent", reqObj)
-                            .success(function(data){
-                                console.log('success screens.ts');
-                                $scope.roots = [];
-                            })
-                            .error(function(err){
-                                console.error(err);
-                            });
+                        $scope.request.push($http
+                            .put($rootScope.url + "/setContent", reqObj))
+                            // .success(function(data){
+                            //     console.log('success screens.ts');
+                            //     $scope.roots = [];
+                            // })
+                            // .error(function(err){
+                            //     console.error(err);
+                            // });
 
                         ///////////////////////////////////////////////////////////////////////////
 
@@ -417,25 +462,33 @@
                                 };
                             };
                         });
-                        console.log("RUTAS")
                         
                         var reqObj = {
                             path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
                             filename: "routes.ts",
                             cont: JSON.stringify(_.flattenDeep([routes_export_init, routes, routes_export_end]))
                         };             
-                        $http
-                            .put("http://localhost:8000/setContent", reqObj)
-                            .success(function(data){
-                                console.log('success');
-                            })
-                            .error(function(err){
-                                console.error(err);
-                            });
+                        $scope.request.push($http
+                            .put($rootScope.url + "/setContent", reqObj))
+                            // .success(function(data){
+                            //     console.log('success');
+                            // })
+                            // .error(function(err){
+                            //     console.error(err);
+                            // });
+
                     //}//)
                     //.error(function(){
                     //    console.log("error");
                     //};
+
+                    $q.all($scope.request)
+                        .then(function(){
+                            console.log("ready")
+                            $scope.$emit("files-ready");
+                            $scope.request = [];
+                            $scope.roots = [];
+                        });
                 ///////////////////////////////////////////////////////////////////////////
             };
             $scope.$on("send-info", $scope.sendInfoFunction);

@@ -10,8 +10,8 @@
         .module('custom.graph')
         .controller('graphController', graphController);
 
-    graphController.$inject = ['$log', '$scope', '$rootScope', '$http', 'localStorageService', '$uibModal', '$state', 'd3Factory', '$stateParams', 'kirasoFactory'];
-    function graphController($log, $scope, $rootScope, $http, localStorageService, $uibModal, $state, d3Factory, $stateParams, kirasoFactory) {
+    graphController.$inject = ['$scope', '$rootScope', '$http', 'd3Factory', 'kirasoFactory'];
+    function graphController($scope, $rootScope, $http, d3Factory, kirasoFactory) {
 
         activate();
         
@@ -27,7 +27,7 @@
                     console.log("antes del servicio")
                     $scope.$on("directiveReady", function(){
                         $http
-                            .get("http://localhost:8000/mongoose_findGraph?app="+$scope.app_name)
+                            .get($rootScope.url + "/mongoose_findGraph?app="+$scope.app_name)
                                 .success(function(graph){
                                     console.log("event send");
                                     $scope.$emit("load-graph", graph);

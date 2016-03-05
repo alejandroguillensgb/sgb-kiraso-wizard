@@ -5,8 +5,8 @@
         .module('custom.sideb')
         .controller('sidebController', sidebController);
 
-    sidebController.$inject = ['$log','$scope', '$rootScope','PrebuiltLoader', '$uibModal'];
-    function sidebController($log,$scope,$rootScope,PrebuiltLoader, $uibModal) {
+    sidebController.$inject = ['$scope', '$rootScope','PrebuiltLoader', '$uibModal'];
+    function sidebController($scope, $rootScope, PrebuiltLoader, $uibModal) {
 
         activate();
         
@@ -29,8 +29,6 @@
             }
 
             $scope.createNode = function(item){
-                // var event = new CustomEvent("create-node", {detail: item, cancelable: true});
-                // window.dispatchEvent(event);
                 $rootScope.$broadcast("create-node", item); 
             };
 
