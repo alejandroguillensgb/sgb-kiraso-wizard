@@ -19,11 +19,13 @@
 
         function activate() {
             console.log("preview controller!!!!!!!!!!!!!!!!!!!!!!!!");
-            $scope.$on("reload-view",function(){
-                console.log("reload-view")
-                document.getElementById('frame').contentWindow.location.reload()
-                //$state.reload("app.preview");
-            });
+            // $scope.$on("reload-view",function(){
+            //     console.log("reload-view")
+            //     document.getElementById('frame').contentWindow.location.reload(true);
+
+            //     //$state.reload("app.preview");
+            // });
+            // $scope.online = function(){console.log("ONLINE")}
         }
     }
 })();

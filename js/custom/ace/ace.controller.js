@@ -62,6 +62,19 @@
                 };
                 console.log(thisGraph.nodes);
                 kirasoFactory.setGraph(JSON.stringify({"nodes": thisGraph.nodes, "edges": thisGraph.edges}));
+                var reqObj = {
+                    graph: JSON.stringify({"nodes": thisGraph.nodes, "edges": thisGraph.edges})
+                };
+                $http
+                    .post($rootScope.url + "/mongoose_setGraph?app=" + kirasoFactory.getAppName(), reqObj)
+                    .success(function(){
+                        console.log("graph app saved");
+                        alert("Your app was saved");
+                    })
+                    .error(function(){
+                        console.log("error saving graph app");
+                        alert("Error saving your app")
+                    });
             };
 
             $scope.$on('save', function(event){

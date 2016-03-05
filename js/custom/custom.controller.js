@@ -68,6 +68,17 @@
 
             $scope.wizard = function(){
                 $scope.previewActive = false;
+                if($scope.pid){
+                    console.log("KILL PID")
+                    $http
+                        .get($rootScope.url + "/killApp?pid=" + $scope.pid)
+                        .success(function(data){
+                            console.log(data);
+                        })
+                        .error(function(){
+                            console.log("error killing");
+                        })
+                }
             };
 
             $scope.preview = function(){
