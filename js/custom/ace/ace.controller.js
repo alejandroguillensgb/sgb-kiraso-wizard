@@ -51,7 +51,7 @@
 
                 for(var key in data[data_key]){
                     if(key == "dataSource"){
-                        update_node.dataModel = data[data_key][key];
+                        update_node.dataModel = {type: data[data_key][key].type, path:data[data_key][key].params.path};
                     } else if(key == "params") {
                         update_node.paramsModel = data[data_key][key];
                     } else if(key == "default") {
