@@ -16,8 +16,9 @@ script.
 
 div#aceEditor.ace_editor(ui-ace="{useWrapMode : true,showGutter: true,mode: 'html',theme: 'monokai',onLoad: aceLoaded,onChange: aceChanged}" ng-model="code") 
 
-div(style="height: 500px; overflow-y: auto;")
-    #output
+div(style="height: 250px; overflow-y: scroll; background-color: black;", scroll="messages")
+    #output(ng-repeat="message in messages track by $index")
+        {{ message }}
   
       
 

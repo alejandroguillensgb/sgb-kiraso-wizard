@@ -76,10 +76,6 @@
                     templateUrl: helper.basepath('singleview.html'),
                     controller:"aceController"
                 },
-                "offsidebar":{
-                    templateUrl: helper.basepath('partials/offsidebar.html'),
-                    controller: "previewController"
-                },
                 "sidebar":{
                     templateUrl: helper.basepath('partials/menubar.html'),
                     controller: "SidebarController"

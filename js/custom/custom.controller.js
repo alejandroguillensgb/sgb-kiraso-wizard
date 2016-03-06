@@ -87,9 +87,20 @@
                 $scope.$broadcast("create-file");
             };
 
+            $scope.messages = [];
             $scope.$on("files-ready", function(){
                 console.log("files ready")
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
+
+                var socket = io.connect($rootScope.url);
+                console.log(socket);
+                socket.on("news", function(data) {
+                    $scope.messages.push(data);
+                    //var output = document.getElementById("output");
+                    //output.innerHTML += "<p style='color: white; text-align: left;'> > " + data + "</p>";
+                    //output.scrollTop = output.scrollHeight;
+                });
+
                 $http
                     .get($rootScope.url + "/exec?path=" + path)
                     .success(function(data){
@@ -106,13 +117,17 @@
                 console.log("show frame");
             });
 
+            $scope.reload = function(){
+                 document.getElementById('frame').src += '';
+            };
+
             $scope.runApp = function(){
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 $http
                     .get($rootScope.url + "/runApp?path=" + path)
                     .success(function(data){
-                        $scope.$broadcast("reload-view");
                         $scope.pid = data;
+                        console.log(data);
                     })
                     .error(function(){
                         console.log("erro exec");
@@ -191,11 +206,15 @@
             //     document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; 
             // };
 
-            var socket = io.connect($rootScope.url);
-            console.log(socket);
-            socket.on("news", function(data) {
-                console.log(data);
-            });
+            // var socket = io.connect($rootScope.url);
+            // console.log(socket);
+            // socket.on("news", function(data) {
+            //     console.log(data);
+            // });
+
+     
+            // handles the callback from the received event
+            
 
             //testing
             $scope.team = function(){

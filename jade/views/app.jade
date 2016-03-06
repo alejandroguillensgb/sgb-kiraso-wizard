@@ -9,7 +9,8 @@ header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'")
 aside.aside(ui-view="sidebar",autoscroll="true")
 
 // offsidebar
-aside.offsidebar(ui-view="offsidebar", autoscroll="false")
+aside.offsidebar(ui-view="offsidebar", autoscroll="false", ng-if="!previewActive")
+aside.offsidebar(ng-include="'app/views/partials/offsidebar.html'", ng-if="previewActive")
 //aside.offsidebar(ng-include="'app/views/partials/sideform.html'", ng-controller="formsController")
 //aside.offsidebar(ui-view="wizard-offsidebar", autoscroll="false")
 // Main section
@@ -34,7 +35,7 @@ section.has-sidebar-right
   div(style="text-align:center;", ng-if="previewActive")
     div.btn-toolbar(style="display: inline-block; padding:5px;")      
       //label.btn.btn-primary(ng-click="new()") New
-      //label.btn.btn-primary(ng-click="load()") Load
+      label.btn.btn-primary(ng-click="reload()") ReLoad
       label.btn.btn-primary(ng-click="runApp()") Run
       label.btn.btn-primary(ng-click="save()") Save
       label.btn.btn-primary(ng-click="team()") Team
