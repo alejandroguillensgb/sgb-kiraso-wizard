@@ -13,8 +13,6 @@
         var projects = [];
         var graph = "";
         function setAppModel(model){
-            console.log("got called")
-            console.log(model)
             appModel = model;
         };
         function setUsername(name){

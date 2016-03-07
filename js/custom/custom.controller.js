@@ -382,6 +382,14 @@
                                 dataConnector
                             ];
 
+
+                            // if(item.type[0] == "@"){
+                            //     var reqObj = {
+                            //         path:
+                            //     };
+                            //     $scope.request.push($http.put($rootScope.url + "/moveScreens", reqObj));
+                            // }
+
                             if(screen_obj.default){
                                 file.push(["\tdefault: true"]);
                             };

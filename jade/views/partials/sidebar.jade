@@ -1,25 +1,22 @@
 div.aside-inner
+  uib-accordion(close-others="oneAtATime")
+    uib-accordion-group(heading="Prebuilt Apps")
+      nav.sidebar(sidebar="")
+        ul.nav
+          li(ng-repeat='item in appItems')
+            {{item.name}}
+  
+    uib-accordion-group(heading="Components")
+      nav.sidebar(sidebar="")
+        ul.nav
+          li(ng-repeat='item in compItems') 
+            span(ng-click="createNode(item)") {{item.name}}
+            span(style="float: right;") 
+              a.icon-eye(ng-click="openModal(item)")
+              a.icon-trash(ng-show="item.own", ng-click="removeComp(item)")
+          li
+            div(ng-click="addComp()") Add your component
+              span(style="float: right;") 
+                em.icon-plus
 
-  uib-tabset(Justified="true")
-    uib-tab(heading="Apps&Comp")
-        uib-accordion(close-others="oneAtATime")
-          uib-accordion-group(heading="Prebuilt Apps")
-            nav.sidebar(sidebar="")
-              ul.nav
-                li(ng-repeat='item in appItems')
-                  {{item.name}}
-        
-          uib-accordion-group(heading="Components")
-            nav.sidebar(sidebar="")
-              ul.nav
-                li(ng-repeat='item in compItems') 
-                  span(ng-click="createNode(item)") {{item.name}}
-                  span(style="float: right;") 
-                    a.icon-eye(ng-click="openModal(item)")
-                    a.icon-doc(ng-click=('copyContent(item)'))
-                li
-                  div Add your component
-                    span(style="float: right;") 
-                      em.icon-plus
-    uib-tab(heading="Hierarchy")
       

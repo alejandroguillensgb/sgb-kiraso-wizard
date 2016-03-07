@@ -175,6 +175,95 @@
 
             $scope.signupModel = {};
 
+
+            ////////////////////////////////////////
+
+            $scope.addCompSchema = {
+                type: "object",
+                properties: {
+                    name: {
+                        title: "Component name",
+                        type: "string"
+                    },
+                    type: {
+                        title: "Component type",
+                        type: "string",
+                        description: "Ex: @sgb-screen-calendar (must have @)"
+                    },
+                    path: {
+                        title: "Github repo url",
+                        type: "string",
+                        description: "(https url)"
+                    },
+                    description_images: {
+                        title: "Description images",
+                        type: "array",
+                        minItems: 1,
+                        items: {
+                            type: "object",
+                            properties: {
+                                desc: {
+                                    title: "Description",
+                                    type: "string"
+                                },
+                                url: {
+                                    title: "Image url",
+                                    type: "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                required: ["name", "type", "path"]
+            };
+              
+            $scope.addCompForm = [
+                "*",
+                {
+                    type: "submit",
+                    title: "save"
+                }
+            ];
+
+            $scope.addCompModel = {};
+
+            $scope.submitAddComp = function(form){
+                $scope.$broadcast('schemaFormValidate');
+                
+                if(form.$valid){    
+                    console.log("submit");
+                    $scope.addCompModel.own = true;
+                    var reqObj = {
+                        path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp/screens/" + _.tail($scope.addCompModel.type).join(""),
+                        repo: $scope.addCompModel.path
+                    };
+                    $http
+                        .post($rootScope.url + "/cloneRepo", reqObj)
+                        .success(function(){
+                            var reqObj = {
+                                path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username,
+                                filename: "inventario_componentes_propios.json",
+                                cont: JSON.stringify($scope.addCompModel)
+                            };
+                            $http
+                                .put($rootScope.url + "/setInventario", reqObj)
+                                .success(function(){
+                                    console.log("file added");
+                                    $rootScope.$broadcast("new-component");
+                                })
+                                .error(function(){
+                                    console.log("error setting file")
+                                });
+                        })
+                        .error(function(){
+                            console.log("error");
+                        })
+                    
+                };
+            };
+
+            ////////////////////////////////////////
+
             // App options form
 
             $scope.screens = [];
@@ -284,7 +373,13 @@
                     $scope.paramsModel = {};
                 }
 
-                FormsLoader.getFormParams(node_data.path, paramsReady);
+                if(node_data.type[0] == "@"){
+                    var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "-tmp"
+                    var name = _.tail(node_data.type).join("");
+                    FormsLoader.getFormParams(path +"/"+name, paramsReady);
+                } else {
+                    FormsLoader.getFormParams(node_data.path, paramsReady);    
+                }                
       
                 function paramsReady(data){
                     $scope.show = true;
@@ -306,6 +401,7 @@
                                     menu: {
                                         title: "Menu",
                                         type: "array",
+                                        minItems: 1,
                                         items: {
                                             type: "object",
                                             properties: {
