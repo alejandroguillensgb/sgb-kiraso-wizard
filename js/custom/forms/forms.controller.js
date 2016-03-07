@@ -234,7 +234,7 @@
                     console.log("submit");
                     $scope.addCompModel.own = true;
                     var reqObj = {
-                        path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp/screens/" + _.tail($scope.addCompModel.type).join(""),
+                        path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens/" + _.tail($scope.addCompModel.type).join(""),
                         repo: $scope.addCompModel.path
                     };
                     $http
@@ -374,7 +374,7 @@
                 }
 
                 if(node_data.type[0] == "@"){
-                    var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "-tmp"
+                    var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens"
                     var name = _.tail(node_data.type).join("");
                     FormsLoader.getFormParams(path +"/"+name, paramsReady);
                 } else {

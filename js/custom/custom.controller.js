@@ -96,9 +96,6 @@
                 console.log(socket);
                 socket.on("news", function(data) {
                     $scope.messages.push(data);
-                    //var output = document.getElementById("output");
-                    //output.innerHTML += "<p style='color: white; text-align: left;'> > " + data + "</p>";
-                    //output.scrollTop = output.scrollHeight;
                 });
 
                 $http
@@ -107,7 +104,6 @@
                         console.log("finish")
                         console.log(data)
                         $scope.$broadcast("gen-dir", path);
-                        //$scope.$broadcast("reload-view");
                     })
                     .error(function(){
                         console.log("erro exec");
@@ -383,12 +379,14 @@
                             ];
 
 
-                            // if(item.type[0] == "@"){
-                            //     var reqObj = {
-                            //         path:
-                            //     };
-                            //     $scope.request.push($http.put($rootScope.url + "/moveScreens", reqObj));
-                            // }
+                            if(item.type[0] == "@"){
+                                var reqObj = {
+                                    base_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens/" + _.tail(item.type).join(""),
+                                    copy_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"_tmp/screens",
+                                    app_path:  "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"/screens/" + _.tail(item.type).join("")
+                                };
+                                $scope.request.push($http.put($rootScope.url + "/moveScreens", reqObj));
+                            };
 
                             if(screen_obj.default){
                                 file.push(["\tdefault: true"]);
