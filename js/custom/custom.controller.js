@@ -24,11 +24,33 @@
             $scope.projects = kirasoFactory.getProjects().projects;
 
             $scope.goLogin = function(){
-                $state.go("base.login");
+                $scope.confirm = false;
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/confirmModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+                $scope.modalInstance.result.then(function(confirm){
+                    if(confirm){
+                        $state.go("base.login");
+                    }
+                })            
             };
 
             $scope.goToProjects = function(){
-                $state.go("projects");
+                $scope.confirm = false;
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/confirmModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+                $scope.modalInstance.result.then(function(confirm){
+                    if(confirm){
+                        $state.go("projects");
+                    }
+                })
             };
 
             $scope.closeModal = function(){
@@ -66,25 +88,60 @@
             else 
                 $scope.previewActive = false;
 
+            $scope.closeModal = function(){
+                $scope.modalInstance.dismiss(false);
+            };
+
             $scope.wizard = function(){
-                $scope.previewActive = false;
-                if($scope.pid){
-                    console.log("KILL PID")
-                    $http
-                        .get($rootScope.url + "/killApp?pid=" + $scope.pid)
-                        .success(function(data){
-                            console.log(data);
-                        })
-                        .error(function(){
-                            console.log("error killing");
-                        })
-                }
+                $scope.confirm = false;
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/confirmModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+                $scope.modalInstance.result.then(function(confirm){
+                    if(confirm){
+                        $scope.radioModel = 'wizard';
+                        $state.go("app.wizard");
+                        $scope.previewActive = false;
+                        if($scope.pid){
+                            console.log("KILL PID")
+                            $http
+                                .get($rootScope.url + "/killApp?pid=" + $scope.pid)
+                                .success(function(data){
+                                    console.log(data);
+                                })
+                                .error(function(){
+                                    console.log("error killing");
+                                })
+                        }
+                    }
+                });
+            };
+
+            $scope.confirmChange = function(){
+                $scope.modalInstance.close(!$scope.confirm);
             };
 
             $scope.preview = function(){
-                $scope.previewActive = true;
-                $scope.$broadcast("set-graph");
-                $scope.$broadcast("create-file");
+                $scope.confirm = false;
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/confirmModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+                $scope.modalInstance.result.then(function(confirm){
+                    if(confirm){
+                        $scope.radioModel = 'preview';
+                        $state.go("app.preview");
+                        $scope.previewActive = true;
+                        $scope.$broadcast("set-graph");
+                        $scope.$broadcast("create-file");
+                    };
+                });              
+                
             };
 
             $scope.messages = [];
@@ -96,6 +153,7 @@
                 console.log(socket);
                 socket.on("news", function(data) {
                     $scope.messages.push(data);
+                    $scope.$apply();
                 });
 
                 $http

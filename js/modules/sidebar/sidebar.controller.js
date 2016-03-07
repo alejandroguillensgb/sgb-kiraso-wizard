@@ -46,9 +46,11 @@
           });
 
           function contentReady(data,path){
-            $scope.data = data; 
+            var split_path = path.split(".");
+            if(split_path[split_path.length-1] == "json")
+              data = JSON.stringify(data);
             $rootScope.$broadcast('aceChange', data, path);
-          }
+          };
 
           $scope.aceChange = aceChange;
           function aceChange(item){

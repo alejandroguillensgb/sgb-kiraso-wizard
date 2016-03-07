@@ -18,8 +18,8 @@ section.has-sidebar-right
 
   div
     div.btn-group.btn-group-justified(style="padding:5px;")
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="''", ng-click="wizard()",ui-sref="app.wizard") Wizard
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'Middle'", ng-click="preview()", ui-sref="app.preview") Preview&Source
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'wizard'", ng-click="wizard()") Wizard
+        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'preview'", ng-click="preview()") Preview
 
 
   // Wizard buttons
@@ -38,9 +38,9 @@ section.has-sidebar-right
       label.btn.btn-primary(ng-click="reload()") ReLoad
       label.btn.btn-primary(ng-click="runApp()") Run
       label.btn.btn-primary(ng-click="save()") Save
-      label.btn.btn-primary(ng-click="team()") Team
+      //label.btn.btn-primary(ng-click="team()") Team
       label.btn.btn-primary(ng-click="download()") Download
-      label.btn.btn-primary(ng-click="code()") Finish
+      label.btn.btn-primary(ng-click="code()") Generate app
 
   // Page content
   .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")

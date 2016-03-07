@@ -1,4 +1,3 @@
-
 // To run this code, edit file index.html or index.jade and change
 // html data-ng-app attribute from angle to myAppName
 // ----------------------------------------------------------------------
@@ -24,6 +23,8 @@
             });
             
             $scope.code = "<h1>Kiraso.io</h1>";
+
+            $scope.mode = "html";
         
             $scope.aceLoaded = function(_editor) {
                 $scope.aceSession = _editor.getSession();
@@ -33,6 +34,15 @@
             $scope.$on('aceChange', function(event, content, path){
                 $scope.aceSession.setValue(content);
                 $scope.path = path;
+                var split_path = path.split(".");
+                if(split_path[split_path.length-1] == "js" || split_path[split_path.length-1] == "json" || split_path[split_path.length-1] == "ts")
+                    $scope.mode = "javascript"
+                else if(split_path[split_path.length-1] == "html")
+                    $scope.mode = "html"
+                else if(split_path[split_path.length-1] == "xml")
+                    $scope.mode = "xml"
+                else
+                    $scope.mode = "javascript"
             });
 
             $scope.updateGraph = function(data){
@@ -102,6 +112,16 @@
                         .error(function(){
                             console.error('Failed on save')
                         });
+                } else if(filename == "metadata.json") {
+                    reqObj.screens_path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens"
+                    $http
+                        .put($rootScope.url + "/setMetadata", reqObj)
+                        .success(function(){
+                            console.log("metadata saved")
+                        })
+                        .error(function(){
+                            console.log("error saving metadata")
+                        })
                 } else {
                     $http
                         .put($rootScope.url + '/setContent', reqObj)
