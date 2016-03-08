@@ -1,18 +1,3 @@
 [
-  {
-    "name": "Telco",
-    "submenu": [
-      { "text": "Sub Menu", 
-        "sref": "app.submenu"
-      }    
-    ]
-  },
-  {
-    "name": "Banca+",
-    "url": ""
-  },
-  {
-    "name": "App",
-    "url": ""
-  }
+
 ]

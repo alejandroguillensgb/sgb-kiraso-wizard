@@ -24,7 +24,8 @@
                         $rootScope.$broadcast("gen-dir", path);
                         $rootScope.$broadcast("close-modal");
                     }).error(function (error) {
-                    // Handle error from server
+                        alert(error);
+                        $rootScope.$broadcast("close-modal");
                         console.log(error);
                     });
             };

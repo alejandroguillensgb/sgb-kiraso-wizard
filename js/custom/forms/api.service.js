@@ -13,12 +13,17 @@
 
         function uploadResources(resources) {
             
-            var formData = new FormData();
-            formData.append("file", resources);
-            return $http.post($rootScope.url + '/uploadFile?path=/home/alejandro/kiraso-wizard/service_data/'+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName(), formData, {
-                headers: {'Content-Type': undefined},
-                transformRequest: angular.identity
-            });
+            var ext = resources.name.split(".")[resources.name.split(".").length - 1];
+            if(ext == "zip" || ext == "tar"){
+                var formData = new FormData();
+                formData.append("file", resources);
+                return $http.post($rootScope.url + '/uploadFile?path=/home/alejandro/kiraso-wizard/service_data/'+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName(), formData, {
+                    headers: {'Content-Type': undefined},
+                    transformRequest: angular.identity
+                });
+            } else{
+                alert("Incorrect input format");
+            }
         };
 
     }

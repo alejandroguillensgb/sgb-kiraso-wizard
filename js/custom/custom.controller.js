@@ -110,6 +110,7 @@
                             $http
                                 .get($rootScope.url + "/killApp?pid=" + $scope.pid)
                                 .success(function(data){
+                                    $scope.pid = null;
                                     console.log(data);
                                 })
                                 .error(function(){
@@ -190,15 +191,38 @@
 
             $scope.runApp = function(){
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
-                $http
-                    .get($rootScope.url + "/runApp?path=" + path)
-                    .success(function(data){
-                        $scope.pid = data;
-                        console.log(data);
-                    })
-                    .error(function(){
-                        console.log("erro exec");
-                    });
+                if($scope.pid){
+                    console.log("KILL PID")
+                    $http
+                        .get($rootScope.url + "/killApp?pid=" + $scope.pid)
+                        .success(function(data){
+                            $scope.pid = null;
+                            $http
+                                .get($rootScope.url + "/runApp?path=" + path)
+                                .success(function(data){
+                                    $scope.pid = data;
+                                    console.log(data);
+                                })
+                                .error(function(){
+                                    console.log("erro exec");
+                                });
+                        })
+                        .error(function(){
+                            console.log("error killing");
+                        })
+                } else {   
+                    $http
+                        .get($rootScope.url + "/runApp?path=" + path)
+                        .success(function(data){
+                            $scope.pid = data;
+                            console.log(data);
+                        })
+                        .error(function(){
+                            console.log("erro exec");
+                        });
+                }
+
+               
             };
 
             // $scope.$on("ace-loaded", function(){

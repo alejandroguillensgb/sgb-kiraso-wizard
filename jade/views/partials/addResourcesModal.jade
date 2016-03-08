@@ -1,7 +1,8 @@
 div.modal-header
   h3.modal-title Add your resources
 div.modal-body
-    div(ng-controller="formsController")
+    div(ng-controller="formsController") 
+        p Your file must be on a zip / tar format
         form(name="myForm" id="myForm" enctype="multipart/form-data" ng-submit="uploadResources(resourcesFile)")
             input( type="file" name="resources" id="resources" file-model="resourcesFile")
             br
