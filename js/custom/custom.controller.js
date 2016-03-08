@@ -144,6 +144,19 @@
                 
             };
 
+            $scope.addResources = function(){
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/addResourcesModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+            };
+
+            $scope.$on("close-modal", function(){
+                $scope.modalInstance.close();
+            });
+
             $scope.messages = [];
             $scope.$on("files-ready", function(){
                 console.log("files ready")

@@ -6,9 +6,9 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$scope', '$state', 'FormsLoader', '$http', '$rootScope', 'kirasoFactory'];
+    formsController.$inject = ['$scope', '$state', 'FormsLoader', '$http', '$rootScope', 'kirasoFactory', 'API'];
 
-    function formsController($scope, $state, FormsLoader, $http, $rootScope, kirasoFactory) {
+    function formsController($scope, $state, FormsLoader, $http, $rootScope, kirasoFactory, API) {
         
         activate();
         
@@ -16,10 +16,18 @@
 
         function activate() {
 
-
-   
-            /////
-
+            $scope.uploadResources = function(resourcesFile) {
+                API.uploadResources(resourcesFile)
+                    .success(function (uploadResponse) {
+                        console.log(uploadResponse);
+                        var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
+                        $rootScope.$broadcast("gen-dir", path);
+                        $rootScope.$broadcast("close-modal");
+                    }).error(function (error) {
+                    // Handle error from server
+                        console.log(error);
+                    });
+            };
 
             // Log In
 
