@@ -9,8 +9,8 @@
         .module('custom.ace')
         .controller('aceController', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope','$http', 'kirasoFactory'];
-    function Controller($scope, $rootScope, $http, kirasoFactory) {
+    Controller.$inject = ['$scope', '$rootScope','$http', 'kirasoFactory', '$uibModal'];
+    function Controller($scope, $rootScope, $http, kirasoFactory, $uibModal) {
 
         activate();
         
@@ -78,12 +78,18 @@
                 $http
                     .post($rootScope.url + "/mongoose_setGraph?app=" + kirasoFactory.getAppName(), reqObj)
                     .success(function(){
-                        console.log("graph app saved");
-                        alert("Your app was saved");
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: '<p>Your app was saved</p>',
+                            size: "sm"
+                        });
                     })
                     .error(function(){
-                        console.log("error saving graph app");
-                        alert("Error saving your app")
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: '<p>Error saving your app</p>',
+                            size: "sm"
+                        });
                     });
             };
 
@@ -107,30 +113,53 @@
                             console.log('Save: ');
                             console.log(data);
                             $scope.updateGraph(data);
-                            alert("File saved");
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>File saved</p>',
+                                size: "sm"
+                            });
                         })
                         .error(function(){
-                            console.error('Failed on save')
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>Failed on save</p>',
+                                size: "sm"
+                            });
                         });
                 } else if(filename == "metadata.json") {
-                    reqObj.screens_path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens"
+                    reqObj.screens_path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "/screens"
                     $http
                         .put($rootScope.url + "/setMetadata", reqObj)
                         .success(function(){
-                            console.log("metadata saved")
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>Metadata saved</p>',
+                                size: "sm"
+                            });
                         })
                         .error(function(){
-                            console.log("error saving metadata")
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>Error saving metadata</p>',
+                                size: "sm"
+                            });
                         })
                 } else {
                     $http
                         .put($rootScope.url + '/setContent', reqObj)
                         .success(function(data){
-                            console.log('Save: ');
-                            alert("File saved")
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>File saved</p>',
+                                size: "sm"
+                            });
                         })
                         .error(function(){
-                            console.error('Failed on save')
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>Failed on save</p>',
+                                size: "sm"
+                            });
                         });
                 };
             });

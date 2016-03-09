@@ -5,8 +5,8 @@
         .module('custom.forms')
         .service('API', API);
 
-    API.$inject = ['$http', '$rootScope', 'kirasoFactory'];
-    function API($http, $rootScope, kirasoFactory) {
+    API.$inject = ['$http', '$rootScope', 'kirasoFactory', '$uibModal'];
+    function API($http, $rootScope, kirasoFactory, $uibModal) {
         this.uploadResources = uploadResources;
 
         ////////////////
@@ -22,7 +22,11 @@
                     transformRequest: angular.identity
                 });
             } else{
-                alert("Incorrect input format");
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    template: '<p>Incorrect input format</p>',
+                    size: "sm"
+                });
             }
         };
 

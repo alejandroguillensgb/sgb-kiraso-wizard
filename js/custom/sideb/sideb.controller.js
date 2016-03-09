@@ -30,6 +30,7 @@
             PrebuiltLoader.getComps(compReady);
 
             $scope.$on("new-component", function(){
+                $scope.closeModal;
                 PrebuiltLoader.getComps(compReady);
                 $scope.$apply();   
             });

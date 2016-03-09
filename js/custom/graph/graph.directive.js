@@ -5,8 +5,8 @@
         .module('custom.graph')
         .directive('graph', graph);
 
-    graph.$inject = ['d3Factory', '$rootScope', '$http', 'kirasoFactory'];
-    function graph (d3Factory, $rootScope, $http, kirasoFactory) {
+    graph.$inject = ['d3Factory', '$rootScope', '$http', 'kirasoFactory', '$uibModal'];
+    function graph (d3Factory, $rootScope, $http, kirasoFactory, $uibModal) {
 
         var directive = {
             restrict: 'EA',
@@ -228,11 +228,19 @@
                       .post($rootScope.url + "/mongoose_setGraph?app=" + scope.app_name, reqObj)
                       .success(function(){
                         console.log("graph app saved");
-                        alert("Your app was saved");
+                        scope.modalInstance = $uibModal.open({
+                          animation: true,
+                          template: '<p>Your app was saved</p>',
+                          size: "sm"
+                        });
                       })
                       .error(function(){
                         console.log("error saving graph app");
-                        alert("Error saving your app")
+                        scope.modalInstance = $uibModal.open({
+                          animation: true,
+                          template: '<p>Error saving your app</p>',
+                          size: "sm"
+                        });
                       });
                   });
 

@@ -22,6 +22,7 @@
             $rootScope.url = "http://localhost:8000";
             $scope.username = kirasoFactory.getUsername().username;
             $scope.projects = kirasoFactory.getProjects().projects;
+            $scope.frameActive = false;
 
             $scope.goLogin = function(){
                 $scope.confirm = false;
@@ -137,6 +138,8 @@
                 });
                 $scope.modalInstance.result.then(function(confirm){
                     if(confirm){
+                        $scope.socket.disconnect();
+                        $scope.frameActive = false;
                         $scope.radioModel = 'wizard';
                         $state.go("app.wizard");
                         $scope.previewActive = false;
@@ -198,9 +201,9 @@
                 console.log("files ready")
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
 
-                var socket = io.connect($rootScope.url);
-                console.log(socket);
-                socket.on("news", function(data) {
+                $scope.socket = io.connect($rootScope.url);
+                console.log($scope.socket);
+                $scope.socket.on("news", function(data) {
                     $scope.messages.push(data);
                     $scope.$apply();
                 });
@@ -221,6 +224,7 @@
             });
 
             $scope.reload = function(){
+                $scope.frameActive = true;
                 document.getElementById('frame').src += '';
             };
 
@@ -314,22 +318,6 @@
                     scope: $scope,
                     size: "sm"
                 });
-                var reqObj = {
-                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username,
-                    filename: "inventario_apps_propios.json",
-                    cont: JSON.stringify({ name: kirasoFactory.getAppName() , own: true})
-                };
-                $http
-                    .put($rootScope.url + "/setInventario", reqObj)
-                    .success(function(){
-                        $scope.modalInstance.close();
-                        console.log("file added");
-                        $rootScope.$broadcast("new-app");
-                    })
-                    .error(function(){
-                        console.log("error setting file")
-                    });
-
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 $http
                     .get($rootScope.url + "/genApp?path=" + path, {responseType:'arraybuffer'})
@@ -337,11 +325,29 @@
                         $scope.modalInstance.close();
                         var blob = new Blob([data], {type: "application/x-tar"});
                         saveAs(blob, kirasoFactory.getAppName() + ".tar");
+                        var reqObj = {
+                            path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username,
+                            filename: "inventario_apps_propios.json",
+                            cont: JSON.stringify({ name: kirasoFactory.getAppName() , own: true})
+                        };
+                        $http
+                            .put($rootScope.url + "/setInventario", reqObj)
+                            .success(function(){
+                                $scope.modalInstance.close();
+                                console.log("file added");
+                                $rootScope.$broadcast("new-app");
+                            })
+                            .error(function(){
+                                console.log("error setting file")
+                            });
                     })
                     .error(function(){
                         $scope.modalInstance.close();
-                        alert("Error Downloading files");
-                        console.log("error");
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: '<p>Error downloading file</p>',
+                            size: "sm"
+                        });
                     });
             };            
 
@@ -363,8 +369,11 @@
                     })
                     .error(function(){
                         $scope.modalInstance.close();
-                        alert("Error Downloading files");
-                        console.log("error");
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: '<p>Error downloading files</p>',
+                            size: "sm"
+                        });
                     });
             };
 

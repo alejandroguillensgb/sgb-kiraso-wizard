@@ -6,9 +6,9 @@
         .module('custom.forms')
         .controller('formsController', formsController);
 
-    formsController.$inject = ['$scope', '$state', 'FormsLoader', '$http', '$rootScope', 'kirasoFactory', 'API'];
+    formsController.$inject = ['$scope', '$state', 'FormsLoader', '$http', '$rootScope', 'kirasoFactory', 'API', '$uibModal'];
 
-    function formsController($scope, $state, FormsLoader, $http, $rootScope, kirasoFactory, API) {
+    function formsController($scope, $state, FormsLoader, $http, $rootScope, kirasoFactory, API, $uibModal) {
         
         activate();
         
@@ -24,9 +24,12 @@
                         $rootScope.$broadcast("gen-dir", path);
                         $rootScope.$broadcast("close-modal");
                     }).error(function (error) {
-                        alert(error);
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: '<p>' + error + '</p>',
+                            size: "sm"
+                        });
                         $rootScope.$broadcast("close-modal");
-                        console.log(error);
                     });
             };
 
@@ -67,8 +70,12 @@
                             console.log(resObj.projects)
                             $state.go('projects');
                         })
-                        .error(function(err){
-                            alert(err);
+                        .error(function(error){
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: '<p>' + error + '</p>',
+                                size: "sm"
+                            });
                         });
                 };       
             };
@@ -123,10 +130,18 @@
                                 $state.go('base.login');
                             })
                             .error(function(err){
-                                alert(err);
+                                $scope.modalInstance = $uibModal.open({
+                                    animation: true,
+                                    template: '<p>' + err + '</p>',
+                                    size: "sm"
+                                });
                             });
                     } else{
-                        alert("Password doesn't match!");
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: "<p> Password doesn't match! </p>",
+                            size: "sm"
+                        });
                     };    
                 };              
             };
@@ -299,11 +314,25 @@
                         $http
                             .put($rootScope.url + "/mongoose_updateProject", reqObj)
                             .success(function(){
-                                console.log("successful operation");
+                                $scope.modalInstance = $uibModal.open({
+                                    animation: true,
+                                    template: "<p> App updated </p>",
+                                    size: "sm"
+                                });
                             })
                             .error(function(){
-                                console.log("operation failed");
+                                $scope.modalInstance = $uibModal.open({
+                                    animation: true,
+                                    template: "<p> App update failed </p>",
+                                    size: "sm"
+                                });
                             })
+                    }else if(!flag_new && kirasoFactory.getAppName() == $scope.appModel.name){
+                        $scope.modalInstance = $uibModal.open({
+                            animation: true,
+                            template: "<p> App updated </p>",
+                            size: "sm"
+                        });
                     }else{
                         $http
                             .post($rootScope.url + "/mongoose_test", $scope.appModelNew)
@@ -326,17 +355,28 @@
                                             $state.go("app.wizard", {new: flag_new});
                                         })
                                         .error(function(err){
-                                            alert(err);
-                                            console.log("error setting projects");
+                                            $scope.modalInstance = $uibModal.open({
+                                                animation: true,
+                                                template: "<p> Error setting projects </p>",
+                                                size: "sm"
+                                            });
                                         });
                                 };
                             })
                             .error(function(){
-                                console.log('app_mongoose_error');
+                                $scope.modalInstance = $uibModal.open({
+                                    animation: true,
+                                    template: "<p> app_mongoose_error </p>",
+                                    size: "sm"
+                                });
                             });
                         }
                 } else {
-                    alert("App name is required");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> App name is required </p>",
+                        size: "sm"
+                    });
                 };                
             };
 
@@ -356,7 +396,7 @@
                 }
 
                 if(node_data.type[0] == "@"){
-                    var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens"
+                    var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "/screens"
                     var name = _.tail(node_data.type).join("");
                     FormsLoader.getFormParams(path +"/"+name, paramsReady);
                 } else {
@@ -441,7 +481,11 @@
 
                 $scope.submitParams = function(){
                     $rootScope.$broadcast("push-paramsModel", $scope.nodeId, $scope.paramsModel);
-                    alert("Params added");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Params added </p>",
+                        size: "sm"
+                    });
                 };
 
                 //////////////////
@@ -506,7 +550,11 @@
 
                 $scope.submitData = function(){
                     $rootScope.$broadcast("push-dataModel", $scope.nodeId, $scope.dataModel);
-                    alert("Data added");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Data added </p>",
+                        size: "sm"
+                    });;
                 };
 
                 ////////////////////////////////////////////////////
@@ -526,7 +574,11 @@
                 
                 $scope.submitScreen = function(){
                     $rootScope.$broadcast("push-screenModel", $scope.nodeId, $scope.screenModel);
-                    alert("Screen added");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Screen added </p>",
+                        size: "sm"
+                    });
                 };
 
                 ///////////////////////////////////////////////////////
@@ -606,7 +658,11 @@
 
                 $scope.submitDataconnector = function(){
                     $rootScope.$broadcast("push-dataconnectorModel", $scope.nodeId, $scope.dataconnectorModel);
-                    alert("Dataconnector added");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Dataconnector added </p>",
+                        size: "sm"
+                    });
                 };
             };
 
@@ -649,7 +705,11 @@
                 
                 $scope.submitEvent = function(){
                     $rootScope.$broadcast("push-eventModel", $scope.edgeSrcId, $scope.edgeTgtId, $scope.eventModel);
-                    alert("Event added");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Event added </p>",
+                        size: "sm"
+                    });
                 };
             };
         };
