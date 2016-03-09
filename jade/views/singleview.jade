@@ -1,6 +1,6 @@
 div#aceEditor.ace_editor(ui-ace="{useWrapMode : true,showGutter: true,mode: mode,theme: 'monokai',onLoad: aceLoaded,onChange: aceChanged}" ng-model="code") 
 
-div(style="height: 250px; overflow-y: scroll; background-color: black;", scroll="messages")
+div(style="height: 250px; overflow-y: scroll; background-color: black; padding-left: 20px; color: #fff;", scroll="messages")
     #output(ng-repeat="message in messages track by $index")
         {{ message }}
   

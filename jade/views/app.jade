@@ -29,7 +29,7 @@ section.has-sidebar-right
       //label.btn.btn-primary(ng-click="load()") Load
       label.btn.btn-primary(ng-click="saveWizard()") Save
       label.btn.btn-primary(ng-click="download()") Download
-      label.btn.btn-primary(ng-click="code()") Finish
+      label.btn.btn-primary(ng-click="genApp()") Generate app
 
   // Preview and source buttons
   div(style="text-align:center;", ng-if="previewActive")
@@ -40,7 +40,7 @@ section.has-sidebar-right
       label.btn.btn-primary(ng-click="save()") Save
       //label.btn.btn-primary(ng-click="team()") Team
       label.btn.btn-primary(ng-click="download()") Download
-      label.btn.btn-primary(ng-click="code()") Generate app
+      label.btn.btn-primary(ng-click="genApp()") Generate app
 
   // Page content
   .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")

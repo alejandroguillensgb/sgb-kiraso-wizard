@@ -837,6 +837,41 @@
                   graph.updateGraph();
                 };
 
+                scope.loadPrebuiltFunction = function(event, graph){
+                  console.log("listen load-graph");
+                  //event.stopPropagation();
+                  var docEl = document.documentElement,
+                  bodyEl = document.getElementById('graph'),
+                  svgEl= document.getElementsByTagName('svg');
+                  var index;
+                  for (index = svgEl.length - 1; index >= 0; index--) {
+                    svgEl[index].parentNode.removeChild(svgEl[index]);
+                  };
+                  var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth,
+                  height =  400;//window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
+                  var xLoc = width/2 - 25,
+                  yLoc = 100;
+                  if(typeof(graph)=="string"){
+                    graph = JSON.parse(graph);
+                  };
+                  var nodes = graph.nodes;
+                  var transformEdges = graph.edges;
+                  transformEdges.forEach(function(e, i){
+                    transformEdges[i] = {source: nodes.filter(function(n){return n.id == e.source;})[0],
+                    target: nodes.filter(function(n){return n.id == e.target;})[0],
+                    eventModel: e.eventModel};
+                  });
+                  var edges = transformEdges;
+                  var svg = d3.select(settings.appendElSpec).append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+                  var graph = new GraphCreator(svg, nodes, edges);
+                  graph.setIdCt(nodes.length + 1);
+                  graph.updateGraph();
+                };
+
+                scope.$on("load-prebuilt-graph", scope.loadPrebuiltFunction)
+
                 scope.$on("reload-graph", scope.loadGraphFunction);
 
                 scope.$on("load-graph", scope.loadGraphFunction);

@@ -80,18 +80,14 @@
                     type: "password"
                 },
                 {
-                    type: "submit",
-                    title: "Login"
-                },
-                {
                     type: "section",
                     htmlClass: "row",
                     items: [
                         {
-                            type: "button",
-                            htmlClass: "col-md-6",
-                            style: "btn-info",
-                            title: "Forgot password?"
+                            type: "submit",
+                            style: "btn-success",
+                            htmlClass: "col-md-4",
+                            title: "Login"
                         },
                         {
                             type: "button",
@@ -170,6 +166,7 @@
                 },
                 {
                     type: "submit",
+                    style: "btn-success",
                     title: "Sign Up"
                 },
                 {
@@ -179,7 +176,6 @@
                         {
                             type: "button",
                             htmlClass: "col-md-6",
-                            style: "btn-info",
                             title: "Already have an account?",
                             onClick: "goTo('base.login')"
                         }
@@ -208,24 +204,6 @@
                         title: "Github repo url",
                         type: "string",
                         description: "(https url)"
-                    },
-                    description_images: {
-                        title: "Description images",
-                        type: "array",
-                        minItems: 1,
-                        items: {
-                            type: "object",
-                            properties: {
-                                desc: {
-                                    title: "Description",
-                                    type: "string"
-                                },
-                                url: {
-                                    title: "Image url",
-                                    type: "string"
-                                }
-                            }
-                        }
                     }
                 },
                 required: ["name", "type", "path"]
@@ -235,7 +213,7 @@
                 "*",
                 {
                     type: "submit",
-                    title: "save"
+                    title: "Save"
                 }
             ];
 
@@ -288,14 +266,6 @@
                         type: "string", 
                         minLength: 1, 
                         title: "App name" 
-                    },
-                    backgroundImage: {
-                        title: "Background Image",
-                        type: "string"
-                    },
-                    appLogo: {
-                        title: "App logo",
-                        type: "string"
                     }
                 },
                 required: ["name"]
@@ -303,8 +273,6 @@
 
             $scope.appForm = [
                 "name",
-                "backgroundImage",
-                "appLogo",
                 {
                     type: "submit",
                     title: "Save"
@@ -415,7 +383,6 @@
                                     menu: {
                                         title: "Menu",
                                         type: "array",
-                                        minItems: 1,
                                         items: {
                                             type: "object",
                                             properties: {
@@ -447,8 +414,7 @@
                             "*",
                             {
                                 type: "submit",
-                                style: "btn-info",
-                                title: "OK"
+                                title: "Save"
                             }
                         ];
                     } else {

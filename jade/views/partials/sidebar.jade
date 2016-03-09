@@ -4,15 +4,18 @@ div.aside-inner
       nav.sidebar(sidebar="")
         ul.nav
           li(ng-repeat='item in appItems')
-            {{item.name}}
-  
+            span(ng-click="loadPbApp(item)") {{item.name}}
+            span(style="float: right;") 
+              a.icon-trash(ng-show="item.own", ng-click="removePrebuilt(item)")
+              
     uib-accordion-group(heading="Components")
       nav.sidebar(sidebar="")
         ul.nav
           li(ng-repeat='item in compItems') 
             span(ng-click="createNode(item)") {{item.name}}
             span(style="float: right;") 
-              a.icon-eye(ng-click="openModal(item)")
+              a.icon-feed(ng-show="!item.own", href="{{item.url}}", target="_blank")
+              a.icon-feed(ng-show="item.own", href="{{item.path}}", target="_blank")
               a.icon-trash(ng-show="item.own", ng-click="removeComp(item)")
           li
             div(ng-click="addComp()") Add your component

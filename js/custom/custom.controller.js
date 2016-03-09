@@ -33,6 +33,18 @@
                 });
                 $scope.modalInstance.result.then(function(confirm){
                     if(confirm){
+                        if($scope.pid){
+                            console.log("KILL PID")
+                            $http
+                                .get($rootScope.url + "/killApp?pid=" + $scope.pid)
+                                .success(function(data){
+                                    $scope.pid = null;
+                                    console.log(data);
+                                })
+                                .error(function(){
+                                    console.log("error killing");
+                                })
+                        };
                         $state.go("base.login");
                     }
                 })            
@@ -48,6 +60,18 @@
                 });
                 $scope.modalInstance.result.then(function(confirm){
                     if(confirm){
+                        if($scope.pid){
+                            console.log("KILL PID")
+                            $http
+                                .get($rootScope.url + "/killApp?pid=" + $scope.pid)
+                                .success(function(data){
+                                    $scope.pid = null;
+                                    console.log(data);
+                                })
+                                .error(function(){
+                                    console.log("error killing");
+                                })
+                        };
                         $state.go("projects");
                     }
                 })
@@ -67,20 +91,31 @@
 
             $scope.deleteProject = function(project){
                 console.log(project);
-                //alerta 
-                $http
-                    .delete($rootScope.url + "/mongoose_removeElement?app=" + project + "&username=" +$scope.username)
-                    .success(function(){
-                        console.log("delete successful")    
-                        var pro = _.filter($scope.projects, function(e){
-                            return e != project
-                        });
-                        kirasoFactory.setProjects(pro);
-                        $scope.projects = kirasoFactory.getProjects().projects;
-                    })
-                    .error(function(){
-                        console.log("delete error")
-                    })
+                $scope.confirm = false;
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: '/app/views/partials/confirmRemoveModal.html',
+                    scope: $scope,
+                    size: "sm"
+                });
+                $scope.modalInstance.result.then(function(confirm){
+                    if(confirm){
+                        $http
+                            .delete($rootScope.url + "/mongoose_removeElement?app=" + project + "&username=" +$scope.username)
+                            .success(function(){
+                                console.log("delete successful")    
+                                var pro = _.filter($scope.projects, function(e){
+                                    return e != project
+                                });
+                                kirasoFactory.setProjects(pro);
+                                $scope.projects = kirasoFactory.getProjects().projects;
+                            })
+                            .error(function(){
+                                console.log("delete error")
+                            })        
+                    }
+                })
+                
             }; 
 
             if($state.current.name == "app.preview")
@@ -186,7 +221,7 @@
             });
 
             $scope.reload = function(){
-                 document.getElementById('frame').src += '';
+                document.getElementById('frame').src += '';
             };
 
             $scope.runApp = function(){
@@ -272,40 +307,67 @@
                 $scope.$broadcast("create-file");
             };
 
-            $scope.load = function(){
-            };            
+            $scope.genApp = function(){
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    template: '<p>Building your app...</p>',
+                    scope: $scope,
+                    size: "sm"
+                });
+                var reqObj = {
+                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username,
+                    filename: "inventario_apps_propios.json",
+                    cont: JSON.stringify({ name: kirasoFactory.getAppName() , own: true})
+                };
+                $http
+                    .put($rootScope.url + "/setInventario", reqObj)
+                    .success(function(){
+                        $scope.modalInstance.close();
+                        console.log("file added");
+                        $rootScope.$broadcast("new-app");
+                    })
+                    .error(function(){
+                        console.log("error setting file")
+                    });
 
-            $scope.download = function(){
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 $http
-                    .get($rootScope.url + "/generateFolder?path=" + path)
+                    .get($rootScope.url + "/genApp?path=" + path, {responseType:'arraybuffer'})
                     .success(function(data){
+                        $scope.modalInstance.close();
                         var blob = new Blob([data], {type: "application/x-tar"});
                         saveAs(blob, kirasoFactory.getAppName() + ".tar");
                     })
                     .error(function(){
+                        $scope.modalInstance.close();
+                        alert("Error Downloading files");
+                        console.log("error");
+                    });
+            };            
+
+            $scope.download = function(){
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    template: '<p>Downloading...</p>',
+                    scope: $scope,
+                    size: "sm"
+                });
+                var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
+                $http
+                    .get($rootScope.url + "/generateFolder?path=" + path, {responseType:'arraybuffer'})
+                    .success(function(data){
+                        $scope.modalInstance.close();
+                        console.log("data")
+                        var blob = new Blob([data], {type: "application/x-tar"});
+                        saveAs(blob, kirasoFactory.getAppName() + ".tar");
+                    })
+                    .error(function(){
+                        $scope.modalInstance.close();
+                        alert("Error Downloading files");
                         console.log("error");
                     });
             };
 
-            // $scope.websocket = new WebSocket("ws://echo.websocket.org/");
-            // console.log($scope.websocket)
-            // $scope.websocket.onopen = function() { document.getElementById("output").innerHTML += "<p>> CONNECTED</p>"; };
-            // $scope.websocket.onmessage = function(evt) { 
-            //     document.getElementById("output").innerHTML += "<p style='color: blue;'>> RESPONSE: " + evt.data + "</p>"; };
-            // $scope.websocket.onerror = function(evt) { 
-            //     document.getElementById("output").innerHTML += "<p style='color: red;'>> ERROR: " + evt.data + "</p>"; 
-            // };
-
-            // var socket = io.connect($rootScope.url);
-            // console.log(socket);
-            // socket.on("news", function(data) {
-            //     console.log(data);
-            // });
-
-     
-            // handles the callback from the received event
-            
 
             //testing
             $scope.team = function(){

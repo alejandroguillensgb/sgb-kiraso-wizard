@@ -28,14 +28,14 @@
                     $scope.$on("directiveReady", function(){
                         $http
                             .get($rootScope.url + "/mongoose_findGraph?app="+$scope.app_name)
-                                .success(function(graph){
-                                    console.log("event send");
-                                    $scope.$emit("load-graph", graph);
-                                })
-                                .error(function(){
-                                    console.log("error loading graph");
-                                });    
-                    });                    
+                            .success(function(graph){
+                                console.log("event send");
+                                $scope.$emit("load-graph", graph);
+                            })
+                            .error(function(){
+                                console.log("error loading graph");
+                            });    
+                });                    
                 } else{
                     $scope.$on("directiveReady", function(){
                         if(fromState.name == "app.preview"){

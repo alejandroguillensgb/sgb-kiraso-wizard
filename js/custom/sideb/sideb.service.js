@@ -16,11 +16,16 @@
         function getApps(onReady, onError) {
           
           onError = onError || function() { alert('Failure loading prebuilt apps'); };
-
-          $http
-            .get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/server/inventario_apps.json&type=json')
-            .success(onReady)
-            .error(onError);
+          var requests = [];
+          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/server/inventario_apps.json&type=json'));
+          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/service_data/'+ kirasoFactory.getUsername().username + "/inventario_apps_propios.json&type=json"))
+          $q.all(requests)
+            .then(function(res){
+                console.log(res)
+                var items = [];
+                items.push(res[0].data, res[1].data);
+                onReady(_.flattenDeep(items));
+            })
         }
 
         function getComps(onReady, onError) {
@@ -32,10 +37,10 @@
           $q.all(requests)
             .then(function(res){
                 console.log(res)
-            var items = [];
-            items.push(res[0].data, res[1].data);
-            onReady(_.flattenDeep(items));
-          })
+                var items = [];
+                items.push(res[0].data, res[1].data);
+                onReady(_.flattenDeep(items));
+            })
         }
 
         function copyContent(item , onReady, onError) {
