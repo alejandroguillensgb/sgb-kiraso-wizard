@@ -68,6 +68,7 @@
                             kirasoFactory.setUsername(resObj.username);
                             kirasoFactory.setProjects(resObj.projects);
                             console.log(resObj.projects)
+                            $rootScope.isAuthenticated = true;
                             $state.go('projects');
                         })
                         .error(function(error){
@@ -81,10 +82,14 @@
             };
 
             $scope.loginForm = [
-                "username",
+                {
+                    key: "username",
+                    feedback:false   
+                },
                 {
                     key: "password",
-                    type: "password"
+                    type: "password",
+                    feedback:false
                 },
                 {
                     type: "section",
@@ -170,14 +175,19 @@
             };
               
             $scope.signupForm = [
-                "username",
+                {
+                    key: "username",
+                    feedback: false 
+                },
                 {
                     key: "password",
-                    type: "password"
+                    type: "password",
+                    feedback: false
                 },
                 {
                     key: "confirmPassword",
-                    type: "password"
+                    type: "password",
+                    feedback: false
                 },
                 {
                     type: "submit",
@@ -225,7 +235,19 @@
             };
               
             $scope.addCompForm = [
-                "*",
+                {
+                    key: "name",
+                    feedback: false
+
+                },
+                {
+                    key: "type",
+                    feedback: false
+                },
+                {
+                    key: "path",
+                    feedback: false
+                },
                 {
                     type: "submit",
                     title: "Save"
@@ -238,7 +260,11 @@
                 $scope.$broadcast('schemaFormValidate');
                 
                 if(form.$valid){    
-                    console.log("submit");
+                    $scope.modalInstance = $uibModal.open({
+                        animation: true,
+                        template: "<p> Clonning repository </p>",
+                        size: "sm"
+                    });
                     $scope.addCompModel.own = true;
                     var reqObj = {
                         path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens/" + _.tail($scope.addCompModel.type).join(""),
@@ -247,6 +273,7 @@
                     $http
                         .post($rootScope.url + "/cloneRepo", reqObj)
                         .success(function(){
+                            $scope.modalInstance.close();
                             var reqObj = {
                                 path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username,
                                 filename: "inventario_componentes_propios.json",
@@ -263,7 +290,12 @@
                                 });
                         })
                         .error(function(){
-                            console.log("error");
+                            $scope.modalInstance.close();
+                            $scope.modalInstance = $uibModal.open({
+                                animation: true,
+                                template: "<p> Errror clonning your repo </p>",
+                                size: "sm"
+                            });
                         })
                     
                 };
@@ -287,7 +319,10 @@
             };
 
             $scope.appForm = [
-                "name",
+                {
+                    key: "name",
+                    feedback: false
+                },
                 {
                     type: "submit",
                     title: "Save"
@@ -398,12 +433,23 @@
                 if(node_data.type[0] == "@"){
                     var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "/screens"
                     var name = _.tail(node_data.type).join("");
-                    FormsLoader.getFormParams(path +"/"+name, paramsReady);
+                    FormsLoader.getFormParams(path +"/"+name, checkParams);
                 } else {
                     FormsLoader.getFormParams(node_data.path, paramsReady);    
-                }                
+                }
+
+                function checkParams(data){
+                    if(data.length>0){
+                        paramsReady(data);
+                    } else{
+                        var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens"
+                        var name = _.tail(node_data.type).join("");
+                        FormsLoader.getFormParams(path +"/"+name, paramsReady);
+                    };
+                };         
       
                 function paramsReady(data){
+
                     $scope.show = true;
                     $scope.params = data;
                     $scope.properties = {};
@@ -450,12 +496,17 @@
                             type: "object",
                             properties: $scope.properties  
                         };
+
                         $scope.paramsForm = [                  
                             "*",
                             {
                                 type: "submit",
                                 title: "Save"
+                            },
+                            {
+                                feedback: false
                             }
+                            
                         ];
                     } else {
                         $scope.show = false;
@@ -525,7 +576,8 @@
                                 value: "",
                                 name: "None"
                             }
-                        ]
+                        ],
+                        feedback: false
                     },
                     {
                         type: "conditional",
@@ -533,7 +585,8 @@
                         items: [
                             {
                                 key: "path",
-                                type: "string"
+                                type: "string",
+                                feedback: false
                             }
                         ]
                     },
@@ -560,7 +613,14 @@
                 ////////////////////////////////////////////////////
 
                 $scope.screenForm =  [
-                    "*",
+                    {
+                        key: "name",
+                        feedback: false
+                    },
+                    {
+                        key: "default",
+                        feedback: false
+                    },
                     {
                         type: "submit",
                         title: "Save"
@@ -608,10 +668,14 @@
                 };
 
                 $scope.dataconnectorForm = [
-                    "title",
+                    {
+                        key: "title",
+                        feedback: false
+                    },
                     {
                         key: "type",
                         type: "select",
+                        feedback: false,
                         titleMap: [
                             {
                                 value: "sgb-dataconnector-http",
@@ -623,10 +687,14 @@
                             }
                         ]
                     },
-                    "url",
+                    {
+                        key: "url",
+                        feedback: false
+                    },
                     {
                         key: "method",
                         type: "select",
+                        feedback: false,
                         titleMap: [
                             {
                                 value: "GET",
@@ -696,7 +764,10 @@
                 };
 
                 $scope.eventForm = [
-                    "*",
+                    {
+                        key: "event",
+                        feedback: false
+                    },
                     {
                         type: "submit",
                         title: "Save"

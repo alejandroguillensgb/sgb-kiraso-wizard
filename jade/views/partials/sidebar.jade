@@ -1,6 +1,6 @@
 div.aside-inner
   uib-accordion(close-others="oneAtATime")
-    uib-accordion-group(heading="Prebuilt Apps")
+    uib-accordion-group(heading="Prebuilt Apps",style="margin-top: 5px;")
       nav.sidebar(sidebar="")
         ul.nav
           li(ng-repeat='item in appItems')
@@ -8,7 +8,7 @@ div.aside-inner
             span(style="float: right;") 
               a.icon-trash(ng-show="item.own", ng-click="removePrebuilt(item)")
               
-    uib-accordion-group(heading="Components")
+    uib-accordion-group(heading="Components", style="margin-top: 10px;")
       nav.sidebar(sidebar="")
         ul.nav
           li(ng-repeat='item in compItems') 

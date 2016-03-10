@@ -24,6 +24,12 @@
             $scope.projects = kirasoFactory.getProjects().projects;
             $scope.frameActive = false;
 
+            $scope.$on('$locationChangeStart', function(event) {
+                if (!$rootScope.isAuthenticated) {
+                    event.preventDefault();
+                }
+            });
+
             $scope.goLogin = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -46,7 +52,8 @@
                                     console.log("error killing");
                                 })
                         };
-                        $state.go("base.login");
+                        $rootScope.isAuthenticated = false;
+                        $state.go("base.login", {location: false});
                     }
                 })            
             };
@@ -138,7 +145,9 @@
                 });
                 $scope.modalInstance.result.then(function(confirm){
                     if(confirm){
-                        $scope.socket.disconnect();
+                        if($scope.socket){
+                            $scope.socket.removeAllListeners();
+                        };
                         $scope.frameActive = false;
                         $scope.radioModel = 'wizard';
                         $state.go("app.wizard");
@@ -222,6 +231,13 @@
                 console.log("gen dir tree");
                 console.log("show frame");
             });
+
+            // $scope.$on('$destroy', function (event) {
+            //     if($scope.socket){
+            //         console.log("desproy socket")
+            //         $scope.socket.removeAllListeners();
+            //     };
+            // });
 
             $scope.reload = function(){
                 $scope.frameActive = true;
@@ -386,9 +402,6 @@
                     .success(function(data){
                         console.log(data)
                         
-
-                        
-                        //$scope.websocket.send(data)
                     })
                     .error(function(){
                         console.log('DROP error')

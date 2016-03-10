@@ -65,20 +65,24 @@ marker{
 }
 
 g.conceptG circle{
-    fill: #F6FBFF;
+    //fill: #F6FBFF;
+    fill: rgb(189,206,237);
     stroke: #333;
     stroke-width: 2px;
 }
 
 g.conceptG:hover circle{
-    fill: rgb(200, 238, 241);
+    //fill: rgb(200, 238, 241);
+    fill: rgb(143,172,224);
 }
 
 g.selected circle{
-    fill: rgb(250, 232, 255);
+    //fill: rgb(250, 232, 255);
+    fill: rgb(66,115,203);
 }
 g.selected:hover circle{
-    fill: rgb(250, 232, 255);
+    //fill: rgb(250, 232, 255);
+    fill: rgb(66,115,203);
 }
 
 path.link {
@@ -89,7 +93,8 @@ path.link {
 }
 
 path.link:hover{
-    stroke: rgb(94, 196, 204);
+    //stroke: rgb(94, 196, 204);
+    stroke: rgb(163,233,180);
 }
 
 g.connect-node circle{
@@ -101,5 +106,6 @@ path.link.hidden{
 }
 
 path.link.selected {
-    stroke: rgb(229, 172, 247);
+    //stroke: rgb(229, 172, 247);
+    stroke: rgb(116,222,141);
 }

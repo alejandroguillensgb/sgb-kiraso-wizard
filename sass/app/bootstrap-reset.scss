@@ -63,7 +63,9 @@ now {
     }
   }
   &.panel-default {
-    border-top-width: 3px;    
+    margin: 5px;
+    border: 1px solid #182f58;
+    boder-radius: 3px;
   }
 }
 

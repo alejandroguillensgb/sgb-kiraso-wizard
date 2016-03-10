@@ -17,30 +17,28 @@ aside.offsidebar(ng-include="'app/views/partials/offsidebar.html'", ng-if="previ
 section.has-sidebar-right
 
   div
-    div.btn-group.btn-group-justified(style="padding:5px;")
+    div.btn-group.btn-group-justified(style="padding:10px;")
         label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'wizard'", ng-click="wizard()") Wizard
         label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'preview'", ng-click="preview()") Preview
 
 
   // Wizard buttons
   div(style="text-align:center;", ng-if="!previewActive")
-    div.btn-toolbar(style="display: inline-block; padding:5px;")      
-      //label.btn.btn-primary(ng-click="new()") New
-      //label.btn.btn-primary(ng-click="load()") Load
+    div.btn-toolbar(style="display: inline-block; padding:10px;")
       label.btn.btn-primary(ng-click="saveWizard()") Save
-      label.btn.btn-primary(ng-click="download()") Download
-      label.btn.btn-primary(ng-click="genApp()") Generate app
+      label.btn.btn-primary(ng-click="download()", style="margin-left: 20px") Download
+      label.btn.btn-primary(ng-click="genApp()", style="margin-left: 20px") Generate app
 
   // Preview and source buttons
   div(style="text-align:center;", ng-if="previewActive")
-    div.btn-toolbar(style="display: inline-block; padding:5px;")      
-      label.btn.btn-primary(ng-click="addResources()") Add resources
-      label.btn.btn-primary(ng-click="reload()") ReLoad
-      label.btn.btn-primary(ng-click="runApp()") Run
-      label.btn.btn-primary(ng-click="save()") Save
+    div.btn-toolbar(style="display: inline-block; padding:5px;")
+      label.btn.btn-primary(ng-click="save()") Save      
+      label.btn.btn-primary(ng-click="addResources()",style="margin-left: 30px") Add resources
+      label.btn.btn-primary(ng-click="reload()",style="margin-left: 30px") ReLoad
+      label.btn.btn-primary(ng-click="runApp()",style="margin-left: 30px") Run
       //label.btn.btn-primary(ng-click="team()") Team
-      label.btn.btn-primary(ng-click="download()") Download
-      label.btn.btn-primary(ng-click="genApp()") Generate app
+      label.btn.btn-primary(ng-click="download()",style="margin-left: 30px") Download
+      label.btn.btn-primary(ng-click="genApp()",style="margin-left: 30px") Generate app
 
   // Page content
   .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")
