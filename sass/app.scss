@@ -60,3 +60,20 @@
 .white{
     color: #fff;
 }
+
+.primary {
+    color: $kiraso-blue;
+    background-color: #fff;
+    border-color: $kiraso-blue;
+}
+
+.primary-active {
+    color: #fff;
+    background-color: $kiraso-blue;
+    border-color: $kiraso-blue;
+}
+
+.main-background{
+    background-image: url(../img/Fondo3.png);
+}
+

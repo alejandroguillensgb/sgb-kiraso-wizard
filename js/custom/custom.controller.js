@@ -24,11 +24,11 @@
             $scope.projects = kirasoFactory.getProjects().projects;
             $scope.frameActive = false;
 
-            $scope.$on('$locationChangeStart', function(event) {
-                if (!$rootScope.isAuthenticated) {
-                    event.preventDefault();
-                }
-            });
+            // $scope.$on('$locationChangeStart', function(event) {
+            //     if (!$rootScope.isAuthenticated) {
+            //         event.preventDefault();
+            //     }
+            // });
 
             $scope.goLogin = function(){
                 $scope.confirm = false;
@@ -135,6 +135,9 @@
                 $scope.modalInstance.dismiss(false);
             };
 
+            $scope.activeWizard = true;
+            $scope.activePreview = false;
+
             $scope.wizard = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -149,7 +152,8 @@
                             $scope.socket.removeAllListeners();
                         };
                         $scope.frameActive = false;
-                        $scope.radioModel = 'wizard';
+                        $scope.activeWizard = !$scope.activeWizard;
+                        $scope.activePreview = !$scope.activePreview;
                         $state.go("app.wizard");
                         $scope.previewActive = false;
                         if($scope.pid){
@@ -182,7 +186,8 @@
                 });
                 $scope.modalInstance.result.then(function(confirm){
                     if(confirm){
-                        $scope.radioModel = 'preview';
+                        $scope.activeWizard = !$scope.activeWizard;
+                        $scope.activePreview = !$scope.activePreview;
                         $state.go("app.preview");
                         $scope.previewActive = true;
                         $scope.$broadcast("set-graph");
@@ -269,6 +274,7 @@
                     $http
                         .get($rootScope.url + "/runApp?path=" + path)
                         .success(function(data){
+                            console.log(data)
                             $scope.pid = data;
                             console.log(data);
                         })

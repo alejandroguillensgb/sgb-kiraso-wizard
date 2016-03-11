@@ -18,8 +18,8 @@ section.has-sidebar-right
 
   div
     div.btn-group.btn-group-justified(style="padding:10px;")
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'wizard'", ng-click="wizard()") Wizard
-        label.btn.btn-primary(ng-model="radioModel", uib-btn-radio="'preview'", ng-click="preview()") Preview
+        label.btn(ng-class="activeWizard?'primary-active':'primary'", ng-click="wizard()") Wizard
+        label.btn(ng-class="activePreview?'primary-active':'primary'", ng-click="preview()") Preview
 
 
   // Wizard buttons
