@@ -92,15 +92,14 @@
                     feedback:false
                 },
                 {
+                    type: "submit",
+                    style: "btn-success",
+                    title: "Login"
+                },
+                {
                     type: "section",
                     htmlClass: "row",
-                    items: [
-                        {
-                            type: "submit",
-                            style: "btn-success",
-                            htmlClass: "col-md-4",
-                            title: "Login"
-                        },
+                    items: [       
                         {
                             type: "button",
                             htmlClass: "col-md-4",
@@ -200,7 +199,7 @@
                     items: [
                         {
                             type: "button",
-                            htmlClass: "col-md-6",
+                            htmlClass: "col-md-4",
                             title: "Already have an account?",
                             onClick: "goTo('base.login')"
                         }
@@ -370,7 +369,7 @@
                         });
                     }else{
                         $http
-                            .post($rootScope.url + "/mongoose_test", $scope.appModelNew)
+                            .post($rootScope.url + "/mongoose_createProject", $scope.appModelNew)
                             .success(function(){
                                 kirasoFactory.setAppModel($scope.appModelNew);
                                 kirasoFactory.setAppName($scope.appModelNew.name);

@@ -9,7 +9,6 @@
     function PrebuiltLoader($http, $rootScope, $q, kirasoFactory) {
         this.getApps = getApps;
         this.getComps = getComps;
-        this.copyContent = copyContent;
 
         ////////////////
 
@@ -42,17 +41,5 @@
                 onReady(_.flattenDeep(items));
             })
         }
-
-        function copyContent(item , onReady, onError) {
-
-            onError = onError || function() { alert('Failure copying'); };
-
-            $http
-                .get($rootScope.url + '/copyContent?path_src='+item.path+'&path_dst='+item.path+'-copy')
-                .success(function(){
-                    onReady(item.name+'-copy', item.path+'-copy')
-                })
-                .error(onError);
-        } 
     }
 })();

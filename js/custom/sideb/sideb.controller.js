@@ -157,10 +157,6 @@
                 });
             };
 
-            $scope.copyContent = function(item){
-                PrebuiltLoader.copyContent(item, reloadController);
-            }
-
             function reloadController(name, path){
                 $scope.compItems.push({name: name, path: path})
             }

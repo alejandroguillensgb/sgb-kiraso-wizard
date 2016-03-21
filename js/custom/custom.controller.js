@@ -24,12 +24,6 @@
             $scope.projects = kirasoFactory.getProjects().projects;
             $scope.frameActive = false;
 
-            // $scope.$on('$locationChangeStart', function(event) {
-            //     if (!$rootScope.isAuthenticated) {
-            //         event.preventDefault();
-            //     }
-            // });
-
             $scope.goLogin = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -237,12 +231,6 @@
                 console.log("show frame");
             });
 
-            // $scope.$on('$destroy', function (event) {
-            //     if($scope.socket){
-            //         console.log("desproy socket")
-            //         $scope.socket.removeAllListeners();
-            //     };
-            // });
 
             $scope.reload = function(){
                 $scope.frameActive = true;
@@ -285,23 +273,6 @@
 
                
             };
-
-            // $scope.$on("ace-loaded", function(){
-            //     var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
-            //     $http
-            //         .get($rootScope.url + "/exec?path=" + path)
-            //         .success(function(data){
-            //             console.log(data)
-            //             $scope.$broadcast("gen-dir", path);
-            //             //$scope.$broadcast("reload-view");
-            //         })
-            //         .error(function(){
-            //             console.log("erro exec");
-            //         });
-            //     console.log("gen app");
-            //     console.log("gen dir tree");
-            //     console.log("show frame");
-            // });
 
             $scope.new = function(){
             };
@@ -403,7 +374,6 @@
             //testing
             $scope.team = function(){
                 $http
-                    //.get($rootScope.url + "/runServer")
                     .get($rootScope.url + "/dropDb")
                     .success(function(data){
                         console.log(data)
@@ -423,293 +393,266 @@
 
             $scope.sendInfoFunction = function(event, graph){
                 console.log("listen send info")
-                //Clear directory
-               // $http
-                 //   .delete("http://localhost:8000/cleanDir?path=/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName())
-                  //  .success(function(){
-                        var data = JSON.parse(graph);
-                        $scope.nodes = data.nodes;
-                        $scope.edges = data.edges;
 
-                        _.forEach($scope.edges, function(elem){
-                            $scope.src.push(elem.source);
-                            $scope.tgt.push(elem.target);
-                        });
-                        
-                        _.forEach(_.uniq($scope.src), function(elem){
-                            if(_.uniq($scope.tgt).indexOf(elem) == -1)
-                                $scope.roots.push(elem);
-                        });
-                        
-                        var adjMatrix = [];
-                        console.log($scope.nodes.length);
+                var data = JSON.parse(graph);
+                $scope.nodes = data.nodes;
+                $scope.edges = data.edges;
+
+                _.forEach($scope.edges, function(elem){
+                    $scope.src.push(elem.source);
+                    $scope.tgt.push(elem.target);
+                });
+                
+                _.forEach(_.uniq($scope.src), function(elem){
+                    if(_.uniq($scope.tgt).indexOf(elem) == -1)
+                        $scope.roots.push(elem);
+                });
+                
+                var adjMatrix = [];
+                console.log($scope.nodes.length);
+                for(var i = 1; i < $scope.nodes.length+1; ++i){
+                    adjMatrix[i] = []; 
+                    for(var j = 1; j < $scope.nodes.length+1; ++j){
+                        if(_.filter($scope.edges, function(edge){return edge.source == i && edge.target == j}).length==1)
+                            adjMatrix[i][j] = true;
+                        else
+                            adjMatrix[i][j] = false;
+                    };
+                };
+
+                function bfs(adjMatrix, node){
+                    var queue = [];
+                    var mark = [];
+
+                    queue.push(node);
+                    mark[node] = true;
+
+                    while(queue.length != 0){
+                        var item = queue.shift();
                         for(var i = 1; i < $scope.nodes.length+1; ++i){
-                            adjMatrix[i] = []; 
-                            for(var j = 1; j < $scope.nodes.length+1; ++j){
-                                if(_.filter($scope.edges, function(edge){return edge.source == i && edge.target == j}).length==1)
-                                    adjMatrix[i][j] = true;
-                                else
-                                    adjMatrix[i][j] = false;
+                            if(adjMatrix[item][i] && !mark[i]){
+                                mark[i] = true;
+                                queue.push(i);
                             };
                         };
+                    };
 
-                        function bfs(adjMatrix, node){
-                            var queue = [];
-                            var mark = [];
+                    return mark;
+                };
 
-                            queue.push(node);
-                            mark[node] = true;
+                //Config files
 
-                            while(queue.length != 0){
-                                var item = queue.shift();
-                                for(var i = 1; i < $scope.nodes.length+1; ++i){
-                                    if(adjMatrix[item][i] && !mark[i]){
-                                        mark[i] = true;
-                                        queue.push(i);
-                                    };
-                                };
-                            };
+                var exportfiles = [];
 
-                            return mark;
-                        };
+                _.forEach($scope.nodes, function(item){
+                    var nodeId = item.id;
+                    var screen_obj = item.screenModel;
+                    var title = screen_obj.name.toLowerCase();
+                    var dataSource = [];
+                    var dataConnector = [];
 
-                        //Config files
-
-                        var exportfiles = [];
-
-                        _.forEach($scope.nodes, function(item){
-                            var nodeId = item.id;
-                            var screen_obj = item.screenModel;
-                            var title = screen_obj.name.toLowerCase();
-                            var dataSource = [];
-                            var dataConnector = [];
-
-                            if(item.dataModel && item.dataModel.type != ""){
-                                var nodeData = item.dataModel;
-                                var nodeDataType = nodeData.type;
-                                var nodeDataPath = nodeData.path;
-                                if(nodeDataType == "sgb-datasource-json#1.0"){
+                    if(item.dataModel && item.dataModel.type != ""){
+                        var nodeData = item.dataModel;
+                        var nodeDataType = nodeData.type;
+                        var nodeDataPath = nodeData.path;
+                        if(nodeDataType == "sgb-datasource-json#1.0"){
+                            dataSource = [
+                                "\tdataSource: {",
+                                "\t\ttype: '" + nodeDataType + "',",
+                                "\t\tparams: {",
+                                "\t\t\tpath: '" + nodeDataPath + "'",
+                                "\t\t}",
+                                "\t},"
+                            ];
+                        } else if(nodeDataType == "sgb-datasource-function"){
+                            $http
+                                .get($rootScope.url + "/getContent?path=" + nodeDataPath + "&type=json")
+                                .success(function(data){
                                     dataSource = [
                                         "\tdataSource: {",
                                         "\t\ttype: '" + nodeDataType + "',",
                                         "\t\tparams: {",
-                                        "\t\t\tpath: '" + nodeDataPath + "'",
+                                        "\t\t\tdata: function(){",
+                                        "\t\t\t\treturn " + JSON.stringify(data),
+                                        "\t\t\t}",
                                         "\t\t}",
                                         "\t},"
-                                    ];
-                                } else if(nodeDataType == "sgb-datasource-function"){
-                                    $http
-                                        .get($rootScope.url + "/getContent?path=" + nodeDataPath + "&type=json")
-                                        .success(function(data){
-                                            dataSource = [
-                                                "\tdataSource: {",
-                                                "\t\ttype: '" + nodeDataType + "',",
-                                                "\t\tparams: {",
-                                                "\t\t\tdata: function(){",
-                                                "\t\t\t\treturn " + JSON.stringify(data),
-                                                "\t\t\t}",
-                                                "\t\t}",
-                                                "\t},"
-                                            ];    
-                                        })
-                                        .error(function(){
-                                            console.log("error retreiving data");
-                                        });
-                                } else {
-                                    dataSource = [
-                                        "\tdataSource: {",
-                                        "\t\ttype: '" + nodeDataType + "'",
-                                        "\t},"
-                                    ];
-                                };
-                            };
-
-                            if(!_.isEmpty(item.dataconnectorModel)){
-                                console.log("DATACONNECTOR")
-                                console.log(item.dataconnectorModel)
-                                var nodeData = item.dataconnectorModel;
-                                dataConnector = [
-                                    "\tdataConnectors: {",
-                                    "\t\t" + nodeData.title + ": {",
-                                    "\t\t\ttype: '" + nodeData.type + "',",
-                                    "\t\t\tparams: {",
-                                    "\t\t\t\tmethod: '" + nodeData.method + "',",
-                                    "\t\t\t\turl: '" + nodeData.url + "'",
-                                    "\t\t\t},",
-                                    "\t\t}",
-                                    "\t}"
-                                ]
-                            };
-
-                            var params = [];
-                            if(item.paramsModel){
-                                var nodeParams = item.paramsModel;
-                                var eachParam = []; 
-                                for (var key in nodeParams){
-                                    eachParam.push("\t\t" + key + ": " + JSON.stringify(nodeParams[key]) + ",");
-                                };
-                                params = [
-                                    "\tparams: {",
-                                    [eachParam],
-                                    "\t},",    
-                                ];
-                            };
-                            
-                            var file = [
-                                "export var " + title + "Screen = {",
-                                "\ttype: '" + item.type + "',",
-                                params,    
-                                dataSource,
-                                dataConnector
+                                    ];    
+                                })
+                                .error(function(){
+                                    console.log("error retreiving data");
+                                });
+                        } else {
+                            dataSource = [
+                                "\tdataSource: {",
+                                "\t\ttype: '" + nodeDataType + "'",
+                                "\t},"
                             ];
+                        };
+                    };
+
+                    if(!_.isEmpty(item.dataconnectorModel)){
+                        console.log("DATACONNECTOR")
+                        console.log(item.dataconnectorModel)
+                        var nodeData = item.dataconnectorModel;
+                        dataConnector = [
+                            "\tdataConnectors: {",
+                            "\t\t" + nodeData.title + ": {",
+                            "\t\t\ttype: '" + nodeData.type + "',",
+                            "\t\t\tparams: {",
+                            "\t\t\t\tmethod: '" + nodeData.method + "',",
+                            "\t\t\t\turl: '" + nodeData.url + "'",
+                            "\t\t\t},",
+                            "\t\t}",
+                            "\t}"
+                        ]
+                    };
+
+                    var params = [];
+                    if(item.paramsModel){
+                        var nodeParams = item.paramsModel;
+                        var eachParam = []; 
+                        for (var key in nodeParams){
+                            eachParam.push("\t\t" + key + ": " + JSON.stringify(nodeParams[key]) + ",");
+                        };
+                        params = [
+                            "\tparams: {",
+                            [eachParam],
+                            "\t},",    
+                        ];
+                    };
+                    
+                    var file = [
+                        "export var " + title + "Screen = {",
+                        "\ttype: '" + item.type + "',",
+                        params,    
+                        dataSource,
+                        dataConnector
+                    ];
 
 
-                            if(item.type[0] == "@"){
-                                var reqObj = {
-                                    base_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens/" + _.tail(item.type).join(""),
-                                    copy_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"_tmp/screens",
-                                    app_path:  "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"/screens/" + _.tail(item.type).join("")
-                                };
-                                $scope.request.push($http.put($rootScope.url + "/moveScreens", reqObj));
-                            };
+                    if(item.type[0] == "@"){
+                        var reqObj = {
+                            base_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/screens/" + _.tail(item.type).join(""),
+                            copy_path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"_tmp/screens",
+                            app_path:  "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() +"/screens/" + _.tail(item.type).join("")
+                        };
+                        $scope.request.push($http.put($rootScope.url + "/moveScreens", reqObj));
+                    };
 
-                            if(screen_obj.default){
-                                file.push(["\tdefault: true"]);
-                            };
+                    if(screen_obj.default){
+                        file.push(["\tdefault: true"]);
+                    };
 
-                            file.push("}");
+                    file.push("}");
 
-                            exportfiles.push(file);
-                            
-                            var reqObj = {
-                                path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
-                                filename: title + ".ts",
-                                cont: JSON.stringify(_.flattenDeep(file))
-                            };
-                            console.log("archivo")
-                            console.log(file)
-                            $scope.request.push($http
-                                .put($rootScope.url + "/setContent", reqObj))
-                                // .success(function(data){
-                                //     console.log('Save: ');
-                                // })
-                                // .error(function(){
-                                //     console.error('Failed on save');
-                                // });
-                        });
+                    exportfiles.push(file);
+                    
+                    var reqObj = {
+                        path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
+                        filename: title + ".ts",
+                        cont: JSON.stringify(_.flattenDeep(file))
+                    };
+                    console.log("archivo")
+                    console.log(file)
+                    $scope.request.push($http
+                        .put($rootScope.url + "/setContent", reqObj))
+                });
 
-                        //////////////////////////////////////////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////
 
-                        //Screen.ts
+                //Screen.ts
 
-                        var imports = [];
-                        var screens = [];
-                        var nodeObj = [];
-                        var reacheability = [];
-                        
-                        // imports
-                        _.forEach($scope.nodes, function(item){
+                var imports = [];
+                var screens = [];
+                var nodeObj = [];
+                var reacheability = [];
+                
+                // imports
+                _.forEach($scope.nodes, function(item){
+                    var screenObj = item.screenModel;
+                    var name = screenObj.name.toLowerCase();
+                    imports.push("import " + name + " = require('./"+ name +"')");    
+                });
+
+                // screens
+                _.forEach($scope.roots, function(root){
+                    var root_name = _.find($scope.nodes, function(node){return node.id == root}).screenModel.name.toLowerCase();
+                    screens.push("\t'" + root_name +"': " + root_name + "." + root_name + "Screen,"); 
+                    nodeObj.push({screenName: root_name, id: root});
+
+                    reacheability = bfs(adjMatrix, root);
+
+                    _.forEach($scope.nodes, function(item){
+                        if(reacheability[item.id] && item.id != root){
                             var screenObj = item.screenModel;
                             var name = screenObj.name.toLowerCase();
-                            imports.push("import " + name + " = require('./"+ name +"')");    
-                        });
+                            screens.push("\t'" + root_name + "." + name + "': " + name + "." + name + "Screen,");
+                            nodeObj.push({screenName: root_name + "." + name, id: item.id});    
+                        }; 
+                    }); 
+                });
 
-                        // screens
-                        _.forEach($scope.roots, function(root){
-                            var root_name = _.find($scope.nodes, function(node){return node.id == root}).screenModel.name.toLowerCase();
-                            screens.push("\t'" + root_name +"': " + root_name + "." + root_name + "Screen,"); 
-                            nodeObj.push({screenName: root_name, id: root});
+                var line = ['','export var screens : Megazord.ContainerScreenList = {'];
+                var end = ["}"];
+                var result = _.flattenDeep([imports,line,screens,end]);
 
-                            reacheability = bfs(adjMatrix, root);
+                var reqObj = {
+                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
+                    filename: "screens.ts",
+                    cont: JSON.stringify(result)
+                };
+                console.log(JSON.stringify(result));        
+                $scope.request.push($http
+                    .put($rootScope.url + "/setContent", reqObj))
 
-                            _.forEach($scope.nodes, function(item){
-                                if(reacheability[item.id] && item.id != root){
-                                    var screenObj = item.screenModel;
-                                    var name = screenObj.name.toLowerCase();
-                                    screens.push("\t'" + root_name + "." + name + "': " + name + "." + name + "Screen,");
-                                    nodeObj.push({screenName: root_name + "." + name, id: item.id});    
-                                }; 
-                            }); 
-                        });
+                ///////////////////////////////////////////////////////////////////////////
 
-                        var line = ['','export var screens : Megazord.ContainerScreenList = {'];
-                        var end = ["}"];
-                        var result = _.flattenDeep([imports,line,screens,end]);
+                // Routes.ts
+                var routes_export_init = ["export var routes : Megazord.RouterConfig = {"]; 
+                var routes_export_end = ["};"];
+                var routes = [];
 
-                        var reqObj = {
-                            path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
-                            filename: "screens.ts",
-                            cont: JSON.stringify(result)
-                        };
-                        console.log(JSON.stringify(result));        
-                        $scope.request.push($http
-                            .put($rootScope.url + "/setContent", reqObj))
-                            // .success(function(data){
-                            //     console.log('success screens.ts');
-                            //     $scope.roots = [];
-                            // })
-                            // .error(function(err){
-                            //     console.error(err);
-                            // });
+                _.forEach(nodeObj, function(node){
+                    var edges_same_src = _.filter($scope.edges, function(edge){
+                        return edge.source == node.id 
+                    });
 
-                        ///////////////////////////////////////////////////////////////////////////
-
-                        // Routes.ts
-                        var routes_export_init = ["export var routes : Megazord.RouterConfig = {"]; 
-                        var routes_export_end = ["};"];
-                        var routes = [];
-
-                        _.forEach(nodeObj, function(node){
-                            var edges_same_src = _.filter($scope.edges, function(edge){
-                                return edge.source == node.id 
-                            });
-
-                            if(edges_same_src.length != 0){
-                                var node_routes = [];
-                                _.forEach(edges_same_src, function(edge){
-                                    if(edge.eventModel){
-                                        var target_name = _.find(nodeObj, {id: edge.target}).screenName;
-                                        var routes_intern = [
-                                                            "\t\t" + edge.eventModel.event + ": '" +
-                                                            target_name + "',"
-                                                        ];
-                                        node_routes.push(routes_intern);
-                                    };
-                                });
-                                if(node_routes.length != 0){
-                                    var routes_init = ["\t'" + node.screenName + "': {"]
-                                    var routes_end = ["\t},"]
-                                    routes.push(routes_init.concat(node_routes).concat(routes_end));
-                                };
+                    if(edges_same_src.length != 0){
+                        var node_routes = [];
+                        _.forEach(edges_same_src, function(edge){
+                            if(edge.eventModel){
+                                var target_name = _.find(nodeObj, {id: edge.target}).screenName;
+                                var routes_intern = [
+                                                    "\t\t" + edge.eventModel.event + ": '" +
+                                                    target_name + "',"
+                                                ];
+                                node_routes.push(routes_intern);
                             };
                         });
-                        
-                        var reqObj = {
-                            path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
-                            filename: "routes.ts",
-                            cont: JSON.stringify(_.flattenDeep([routes_export_init, routes, routes_export_end]))
-                        };             
-                        $scope.request.push($http
-                            .put($rootScope.url + "/setContent", reqObj))
-                            // .success(function(data){
-                            //     console.log('success');
-                            // })
-                            // .error(function(err){
-                            //     console.error(err);
-                            // });
+                        if(node_routes.length != 0){
+                            var routes_init = ["\t'" + node.screenName + "': {"]
+                            var routes_end = ["\t},"]
+                            routes.push(routes_init.concat(node_routes).concat(routes_end));
+                        };
+                    };
+                });
+                
+                var reqObj = {
+                    path: "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "_tmp",
+                    filename: "routes.ts",
+                    cont: JSON.stringify(_.flattenDeep([routes_export_init, routes, routes_export_end]))
+                };             
+                $scope.request.push($http
+                    .put($rootScope.url + "/setContent", reqObj))
 
-                    //}//)
-                    //.error(function(){
-                    //    console.log("error");
-                    //};
-
-                    $q.all($scope.request)
-                        .then(function(){
-                            console.log("ready")
-                            $scope.$emit("files-ready");
-                            $scope.request = [];
-                            $scope.roots = [];
-                        });
+                $q.all($scope.request)
+                    .then(function(){
+                        console.log("ready")
+                        $scope.$emit("files-ready");
+                        $scope.request = [];
+                        $scope.roots = [];
+                    });
                 ///////////////////////////////////////////////////////////////////////////
             };
             $scope.$on("send-info", $scope.sendInfoFunction);
