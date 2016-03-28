@@ -2,7 +2,7 @@
 nav.navbar.topnavbar(role='navigation', style="background:#2ab24b;")
     // START navbar header
     .navbar-header
-      a.navbar-brand(ng-click="goLogin()") 
+      a.navbar-brand 
         .brand-logo 
           img.img-responsive(src="app/img/Kiraso-01.png", alt="App Logo", style="width: 50%;")
       //-   .brand-logo-collapsed 
@@ -29,6 +29,8 @@ nav.navbar.topnavbar(role='navigation', style="background:#2ab24b;")
           a Welcome {{ username }}!
         li
           a(ng-click="goToProjects()") My projects
+        li
+          a(ng-click="goLogin()") Logout
 
         // END Offsidebar menu
       // END Right Navbar

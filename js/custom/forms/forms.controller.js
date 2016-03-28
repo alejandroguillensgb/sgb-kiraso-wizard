@@ -94,19 +94,14 @@
                 {
                     type: "submit",
                     style: "btn-success",
+                    fieldHtmlClass: "width",
                     title: "Login"
                 },
                 {
-                    type: "section",
-                    htmlClass: "row",
-                    items: [       
-                        {
-                            type: "button",
-                            htmlClass: "col-md-4",
-                            title: "Sing Up",
-                            onClick: "goTo('base.signup')"
-                        }
-                    ]
+                    type: "button",
+                    style: "width black",
+                    title: "Sign Up",
+                    onClick: "goTo('base.signup')"
                 }
             ];
 
@@ -190,20 +185,15 @@
                 },
                 {
                     type: "submit",
+                    fieldHtmlClass: "width",
                     style: "btn-success",
                     title: "Sign Up"
                 },
                 {
-                    type: "section",
-                    htmlClass: "row",
-                    items: [
-                        {
-                            type: "button",
-                            htmlClass: "col-md-4",
-                            title: "Already have an account?",
-                            onClick: "goTo('base.login')"
-                        }
-                    ]
+                    type: "button",
+                    style: "width black",
+                    title: "Already have an account?",
+                    onClick: "goTo('base.login')"
                 }
             ];
 
@@ -400,7 +390,7 @@
                             .error(function(){
                                 $scope.modalInstance = $uibModal.open({
                                     animation: true,
-                                    template: "<p> app_mongoose_error </p>",
+                                    template: "<p> Application already exists</p>",
                                     size: "sm"
                                 });
                             });
