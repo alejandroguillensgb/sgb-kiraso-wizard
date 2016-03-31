@@ -266,6 +266,7 @@
                                                         dataModel: node.dataModel,
                                                         dataconnectorModel: node.dataconnectorModel
                                                       });
+                    thisGraph.updateGraph();
                   });
 
                   scope.$on("push-screenModel", function(event, nodeId, model){
@@ -281,6 +282,31 @@
                                                         dataModel: node.dataModel,
                                                         dataconnectorModel: node.dataconnectorModel
                                                       });
+                    var edge_src = _.find(thisGraph.edges, function(e){ return nodeId == e.source.id });
+                    var edge_tgt = _.find(thisGraph.edges, function(e){ return nodeId == e.target.id });
+                    if(edge_src){
+                      console.log("SOURCE")
+                      var edge_index = _.indexOf(thisGraph.edges, edge_src);
+                      thisGraph.edges.splice(edge_index, 1, {
+                                                              eventModel: edge_src.eventModel,
+                                                              source: {  id: nodeId,
+                                                                          title: node.title,
+                                                                          type: node.type,
+                                                                          x: node.x, y: node.y,
+                                                                          path: node.path,
+                                                                          screenModel: model,
+                                                                          paramsModel: node.paramsModel,
+                                                                          dataModel: node.dataModel,
+                                                                          dataconnectorModel: node.dataconnectorModel
+                                                                        },
+                                                              target: edge_src.target
+                      });
+                    }
+                    scope.push = true;
+                    console.log(scope.push)
+                    console.log("before update")
+                    console.log(thisGraph)
+                    thisGraph.updateGraph();
                   });
 
                   scope.$on("push-dataModel", function(event, nodeId, model){
@@ -296,6 +322,8 @@
                                                         dataModel: model,
                                                         dataconnectorModel: node.dataconnectorModel
                                                       });
+                    scope.push = true;
+                    thisGraph.updateGraph();
                   });
 
                   scope.$on("push-dataconnectorModel", function(event, nodeId, model){
@@ -311,6 +339,7 @@
                                                         dataModel: node.dataModel,
                                                         dataconnectorModel: model
                                                       });
+                    thisGraph.updateGraph();
                   });
 
                   scope.$on("push-eventModel", function(event, srcId, tgtId, model){
@@ -471,6 +500,7 @@
 
                 GraphCreator.prototype.pathMouseDown = function(d3path, d){
                   $rootScope.$broadcast("select-edge", d3path[0][0].__data__);
+                  console.log("entre")
                   var thisGraph = this,
                   state = thisGraph.state;
                   d3.event.stopPropagation();
@@ -488,6 +518,7 @@
 
                 // mousedown on node
                 GraphCreator.prototype.circleMouseDown = function(d3node, d){
+                  console.log("MOUSE DOWNNNNNN!!!!!!!!!!!!!!!!!!!!!!!")
                   var thisGraph = this,
                   state = thisGraph.state;
                   d3.event.stopPropagation();
@@ -496,6 +527,7 @@
                   console.log(d3node[0][0].__data__)
                   $rootScope.$broadcast("select-node", d3node[0][0].__data__);
                   if (d3.event.ctrlKey){
+                    console.log("entre acaaaaa")
                     state.shiftNodeDrag = d3.event.ctrlKey;
                     // reposition dragged directed edge
                     thisGraph.dragLine.classed('hidden', false)
@@ -601,6 +633,9 @@
                 GraphCreator.prototype.svgMouseDD = function(item){
                   var thisGraph = this,
                   state = thisGraph.state;
+
+                  console.log(item);
+                  console.log(thisGraph.idct);
                   this.state.doubleClick = true;
                   var d = { id: thisGraph.idct++, 
                             title: item.name, 
@@ -679,13 +714,12 @@
                     case consts.DELETE_KEY:
                       d3.event.preventDefault();
                       if (selectedNode){
-                        $rootScope.$broadcast("delete-node");
                         thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
                         thisGraph.spliceLinksForNode(selectedNode);
                         state.selectedNode = null;
+                        thisGraph.setIdCt(thisGraph.nodes.length+1);
                         thisGraph.updateGraph();
                       } else if (selectedEdge){
-                        $rootScope.$broadcast("delete-edge");
                         thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
                         state.selectedEdge = null;
                         thisGraph.updateGraph();
@@ -703,6 +737,9 @@
                   var thisGraph = this,
                   consts = thisGraph.consts,
                   state = thisGraph.state;
+
+                  console.log(thisGraph.nodes);
+                  console.log(thisGraph.edges);
 
                   thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
                     return String(d.source.id) + "+" + String(d.target.id);
@@ -732,7 +769,6 @@
                     .on("mouseup", function(d){
                       state.mouseDownLink = null;
                     });
-
                   // remove old links
                   paths.exit().remove();
 
@@ -771,8 +807,15 @@
 
                   // remove old nodes
                   thisGraph.circles.exit().remove();
+
+                  if(scope.push){
+                    scope.push = false;
+                    thisGraph.updateGraph();
+                  };
+
                 };
 
+                
                 GraphCreator.prototype.zoomed = function(){
                   this.state.justScaleTransGraph = true;
                   d3.select("." + this.consts.graphClass)
