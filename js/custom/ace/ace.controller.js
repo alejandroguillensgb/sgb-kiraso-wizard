@@ -94,6 +94,11 @@
             };
 
             $scope.$on('save', function(event){
+                $scope.modalInstance = $uibModal.open({
+                    animation: true,
+                    template: '<p>Saving file</p>',
+                    size: "sm"
+                });
                 var split_path = $scope.path.split("/");
                 var filename = split_path[split_path.length -1];
                 split_path.splice(split_path.length -1, 1); 
@@ -113,6 +118,7 @@
                             console.log('Save: ');
                             console.log(data);
                             $scope.updateGraph(data);
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>File saved</p>',
@@ -120,6 +126,7 @@
                             });
                         })
                         .error(function(){
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>Failed on save</p>',
@@ -131,6 +138,7 @@
                     $http
                         .put($rootScope.url + "/setMetadata", reqObj)
                         .success(function(){
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>Metadata saved</p>',
@@ -138,6 +146,7 @@
                             });
                         })
                         .error(function(){
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>Error saving metadata</p>',
@@ -148,6 +157,7 @@
                     $http
                         .put($rootScope.url + '/setContent', reqObj)
                         .success(function(data){
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>File saved</p>',
@@ -155,6 +165,7 @@
                             });
                         })
                         .error(function(){
+                            $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
                                 animation: true,
                                 template: '<p>Failed on save</p>',
