@@ -256,89 +256,28 @@
                   scope.$on("push-paramsModel", function(event, nodeId, model){
                     var node = _.find(thisGraph.nodes, {id: nodeId});
                     var index = _.indexOf(thisGraph.nodes, node);
-                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
-                                                        title: node.title,
-                                                        type: node.type,
-                                                        x: node.x, y: node.y,
-                                                        path: node.path,
-                                                        screenModel: node.screenModel,
-                                                        paramsModel: model,
-                                                        dataModel: node.dataModel,
-                                                        dataconnectorModel: node.dataconnectorModel
-                                                      });
+                    thisGraph.nodes[index].paramsModel= model;
                     thisGraph.updateGraph();
                   });
 
                   scope.$on("push-screenModel", function(event, nodeId, model){
                     var node = _.find(thisGraph.nodes, {id: nodeId});
                     var index = _.indexOf(thisGraph.nodes, node);
-                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
-                                                        title: node.title,
-                                                        type: node.type,
-                                                        x: node.x, y: node.y,
-                                                        path: node.path,
-                                                        screenModel: model,
-                                                        paramsModel: node.paramsModel,
-                                                        dataModel: node.dataModel,
-                                                        dataconnectorModel: node.dataconnectorModel
-                                                      });
-                    var edge_src = _.find(thisGraph.edges, function(e){ return nodeId == e.source.id });
-                    var edge_tgt = _.find(thisGraph.edges, function(e){ return nodeId == e.target.id });
-                    if(edge_src){
-                      console.log("SOURCE")
-                      var edge_index = _.indexOf(thisGraph.edges, edge_src);
-                      thisGraph.edges.splice(edge_index, 1, {
-                                                              eventModel: edge_src.eventModel,
-                                                              source: {  id: nodeId,
-                                                                          title: node.title,
-                                                                          type: node.type,
-                                                                          x: node.x, y: node.y,
-                                                                          path: node.path,
-                                                                          screenModel: model,
-                                                                          paramsModel: node.paramsModel,
-                                                                          dataModel: node.dataModel,
-                                                                          dataconnectorModel: node.dataconnectorModel
-                                                                        },
-                                                              target: edge_src.target
-                      });
-                    }
-                    scope.push = true;
-                    console.log(scope.push)
-                    console.log("before update")
-                    console.log(thisGraph)
+                    thisGraph.nodes[index].screenModel= model;
                     thisGraph.updateGraph();
                   });
 
                   scope.$on("push-dataModel", function(event, nodeId, model){
                     var node = _.find(thisGraph.nodes, {id: nodeId});
                     var index = _.indexOf(thisGraph.nodes, node);
-                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
-                                                        title: node.title,
-                                                        type: node.type,
-                                                        x: node.x, y: node.y,
-                                                        path: node.path,
-                                                        screenModel: node.screenModel,
-                                                        paramsModel: node.paramsModel,
-                                                        dataModel: model,
-                                                        dataconnectorModel: node.dataconnectorModel
-                                                      });
-                    scope.push = true;
+                    thisGraph.nodes[index].dataModel= model;
                     thisGraph.updateGraph();
                   });
 
                   scope.$on("push-dataconnectorModel", function(event, nodeId, model){
                     var node = _.find(thisGraph.nodes, {id: nodeId});
                     var index = _.indexOf(thisGraph.nodes, node);
-                    thisGraph.nodes.splice(index, 1, {  id: nodeId,
-                                                        title: node.title,
-                                                        type: node.type,
-                                                        x: node.x, y: node.y,
-                                                        path: node.path,
-                                                        screenModel: node.screenModel,
-                                                        paramsModel: node.paramsModel,
-                                                        dataModel: node.dataModel,
-                                                        dataconnectorModel: model
-                                                      });
+                    thisGraph.nodes[index].dataconnectorModel = model;
                     thisGraph.updateGraph();
                   });
 
@@ -347,10 +286,7 @@
                       return elem.source.id == srcId && elem.target.id == tgtId; 
                     });
                     var index = _.indexOf(thisGraph.edges, edge);
-                    thisGraph.edges.splice(index, 1, {  source: edge.source,
-                                                        target: edge.target,
-                                                        eventModel: model
-                                                      });
+                    thisGraph.edges[index].eventModel= model;
                     thisGraph.updateGraph();
                   });
 
