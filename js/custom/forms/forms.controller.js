@@ -338,6 +338,12 @@
                         $http
                             .put($rootScope.url + "/mongoose_updateProject", reqObj)
                             .success(function(){
+                                var old_name = kirasoFactory.getAppName();
+                                kirasoFactory.setAppName($scope.appModel.name);
+                                var projects = kirasoFactory.getProjects().projects;
+                                var index = projects.indexOf(old_name);
+                                projects.splice(index, 1, $scope.appModel.name);
+                                kirasoFactory.setProjects(projects);
                                 $scope.modalInstance = $uibModal.open({
                                     animation: true,
                                     template: "<p> App updated </p>",
@@ -387,12 +393,21 @@
                                         });
                                 };
                             })
-                            .error(function(){
-                                $scope.modalInstance = $uibModal.open({
-                                    animation: true,
-                                    template: "<p> Application already exists</p>",
-                                    size: "sm"
-                                });
+                            .error(function(err){
+                                if(err == "Bad request"){
+                                    $scope.modalInstance = $uibModal.open({
+                                        animation: true,
+                                        template: "<p> Application already exists</p>",
+                                        size: "sm"
+                                    });
+                                } else {
+                                    $scope.modalInstance = $uibModal.open({
+                                        animation: true,
+                                        template: "<p> Service error </p>",
+                                        size: "sm"
+                                    });
+                                }
+                                
                             });
                         }
                 } else {
