@@ -10,14 +10,20 @@
         .module('kiraso')
         .controller('Controller', Controller);
 
-    Controller.$inject = ['$scope', '$rootScope', '$http', '$uibModal', '$state', 'kirasoFactory', '$q'];
-    function Controller($scope, $rootScope, $http, $uibModal, $state, kirasoFactory, $q) {
+    Controller.$inject = ['$scope', '$rootScope', '$http', '$uibModal', '$state', 'kirasoFactory', '$q', '$document'];
+    function Controller($scope, $rootScope, $http, $uibModal, $state, kirasoFactory, $q, $document) {
 
         activate();
         
         ////////////////
 
         function activate() {
+
+            $document.on('keydown', function(e){
+                if(e.which === 8 && e.target.nodeName !== "INPUT"){
+                    e.preventDefault();
+                };
+            });
 
             $rootScope.url = "http://localhost:8000";
             $scope.username = kirasoFactory.getUsername().username;

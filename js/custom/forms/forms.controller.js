@@ -26,7 +26,7 @@
                     }).error(function (error) {
                         $scope.modalInstance = $uibModal.open({
                             animation: true,
-                            template: '<p>' + error + '</p>',
+                            template: '<p> Error uploading file </p>',
                             size: "sm"
                         });
                         $rootScope.$broadcast("close-modal");
@@ -212,7 +212,7 @@
                     type: {
                         title: "Component type",
                         type: "string",
-                        description: "Ex: @sgb-screen-calendar (must have @)"
+                        description: "Must be '@' plus repository name, Ex: @sgb-screen-calendar"
                     },
                     path: {
                         title: "Github repo url",
