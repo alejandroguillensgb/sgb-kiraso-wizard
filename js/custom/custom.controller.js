@@ -19,17 +19,19 @@
 
         function activate() {
 
+            // Disable the backspace key out from inputs
             $document.on('keydown', function(e){
                 if(e.which === 8 && e.target.nodeName !== "INPUT"){
                     e.preventDefault();
                 };
             });
 
-            $rootScope.url = "http://localhost:8000";
-            $scope.username = kirasoFactory.getUsername().username;
+            $rootScope.url = "http://localhost:8000"; //Services base url
+            $scope.username = kirasoFactory.getUsername().username; 
             $scope.projects = kirasoFactory.getProjects().projects;
             $scope.frameActive = false;
 
+            // Redirect to login page
             $scope.goLogin = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -58,6 +60,7 @@
                 })            
             };
 
+            // Redirect to user projects page
             $scope.goToProjects = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -85,10 +88,7 @@
                 })
             };
 
-            $scope.closeModal = function(){
-                $scope.modalInstance.close();
-            };
-
+            // Create a new app
             $scope.newProject = function() {
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -97,6 +97,7 @@
                 });
             };
 
+            // Delete an app
             $scope.deleteProject = function(project){
                 console.log(project);
                 $scope.confirm = false;
@@ -126,18 +127,20 @@
                 
             }; 
 
+            $scope.closeModal = function(){
+                $scope.modalInstance.dismiss(false);
+            };
+
+            // Check the actual view
             if($state.current.name == "app.preview")
                 $scope.previewActive = true;
             else 
                 $scope.previewActive = false;
 
-            $scope.closeModal = function(){
-                $scope.modalInstance.dismiss(false);
-            };
-
             $scope.activeWizard = true;
             $scope.activePreview = false;
 
+            //Wizard view
             $scope.wizard = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -176,6 +179,7 @@
                 $scope.modalInstance.close(!$scope.confirm);
             };
 
+            // Preview view
             $scope.preview = function(){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -197,6 +201,7 @@
                 
             };
 
+            // Add resources to aplication
             $scope.addResources = function(){
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -210,13 +215,12 @@
                 $scope.modalInstance.close();
             });
 
+            // Console messages from server
             $scope.messages = [];
             $scope.$on("files-ready", function(){
-                console.log("files ready")
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
 
-                $scope.socket = io.connect($rootScope.url);
-                console.log($scope.socket);
+                $scope.socket = io.connect($rootScope.url); //Connect socket
                 $scope.socket.on("news", function(data) {
                     $scope.messages.push(data);
                     $scope.$apply();
@@ -232,21 +236,18 @@
                     .error(function(){
                         console.log("erro exec");
                     });
-                console.log("gen app");
-                console.log("gen dir tree");
-                console.log("show frame");
             });
 
-
+            // Reload iframe
             $scope.reload = function(){
                 $scope.frameActive = true;
                 document.getElementById('frame').src += '';
             };
 
+            // Run aplication
             $scope.runApp = function(){
                 var path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName();
                 if($scope.pid){
-                    console.log("KILL PID")
                     $http
                         .get($rootScope.url + "/killApp?pid=" + $scope.pid)
                         .success(function(data){
@@ -275,22 +276,20 @@
                         .error(function(){
                             console.log("erro exec");
                         });
-                }
-
-               
+                } 
             };
 
-            $scope.new = function(){
-            };
-
+            // Save files function
             $scope.save = function(){
                 $rootScope.$broadcast('save');
             };
 
+            // Save graph function
             $scope.saveWizard = function(){
                 $scope.$broadcast("save-graph");
             };
             
+            // Load project from list
             $scope.loadProject = function(project){
                 $http
                     .get($rootScope.url + "/mongoose_findApp?app=" + project)
@@ -305,11 +304,7 @@
                     });
             };
 
-            $scope.code = function(){
-                console.log("request code");
-                $scope.$broadcast("create-file");
-            };
-
+            // Build .apk, download file and add aplication to prebuilt apps
             $scope.genApp = function(){
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -350,6 +345,7 @@
                     });
             };            
 
+            // Download folder projects
             $scope.download = function(){
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -397,9 +393,9 @@
             $scope.tgt = [];
             $scope.request = [];
 
+            // Create files from graphic info
             $scope.sendInfoFunction = function(event, graph){
-                console.log("listen send info")
-
+                
                 var data = JSON.parse(graph);
                 $scope.nodes = data.nodes;
                 $scope.edges = data.edges;
@@ -414,6 +410,7 @@
                         $scope.roots.push(elem);
                 });
                 
+                // Adjacent matrix to know fathers
                 var adjMatrix = [];
                 console.log($scope.nodes.length);
                 for(var i = 1; i < $scope.nodes.length+1; ++i){

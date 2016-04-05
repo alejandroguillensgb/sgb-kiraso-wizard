@@ -1,3 +1,5 @@
+// directed-graph-creator project modified
+
 (function() {
     'use strict';
 
@@ -566,10 +568,11 @@
                   return;
                 }; // end of circles mouseup
 
+                // Create a node
                 GraphCreator.prototype.svgMouseDD = function(item){
                   var thisGraph = this,
                   state = thisGraph.state;
-
+                  
                   console.log(item);
                   console.log(thisGraph.idct);
                   this.state.doubleClick = true;
@@ -584,23 +587,6 @@
                             dataconnectorModel: {}};
                   thisGraph.nodes.push(d);
                   thisGraph.updateGraph();
-                };
-
-                GraphCreator.prototype.svgMouseD = function(){
-                  var thisGraph = this,
-                  state = thisGraph.state;
-                  this.state.doubleClick = true;
-                  var xycoords = d3.mouse(thisGraph.svgG.node()),
-                  d = {id: thisGraph.idct++, title: consts.defaultTitle, x: xycoords[0], y: xycoords[1]};
-                  thisGraph.nodes.push(d);
-                  thisGraph.updateGraph();
-                  // make title of text immediently editable
-                  var d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function(dval){
-                    return dval.id === d.id;
-                  }), d),
-                  txtNode = d3txt.node();
-                  thisGraph.selectElementContents(txtNode);
-                  txtNode.focus();
                 };
 
                 // mousedown on main svg

@@ -1,7 +1,3 @@
-// To run this code, edit file index.html or index.jade and change
-// html data-ng-app attribute from angle to myAppName
-// ----------------------------------------------------------------------
-
 (function() {
     'use strict';
 
@@ -18,10 +14,6 @@
 
         function activate() {
 
-            $scope.$on("$viewContentLoaded", function(){
-                $scope.$emit("ace-loaded");
-            });
-            
             $scope.code = "<h1>Kiraso.io</h1>";
 
             $scope.mode = "html";
@@ -31,6 +23,7 @@
                 $scope.aceRenderer = _editor.renderer;
             };
 
+            // Change mode
             $scope.$on('aceChange', function(event, content, path){
                 $scope.aceSession.setValue(content);
                 $scope.path = path;
@@ -45,6 +38,7 @@
                     $scope.mode = "javascript"
             });
 
+            // Update node information
             $scope.updateGraph = function(data){
                 var thisGraph = JSON.parse(kirasoFactory.getGraph())
                 var data_key;
@@ -70,7 +64,6 @@
                         update_node.dataconnectorModel = data[data_key][key];
                     }
                 };
-                console.log(thisGraph.nodes);
                 kirasoFactory.setGraph(JSON.stringify({"nodes": thisGraph.nodes, "edges": thisGraph.edges}));
                 var reqObj = {
                     graph: JSON.stringify({"nodes": thisGraph.nodes, "edges": thisGraph.edges})
@@ -93,6 +86,7 @@
                     });
             };
 
+            // Save function
             $scope.$on('save', function(event){
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -110,13 +104,10 @@
                 var split_filename = filename.split(".");
                 if(split_filename[1] == "ts" && 
                     !(split_filename[0]=="screens" || split_filename[0]=="routes" || 
-                        split_filename[0]=="languages" || split_filename[0]=="settings")){
-                    console.log("config file");
+                        split_filename[0]=="languages" || split_filename[0]=="settings")){ //Save config files
                     $http
                         .put($rootScope.url + '/setContentConfig', reqObj)
                         .success(function(data){
-                            console.log('Save: ');
-                            console.log(data);
                             $scope.updateGraph(data);
                             $scope.modalInstance.close();
                             $scope.modalInstance = $uibModal.open({
@@ -133,7 +124,7 @@
                                 size: "sm"
                             });
                         });
-                } else if(filename == "metadata.json") {
+                } else if(filename == "metadata.json") { //Save METADATA
                     reqObj.screens_path = "/home/alejandro/kiraso-wizard/service_data/"+ kirasoFactory.getUsername().username + "/" + kirasoFactory.getAppName() + "/screens"
                     $http
                         .put($rootScope.url + "/setMetadata", reqObj)
@@ -153,7 +144,7 @@
                                 size: "sm"
                             });
                         })
-                } else {
+                } else { // Save other files
                     $http
                         .put($rootScope.url + '/setContent', reqObj)
                         .success(function(data){

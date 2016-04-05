@@ -1,3 +1,5 @@
+// Upload file service
+
 (function() {
     'use strict';
 
@@ -11,8 +13,8 @@
 
         ////////////////
 
+        // Upload resources function
         function uploadResources(resources) {
-            
             var ext = resources.name.split(".")[resources.name.split(".").length - 1];
             if(ext == "zip" || ext == "tar"){
                 var formData = new FormData();

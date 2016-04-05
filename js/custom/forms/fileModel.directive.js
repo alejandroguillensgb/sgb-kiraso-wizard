@@ -1,3 +1,5 @@
+// Directive to bind file upload
+
 (function() {
    'use strict';
 

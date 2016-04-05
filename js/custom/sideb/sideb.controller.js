@@ -13,11 +13,11 @@
         ////////////////
 
         function activate() {
-            // Load menu from json file
-            // -----------------------------------
 
+            // Get app list
             PrebuiltLoader.getApps(prebuiltReady);
-              
+            
+            // Add the finished app to prebuilt list  
             $scope.$on("new-app", function(){
                 PrebuiltLoader.getApps(prebuiltReady);
                 $scope.$apply();
@@ -27,14 +27,17 @@
                 $scope.appItems = items;
             }
 
+            // Get component list
             PrebuiltLoader.getComps(compReady);
 
+            // Add the new component to component list
             $scope.$on("new-component", function(){
                 $scope.closeModal;
                 PrebuiltLoader.getComps(compReady);
                 $scope.$apply();   
             });
-              
+            
+            // Remove a prebuilt app
             $scope.removePrebuilt = function(item){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -79,6 +82,7 @@
                 $scope.modalInstance.close(!$scope.confirm);
             };
 
+            // Load prebuilt app graph
             $scope.loadPbApp = function(item){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({
@@ -102,6 +106,7 @@
                 })    
             };
 
+            // Create node on graph
             $scope.createNode = function(item){
                 $rootScope.$broadcast("create-node", item); 
             };
@@ -110,6 +115,7 @@
                 $scope.modalInstance.close();
             };
 
+            // Ope add comp form
             $scope.addComp = function() {
                 $scope.modalInstance = $uibModal.open({
                     animation: true,
@@ -118,6 +124,7 @@
                 });
             };
 
+            // Remove a component
             $scope.removeComp = function(item){
                 $scope.confirm = false;
                 $scope.modalInstance = $uibModal.open({

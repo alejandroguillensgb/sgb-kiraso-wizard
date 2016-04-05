@@ -1,4 +1,3 @@
-
 (function() {
     'use strict';
 
@@ -16,6 +15,7 @@
 
         function activate() {
 
+            // Upload resources function
             $scope.uploadResources = function(resourcesFile) {
                 API.uploadResources(resourcesFile)
                     .success(function (uploadResponse) {
@@ -202,6 +202,7 @@
 
             ////////////////////////////////////////
 
+            //Add component
             $scope.addCompSchema = {
                 type: "object",
                 properties: {
@@ -325,6 +326,7 @@
             else
                 $scope.appModel = {};
 
+
             $scope.submitApp = function(form, flag_new){
                 $scope.$broadcast('schemaFormValidate');
                 console.log("submit app")
@@ -419,7 +421,7 @@
                 };                
             };
 
-            // Params form
+            // Dynamic forms
             $scope.$on("select-node", selectNodeFunction);
 
             function selectNodeFunction(event, node_data){

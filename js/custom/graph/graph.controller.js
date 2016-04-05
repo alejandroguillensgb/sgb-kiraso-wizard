@@ -23,8 +23,7 @@
             $scope.app_name = kirasoFactory.getAppModel().appModel.name;
              
             var stateChangeSuccessListener = $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams, options){ 
-                if(toState.name == "app.wizard" && toParams.new=="false"){
-                    console.log("antes del servicio")
+                if(toState.name == "app.wizard" && toParams.new=="false"){ // Load graph
                     $scope.$on("directiveReady", function(){
                         $http
                             .get($rootScope.url + "/mongoose_findGraph?app="+$scope.app_name)
@@ -36,7 +35,7 @@
                                 console.log("error loading graph");
                             });    
                 });                    
-                } else{
+                } else{ // Create new graph or reload one
                     $scope.$on("directiveReady", function(){
                         if(fromState.name == "app.preview"){
                             console.log("reload");
