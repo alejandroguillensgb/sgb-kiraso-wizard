@@ -46,7 +46,7 @@
             title: 'Login',
             views:{
                 "loginview":{
-                    templateUrl: helper.basepath('login.html')
+                    templateUrl: helper.basepath('partials/login.html')
                 }
             }
         })
@@ -56,7 +56,7 @@
             title: 'Sign Up',
             views:{
                 "signupview":{
-                    templateUrl: helper.basepath('signup.html')
+                    templateUrl: helper.basepath('partials/signup.html')
                 }
             } 
         })
@@ -64,20 +64,20 @@
         .state('projects', {
             url: '/projects',
             title: 'My projects',
-            templateUrl: helper.basepath('projectsview.html'),
+            templateUrl: helper.basepath('partials/projectsview.html'),
             controller: "Controller"
         })
 
         .state('app.preview', {
             url: '/preview',
-            title: 'Preview & Source',
+            title: 'Preview',
             views:{
-                "singleview":{
-                    templateUrl: helper.basepath('singleview.html'),
+                "view":{
+                    templateUrl: helper.basepath('partials/preview.html'),
                     controller:"aceController"
                 },
                 "sidebar":{
-                    templateUrl: helper.basepath('partials/menubar.html'),
+                    templateUrl: helper.basepath('partials/directory.html'),
                     controller: "SidebarController"
                 }
             }
@@ -87,8 +87,8 @@
             url: '/wizard/:new',
             title: 'Wizard',
             views:{
-                "singleview":{
-                    templateUrl: helper.basepath('graphicview.html'),
+                "view":{
+                    templateUrl: helper.basepath('partials/graphicview.html'),
                     controller: "graphController"
                 },
                 "offsidebar":{
@@ -100,11 +100,6 @@
                     controller: "sidebController"
                 }
             }
-        })
-        .state('app.submenu', {
-            url: '/submenu',
-            title: 'Submenu',
-            templateUrl: helper.basepath('submenu.html')
         })
           
           

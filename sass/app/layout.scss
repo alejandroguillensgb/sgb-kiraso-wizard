@@ -103,6 +103,18 @@ html, body {
     margin-bottom: $footer-hg !important; // ensure a space for the footer
   }
 
+  > section.sect{
+    background: transparent;
+    margin-left: 34%;
+    margin-top: 7%;
+  }
+
+  > section.content-wrapper-sect{
+    height: 500px;
+    overflow-y: auto;
+    background: transparent;    
+  }
+
   // Page Footer
   > footer {
     position: absolute;
@@ -179,6 +191,7 @@ html, body {
       margin: 0;
     }
   }
+
 }
 
 // Desktop layout
@@ -415,6 +428,11 @@ html, body {
       @media only screen and (min-width: $mq-tablet) {
         margin-top: $navbar-hg;
       }
+    }
+    > section.sect{
+      background: transparent;
+      margin-left: 34%;
+      margin-top: 7%;
     }
   }
 }

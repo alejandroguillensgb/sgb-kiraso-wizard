@@ -47,6 +47,7 @@
 // Print CSS
 @import "app/print";
 
+
 //Ace Editor
 @import "app/ace";
 
@@ -56,6 +57,17 @@
 //Graph
 @import "app/graph-creator";
 
+//Login
+@import "app/login";
+
+//Projects
+@import "app/projects";
+
+//Sign Up
+@import "app/signup";
+
+//Top-nav-bar
+@import "app/top-nav-bar";
 
 .white{
     color: #fff;
@@ -83,4 +95,42 @@
 
 .black{
     color: black;
+}
+
+.btn-section {
+    padding: 10px;
+}
+
+.center {
+    text-align:center;
+}
+
+.toolbar-wizard{
+    display: inline-block; 
+    padding:10px;
+}
+
+.btn-wizard{
+    margin-left: 20px;
+}
+
+.toolbar-preview{
+    display: inline-block; 
+    padding:5px;
+}
+
+.btn-preview{
+    margin-left: 30px;
+}
+
+.form-padding {
+    padding: 10px;
+}
+
+.accordion-group-top{
+    margin-top: 5px;
+}
+
+.icon-right{
+    float: right;
 }

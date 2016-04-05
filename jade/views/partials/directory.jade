@@ -1,0 +1,13 @@
+// START Sidebar (left)
+.aside-inner
+  nav.sidebar(sidebar="", sidebar-anyclick-close="")
+    // START sidebar nav
+    ul.nav
+      
+      // Iterates over all sidebar items
+
+      treecontrol.tree-light(tree-model='menuItems', options='treeOptions', on-selection='aceChange(node)', selected-node='node1')
+        {{node.text}}
+
+    // END sidebar nav
+// END Sidebar (left)

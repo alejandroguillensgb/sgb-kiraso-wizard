@@ -1,26 +1,14 @@
 // START Top Navbar
-nav.navbar.topnavbar(role='navigation', style="background:#2ab24b;")
+nav.navbar.topnavbar.kiraso-green(role='navigation')
     // START navbar header
     .navbar-header
       a.navbar-brand 
         .brand-logo 
-          img.img-responsive(src="app/img/Kiraso-01.png", alt="App Logo", style="width: 50%;")
-      //-   .brand-logo-collapsed 
-      //-     img.img-responsive(src="app/img/logo-single.png", alt="App Logo")
+          img.img-responsive.logo-image(src="app/img/Kiraso-01.png", alt="App Logo")
     // END navbar header
 
     // START Nav wrapper
     .nav-wrapper
-      // START Left navbar
-      //- ul.nav.navbar-nav
-      //-   li
-      //-     // Button used to collapse the left sidebar. Only visible on tablet and desktops
-      //-     a(href='', trigger-resize="", ng-click="app.layout.isCollapsed = !app.layout.isCollapsed").hidden-xs
-      //-       em.fa.fa-navicon
-      //-     // Button to show/hide the sidebar on mobile. Visible on mobile only.
-      //-     a(href='', ng-click="app.asideToggled = !app.asideToggled").visible-xs.sidebar-toggle
-      //-       em.fa.fa-navicon
-      // END Left navbar
 
       // START Right Navbar
       ul.nav.navbar-nav.navbar-right
@@ -32,11 +20,6 @@ nav.navbar.topnavbar(role='navigation', style="background:#2ab24b;")
         li
           a(ng-click="goLogin()") Logout
 
-        // END Offsidebar menu
       // END Right Navbar
     // END Nav wrapper
-    
-
-    
-
 // END Top Navbar

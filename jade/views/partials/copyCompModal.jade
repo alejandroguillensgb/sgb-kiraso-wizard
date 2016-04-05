@@ -2,7 +2,7 @@ div.modal-header
   h3.modal-title Copy component
 div.modal-body
     div(ng-controller="formsController")
-        form(name="copyComp", sf-schema="addCompSchema", sf-form="addCompForm", sf-model="addCompModel", ng-submit="submitAddComp(copyComp)", style="padding:10px;")
+        form.form-padding(name="copyComp", sf-schema="addCompSchema", sf-form="addCompForm", sf-model="addCompModel", ng-submit="submitAddComp(copyComp)")
     
 div.modal-footer
   button.btn.btn-primary(type="button", ng-click="closeModal()") Close

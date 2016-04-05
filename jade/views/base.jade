@@ -1,10 +1,7 @@
 // top navbar
 header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar-base.html'")
 
-// sidebar
-//aside.aside(ng-include="'app/views/partials/menubar.html'", ng-controller="SidebarController")
-
-section(style="background: transparent; margin-left: 34%; margin-top: 7%")
+section.sect
 
   // Page content
   div(ui-view="loginview", autoscroll="false", ng-class="app.viewAnimation")

@@ -16,7 +16,7 @@
           
           onError = onError || function() { alert('Failure loading prebuilt apps'); };
           var requests = [];
-          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/server/inventario_apps.json&type=json'));
+          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/service_data/inventario_apps.json&type=json'));
           requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/service_data/'+ kirasoFactory.getUsername().username + "/inventario_apps_propios.json&type=json"))
           $q.all(requests)
             .then(function(res){
@@ -31,7 +31,7 @@
 
           onError = onError || function() { alert('Failure loading components'); };
           var requests = [];
-          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/sgb-kiraso-wizard/server/inventario_componentes.json&type=json'))
+          requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/service_data/inventario_componentes.json&type=json'))
           requests.push($http.get($rootScope.url + '/getContent?path=/home/alejandro/kiraso-wizard/service_data/'+ kirasoFactory.getUsername().username + "/inventario_componentes_propios.json&type=json"))
           $q.all(requests)
             .then(function(res){

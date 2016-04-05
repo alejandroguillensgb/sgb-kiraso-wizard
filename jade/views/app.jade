@@ -2,58 +2,41 @@
 header.topnavbar-wrapper(ng-include="'app/views/partials/top-navbar.html'")
 
 // sidebar
-//aside.aside(ng-include="'app/views/partials/menubar.html'", ng-controller="SidebarController")
-
-//aside.aside(ng-include="'app/views/partials/sidebar.html'", ng-controller="sidebController")
-//aside.aside(ui-view="files",autoscroll="false")
 aside.aside(ui-view="sidebar",autoscroll="true")
 
 // offsidebar
 aside.offsidebar(ui-view="offsidebar", autoscroll="false", ng-if="!previewActive")
 aside.offsidebar(ng-include="'app/views/partials/offsidebar.html'", ng-if="previewActive")
-//aside.offsidebar(ng-include="'app/views/partials/sideform.html'", ng-controller="formsController")
-//aside.offsidebar(ui-view="wizard-offsidebar", autoscroll="false")
+
 // Main section
 section.has-sidebar-right
 
   div
-    div.btn-group.btn-group-justified(style="padding:10px;")
+    div.btn-group.btn-group-justified.btn-section
         label.btn(ng-class="activeWizard?'primary-active':'primary'", ng-click="wizard()") Wizard
         label.btn(ng-class="activePreview?'primary-active':'primary'", ng-click="preview()") Preview
 
 
   // Wizard buttons
-  div(style="text-align:center;", ng-if="!previewActive")
-    div.btn-toolbar(style="display: inline-block; padding:10px;")
+  div.center(ng-if="!previewActive")
+    div.btn-toolbar.toolbar-wizard
       label.btn.btn-primary(ng-click="saveWizard()") Save
-      label.btn.btn-primary(ng-click="download()", style="margin-left: 20px") Download
-      label.btn.btn-primary(ng-click="genApp()", style="margin-left: 20px") Generate app
+      label.btn.btn-primary.btn-wizard(ng-click="download()") Download
+      label.btn.btn-primary.btn-wizard(ng-click="genApp()") Generate app
 
   // Preview and source buttons
-  div(style="text-align:center;", ng-if="previewActive")
-    div.btn-toolbar(style="display: inline-block; padding:5px;")
+  div.center(ng-if="previewActive")
+    div.btn-toolbar.toolbar-preview
       label.btn.btn-primary(ng-click="save()") Save      
-      label.btn.btn-primary(ng-click="addResources()",style="margin-left: 30px") Add resources
-      label.btn.btn-primary(ng-click="reload()",style="margin-left: 30px") ReLoad
-      label.btn.btn-primary(ng-click="runApp()",style="margin-left: 30px") Run
-      //label.btn.btn-primary(ng-click="team()") Team
-      label.btn.btn-primary(ng-click="download()",style="margin-left: 30px") Download
-      label.btn.btn-primary(ng-click="genApp()",style="margin-left: 30px") Generate app
+      label.btn.btn-primary.btn-preview(ng-click="addResources()") Add resources
+      label.btn.btn-primary.btn-preview(ng-click="reload()") ReLoad
+      label.btn.btn-primary.btn-preview(ng-click="runApp()") Run
+      label.btn.btn-primary.btn-preview(ng-click="download()") Download
+      label.btn.btn-primary.btn-preview(ng-click="genApp()") Generate app
 
   // Page content
-  .content-wrapper(ui-view="singleview", autoscroll="false", ng-class="app.viewAnimation")
+  .content-wrapper(ui-view="view", autoscroll="false", ng-class="app.viewAnimation")
 
 
 // Page footer
 footer(ng-include="'app/views/partials/footer.html'")
-
-
-
-//- // top navbar
-//- header(style="background:#23b7e5;")
-
-//- section.content-wrapper(ui-view="loginview", autoscroll="false", ng-class="app.viewAnimation")
-
-  
-//- // Page footer
-//- footer(ng-include="'app/views/partials/footer.html'")

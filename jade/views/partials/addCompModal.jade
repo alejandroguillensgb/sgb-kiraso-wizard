@@ -2,7 +2,7 @@ div.modal-header
   h3.modal-title Add your component
 div.modal-body
     div(ng-controller="formsController")
-        form(name="addComp", sf-schema="addCompSchema", sf-form="addCompForm", sf-model="addCompModel", ng-submit="submitAddComp(addComp)", style="padding:10px;")
+        form.form-padding(name="addComp", sf-schema="addCompSchema", sf-form="addCompForm", sf-model="addCompModel", ng-submit="submitAddComp(addComp)")
     
 div.modal-footer
   button.btn.btn-primary(type="button", ng-click="closeModal()") Close
