@@ -14,7 +14,6 @@
             restrict: 'EA',
             link: function(scope, element, attrs) {
               d3Factory.d3().then(function(d3) {
-                console.log("directive");
                 // TODO add user settings
                 var consts = {
                   defaultTitle: "random variable"
@@ -104,15 +103,12 @@
                   svg.on("mouseup", function(d){thisGraph.svgMouseUp.call(thisGraph, d);});
                   
                   scope.createNodeFunction = function(event, item) {
-                    console.log("listen create-node");
                     thisGraph.svgMouseDD.call(thisGraph, item);
                   };
 
                   scope.$on("create-node", scope.createNodeFunction);
                   
                  $rootScope.$on("update_node", function(event, data){
-                    console.log("update-node")
-                    console.log(data)
                     for(var key in data)
                       var data_key = key;
                       var screenName = key.split("Screen")[0];
@@ -124,27 +120,14 @@
                     var index = _.indexOf(thisGraph.nodes, update_node);
 
                     for(var key in data[data_key]){
-                      console.log(key)
                       if(key == "dataSource"){
                         update_node.dataModel = data[data_key][key];
-                        console.log("data")
-                        console.log(update_node)
-                        console.log(data[data_key][key])
                       } else if(key == "params") {
                         update_node.paramsModel = data[data_key][key];
-                        console.log("params")
-                        console.log(update_node)
-                        console.log(data[data_key][key])
                       } else if(key == "default") {
                         update_node.screenModel = {name: screenName, default: data[data_key][key]};
-                        console.log("screen")
-                        console.log(update_node)
-                        console.log(data[data_key][key])
                       } else if(key == "dataConnectors") {
                         update_node.dataconnectorModel = data[data_key][key];
-                        console.log("dataC")
-                        console.log(update_node)
-                        console.log(data[data_key][key])
                       }
                     };
                     console.log(thisGraph.nodes);
@@ -157,7 +140,6 @@
                   });
 
                   scope.createFileFunction = function(){
-                    console.log("listen create-file");
                     var saveEdges = [];
                     thisGraph.edges.forEach(function(val, i){
                     saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
@@ -208,7 +190,6 @@
                   });
 
                   window.addEventListener("download-file", function(event) {
-                    console.log("files")
                     var saveEdges = [];
                     thisGraph.edges.forEach(function(val, i){
                       saveEdges.push({source: val.source.id, target: val.target.id});
@@ -218,7 +199,6 @@
                   }, false);
 
                   scope.$on('save-graph', function(){
-                    console.log("save listener");
                     var saveEdges = [];                    
                     thisGraph.edges.forEach(function(val, i){
                       saveEdges.push({source: val.source.id, target: val.target.id, eventModel: val.eventModel});
@@ -456,16 +436,12 @@
 
                 // mousedown on node
                 GraphCreator.prototype.circleMouseDown = function(d3node, d){
-                  console.log("MOUSE DOWNNNNNN!!!!!!!!!!!!!!!!!!!!!!!")
                   var thisGraph = this,
                   state = thisGraph.state;
                   d3.event.stopPropagation();
                   state.mouseDownNode = d;
-                  console.log("NODE")
-                  console.log(d3node[0][0].__data__)
                   $rootScope.$broadcast("select-node", d3node[0][0].__data__);
                   if (d3.event.ctrlKey){
-                    console.log("entre acaaaaa")
                     state.shiftNodeDrag = d3.event.ctrlKey;
                     // reposition dragged directed edge
                     thisGraph.dragLine.classed('hidden', false)
@@ -572,9 +548,6 @@
                 GraphCreator.prototype.svgMouseDD = function(item){
                   var thisGraph = this,
                   state = thisGraph.state;
-                  
-                  console.log(item);
-                  console.log(thisGraph.idct);
                   this.state.doubleClick = true;
                   var d = { id: thisGraph.idct++, 
                             title: item.name, 
@@ -639,7 +612,6 @@
                         thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
                         thisGraph.spliceLinksForNode(selectedNode);
                         state.selectedNode = null;
-                        thisGraph.setIdCt(thisGraph.nodes.length+1);
                         thisGraph.updateGraph();
                       } else if (selectedEdge){
                         thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
@@ -659,9 +631,6 @@
                   var thisGraph = this,
                   consts = thisGraph.consts,
                   state = thisGraph.state;
-
-                  console.log(thisGraph.nodes);
-                  console.log(thisGraph.edges);
 
                   thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
                     return String(d.source.id) + "+" + String(d.target.id);
@@ -778,7 +747,6 @@
                 };
                 
                 scope.loadGraphFunction = function(event, graph){
-                  console.log("listen load-graph");
                   event.stopPropagation();
                   var docEl = document.documentElement,
                   bodyEl = document.getElementById('graph'),
@@ -811,8 +779,6 @@
                 };
 
                 scope.loadPrebuiltFunction = function(event, graph){
-                  console.log("listen load-graph");
-                  //event.stopPropagation();
                   var docEl = document.documentElement,
                   bodyEl = document.getElementById('graph'),
                   svgEl= document.getElementsByTagName('svg');

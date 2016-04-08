@@ -485,6 +485,8 @@
                                 .error(function(){
                                     console.log("error retreiving data");
                                 });
+                        } else if(nodeDataType == "undefined"){
+                            console.log("entre aca!!!!!!!!!!!!!!!!!!!")
                         } else {
                             dataSource = [
                                 "\tdataSource: {",
