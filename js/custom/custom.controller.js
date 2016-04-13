@@ -454,45 +454,45 @@
                     var dataSource = [];
                     var dataConnector = [];
 
-                    if(item.dataModel && item.dataModel.type != ""){
-                        var nodeData = item.dataModel;
-                        var nodeDataType = nodeData.type;
-                        var nodeDataPath = nodeData.path;
-                        if(nodeDataType == "sgb-datasource-json#1.0"){
-                            dataSource = [
-                                "\tdataSource: {",
-                                "\t\ttype: '" + nodeDataType + "',",
-                                "\t\tparams: {",
-                                "\t\t\tpath: '" + nodeDataPath + "'",
-                                "\t\t}",
-                                "\t},"
-                            ];
-                        } else if(nodeDataType == "sgb-datasource-function"){
-                            $http
-                                .get($rootScope.url + "/getContent?path=" + nodeDataPath + "&type=json")
-                                .success(function(data){
-                                    dataSource = [
-                                        "\tdataSource: {",
-                                        "\t\ttype: '" + nodeDataType + "',",
-                                        "\t\tparams: {",
-                                        "\t\t\tdata: function(){",
-                                        "\t\t\t\treturn " + JSON.stringify(data),
-                                        "\t\t\t}",
-                                        "\t\t}",
-                                        "\t},"
-                                    ];    
-                                })
-                                .error(function(){
-                                    console.log("error retreiving data");
-                                });
-                        } else if(nodeDataType == "undefined"){
-                            console.log("entre aca!!!!!!!!!!!!!!!!!!!")
-                        } else {
-                            dataSource = [
-                                "\tdataSource: {",
-                                "\t\ttype: '" + nodeDataType + "'",
-                                "\t},"
-                            ];
+                    if(!_.isEmpty(item.dataModel)){
+                        if(item.dataModel && item.dataModel.type != ""){
+                            var nodeData = item.dataModel;
+                            var nodeDataType = nodeData.type;
+                            var nodeDataPath = nodeData.path;
+                            if(nodeDataType == "sgb-datasource-json#1.0"){
+                                dataSource = [
+                                    "\tdataSource: {",
+                                    "\t\ttype: '" + nodeDataType + "',",
+                                    "\t\tparams: {",
+                                    "\t\t\tpath: '" + nodeDataPath + "'",
+                                    "\t\t}",
+                                    "\t},"
+                                ];
+                            } else if(nodeDataType == "sgb-datasource-function"){
+                                $http
+                                    .get($rootScope.url + "/getContent?path=" + nodeDataPath + "&type=json")
+                                    .success(function(data){
+                                        dataSource = [
+                                            "\tdataSource: {",
+                                            "\t\ttype: '" + nodeDataType + "',",
+                                            "\t\tparams: {",
+                                            "\t\t\tdata: function(){",
+                                            "\t\t\t\treturn " + JSON.stringify(data),
+                                            "\t\t\t}",
+                                            "\t\t}",
+                                            "\t},"
+                                        ];    
+                                    })
+                                    .error(function(){
+                                        console.log("error retreiving data");
+                                    });
+                            } else {
+                                dataSource = [
+                                    "\tdataSource: {",
+                                    "\t\ttype: '" + nodeDataType + "'",
+                                    "\t},"
+                                ];
+                            };
                         };
                     };
 
